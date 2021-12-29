@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+int stVisit[51][51][4][32] = {0,};
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+int main()
+{
+    int stRow = 6, stCol = 7;
+    cin>>stCol>>stRow;
+    
+    vector<vector<char>> stVec(stRow,vector<char>(stCol,0)); 
+    int stSrow, stScol=0;
+    map<pair<int,int>,int> jCheck;
+      int stNo[5] = {1,2,4,8,16};
+    int stFound =0;
+    for(int i=0; i<stRow; i++)
+    {
+        for(int j=0; j<stCol; j++)
+        {
+            cin>>stVec[i][j];
+            if(stVec[i][j]=='S')
+            {
+                stSrow = i;
+                stScol = j;
+            }
+
+            if(stVec[i][j]=='X')
+            {
+                jCheck[{i,j}]=stNo[stFound++];
+            }
+        }
+    }
+   queue<pair<pair<int,int>,pair<int,int>>> jeweryInfo;
+    jeweryInfo.push({{stSrow,stScol},{0,0}});
+    int cmpAns =0;
+    for(auto it=jCheck.begin(); it!=jCheck.end(); it++)
+    {
+        cmpAns+=(*it).second;
+    }
+
+    while(!jeweryInfo.empty())
+    {
+        int row = jeweryInfo.front().first.first;
+        int col = jeweryInfo.front().first.second;
+        int time = jeweryInfo.front().second.first;
+        int jfound = jeweryInfo.front().second.second;
+        jeweryInfo.pop();
+
+        if(stVec[row][col]=='E')
+        {
+            if(jfound==cmpAns)
+                cout<< time<<endl;
+            else
+                continue;
+        }
+
+        for(int i=0; i<4; i++)
+        {
+            int nrow = row +mAV[i];
+            int ncol = col +mAH[i];
+
+            if(0<=nrow && 0<=ncol && nrow < stRow && ncol <stCol && stVec[nrow][ncol]!='#')
+            {
+                if(!stVisit[nrow][ncol][i][jfound])
+                {
+                    if(stVec[nrow][ncol]=='X')
+                    {
+                        if((jCheck[{nrow,ncol}] & jfound) != (jCheck[{nrow,ncol}]))
+                        {
+                            jeweryInfo.push({{nrow,ncol},{time+1,jfound+jCheck[{nrow,ncol}]}});
+                            stVisit[nrow][ncol][i][jfound] =1;
+                        }
+                        else
+                        {
+                            jeweryInfo.push({{nrow,ncol},{time+1,jfound}});
+                            stVisit[nrow][ncol][i][jfound] =1;
+                        }
+                    }
+                    else
+                    {
+                        jeweryInfo.push({{nrow,ncol},{time+1,jfound}});
+                        stVisit[nrow][ncol][i][jfound] =1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
