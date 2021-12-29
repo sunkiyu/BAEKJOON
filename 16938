@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <numeric>
+
+using namespace std;
+
+int main()
+{
+       ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int quizDP[16] = {0,};
+    int qN =5, qL =25, qR=35, qX=10;
+    int quizs[16]={0,};
+    cin >> qN >> qL >> qR >> qX;
+    for (int i = 0; i < qN; i++)
+    {
+        cin >> quizs[i];
+    }
+    vector<int> quizAns;
+
+    int numOfQuiz=0;
+   
+    function<void(int,int,int)> quizDFS = [&](int cnt,int idx, int curSum)
+    {
+        if(cnt>=2)
+        {
+            int Min = 987654321;
+            int Max = -987654321;
+            int Sum = 0;
+ 
+            for (int i = 0; i < quizAns.size(); i++)
+            {
+                Sum += quizs[quizAns[i]];
+                if (quizs[quizAns[i]] < Min) Min = quizs[quizAns[i]];
+                if (quizs[quizAns[i]] > Max) Max = quizs[quizAns[i]];
+            }
+ 
+            if (qL <= Sum && Sum <= qR && Max - Min >= qX) numOfQuiz++;
+        }
+
+        for(int i=idx; i<qN; i++)
+        {
+            if(quizDP[i])continue;
+            if(curSum+quizs[i]<=qR)
+            {
+                quizDP[i] =1;
+                quizAns.push_back(i);
+                quizDFS(cnt+1,i,curSum+quizs[i]);
+                quizDP[i] =0;
+                quizAns.pop_back();
+            }
+        }
+    };
+    quizDFS(0,0,0);
+    
+    cout<<numOfQuiz<<endl;
+    return 0;
+}
