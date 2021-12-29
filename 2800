@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <queue>
+#include <set>
+int ghVisit[201]= {0,};
+
+using namespace std;
+
+int main()
+{
+   string gh = "(1+(2*(3+4)))";
+   cin>>gh;
+   vector<int> ghVec;
+   vector<string> ansghvec;
+   vector<pair<int,int>> ghInfo,eraseVec;
+   set<string> stringVisit;
+   for(int i=0; i<gh.length(); i++)
+   {
+       if(gh[i]=='(')
+       {
+           ghVec.push_back(i);
+       }
+       else if(gh[i]==')')
+       {
+           int start = ghVec.back();
+           ghVec.pop_back();
+           ghInfo.push_back({start,i});
+       }
+   }
+
+   function<void(int,int)> ghDFS = [&](int cnt,int idx)
+   {
+       if(cnt>0)
+       {
+           string newstr = gh;
+           string cmpstr="";
+           for(int i=0; i<eraseVec.size(); i++)
+           {
+                 newstr[eraseVec[i].first]='.';
+                 newstr[eraseVec[i].second]='.';
+           }
+           for(int i=0; i<newstr.length();i++)
+           {
+               if(newstr[i]=='.')continue;
+               else cmpstr+=newstr[i];
+           }
+
+           if(stringVisit.find(cmpstr)==stringVisit.end())
+           {
+               stringVisit.insert(cmpstr);
+               ansghvec.push_back(cmpstr);
+           }
+       }
+
+       for(int i=idx; i<ghInfo.size(); i++)
+       {
+           if(ghVisit[i])continue;
+           ghVisit[i]= 1;
+           eraseVec.push_back({ghInfo[i].first,ghInfo[i].second});
+           ghDFS(cnt+1,i);
+           eraseVec.pop_back();
+           ghVisit[i]= 0;
+       }
+   };
+   ghDFS(0,0);
+    sort(ansghvec.begin(),ansghvec.end());
+   for(int i=0; i<ansghvec.size(); i++)cout<<ansghvec[i]<<endl; 
+    return 0;
+}
