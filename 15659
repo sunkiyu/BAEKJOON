@@ -1,0 +1,126 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int numlen =0;
+    vector<int> numbers;
+    int operCheck[12] = {0,};
+    vector<int> oper;
+    int numMinval = 2e9, numMaxVal = -2e9;
+    
+    cin >> numlen;
+    
+    for (int i = 0; i < numlen; i++)
+    {
+        int tmp;
+        cin >> tmp;
+        numbers.push_back(tmp);
+    }
+    
+    for (int i = 0; i < 4; i++)
+    {
+        int tmp;
+        cin>>tmp;
+        oper.push_back(tmp);
+    }
+
+    vector<int> onlyCalc;
+    vector<int> op;
+
+    auto OtS = [](int oper)
+    {
+        if(oper==0)
+            return "+";
+        if(oper==1)
+            return "-";
+        if(oper==2)
+            return "*";
+        if(oper==3)
+            return "/";
+    };
+
+    auto Calc= [OtS](int x, int y, int oper)
+    {
+        string c = OtS(oper);
+        if (c == "+") return x + y;
+        else if (c == "-") return x - y;
+        else if (c == "*") return x * y;
+        else if (c == "/") return x / y;
+    };
+
+    function<void(int)> numberDFS = [&](int cnt)
+    {
+        if(cnt == numlen - 1)
+        {
+            vector<string> String;
+            for(int i=0; i<op.size(); i++)
+            {
+                if (op[i] == 0 || op[i] == 1)
+                {
+                      if (String.size() >= 1)
+                      {
+                          String.push_back(OtS(op[i]));
+                          String.push_back(to_string(numbers[i + 1]));
+                      }
+                      else
+                      {
+                          String.push_back(to_string(numbers[i]));
+                          String.push_back(OtS(op[i]));
+                          String.push_back(to_string(numbers[i + 1]));
+                      }
+                }
+                else
+                {
+                      if (String.size() >= 1)
+                      {
+                           int Num = stoi(String[String.size() - 1]);
+                           int Res = Calc(Num, numbers[i + 1], op[i]);
+                           String.pop_back();
+                           String.push_back(to_string(Res));
+                      }
+                      else
+                      {
+                           int Res = Calc(numbers[i], numbers[i + 1], op[i]);
+                           String.push_back(to_string(Res));
+                      }
+                }
+            }
+
+            int Result = 0;
+            Result = stoi(String[0]);
+            for (int i = 1; i < String.size(); i = i + 2)
+            {
+                if (String[i] == "+") Result = Result + stoi(String[i + 1]);
+                else if(String[i] == "-") Result = Result - stoi(String[i + 1]);
+            }
+            if (Result > numMaxVal) numMaxVal = Result;
+            if (Result < numMinval) numMinval = Result;
+            return;
+       }
+        
+        for (int i = 0; i < 4; i++)
+    {
+        if (oper[i] >= 1)
+        {
+            oper[i]--;
+            op.push_back(i);
+            numberDFS(cnt + 1);
+            op.pop_back();
+            oper[i]++;
+        }
+    }
+
+    };
+
+    numberDFS(0);
+    cout<<numMaxVal<<endl;
+    cout<<numMinval<<endl;
+
+    return 0;
+}
