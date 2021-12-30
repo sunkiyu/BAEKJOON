@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int main()    
+{
+        int mAH[4] = {1,-1,0,0};
+    int mAV[4] = {0,0,1,-1};
+    int vRow =7, vCol =7;
+    cin>>vRow>>vCol;
+    
+        vector<vector<int>> vMap(vRow,vector<int>(vCol,0));
+    for(int i=0; i<vRow; i++)
+        for(int j=0; j<vCol; j++)
+            cin>>vMap[i][j];
+    
+    vector<pair<int,int>> vPoint;
+    vector<pair<int,int>> emptyPoint;
+    for(int i=0; i<vRow; i++)
+    {
+        for(int j=0; j<vCol; j++)
+        {
+            if(vMap[i][j]==2)
+                vPoint.push_back({i,j});
+            if(vMap[i][j]==0)
+                emptyPoint.push_back({i,j});
+        }
+    }
+
+    int cvMap[64] = {0,};
+    vector<int> cvVec;
+    int getMaxSafe =0;
+
+    function<void(int,int)> vDFS = [&](int cnt,int idx)mutable
+    {
+        if(cnt==3)
+        {
+            [&,vMap]()mutable
+            {
+                for(int i=0; i<3; i++) vMap[emptyPoint[cvVec[i]].first][emptyPoint[cvVec[i]].second] =1;
+                int vCheck[9][9][4] ={0,};
+                queue<pair<int,int>> virus;
+                for(int i=0; i<vPoint.size(); i++) virus.push({vPoint[i].first,vPoint[i].second});
+                while (!virus.empty())
+                {
+                    int row =virus.front().first;
+                    int col = virus.front().second;
+                    virus.pop();
+
+                    for(int i=0; i<4; i++)
+                    {
+                        int nrow = row + mAV[i];
+                        int ncol = col + mAH[i];
+
+                        if(0<=nrow && nrow <vRow &&0<=ncol && ncol< vCol && vMap[nrow][ncol]!=1)
+                        {
+                            if(!vCheck[nrow][ncol][i])
+                            {
+                                vCheck[nrow][ncol][i] = 1;
+                                vMap[nrow][ncol] = 2;
+                                virus.push({nrow,ncol});
+                            }
+                        }
+                    }
+                }
+
+                int safe =0 ;
+                for(int i=0; i<vRow; i++)
+                    for(int j=0; j<vCol; j++)
+                        if(vMap[i][j]==0)
+                            safe++;
+                getMaxSafe = max(getMaxSafe,safe);
+            }();
+            return;
+        }
+        for(int i=idx; i<emptyPoint.size(); i++)
+        {
+            if(cvMap[i]) continue;
+            cvMap[i] =1;
+            cvVec.push_back(i);
+            vDFS(cnt+1, idx+1);
+            cvVec.pop_back();
+            cvMap[i] =0;
+        }
+    };
+
+    vDFS(0,0);
+    
+    cout<<getMaxSafe<<endl;
+    return 0;
+}
