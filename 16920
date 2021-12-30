@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <algorithm>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+int playerMv[10] = {0,};
+int playerCnt[10] ={0,};
+char castleMap[1001][1001]={0,};
+int main()
+{
+    int castleRow= 3, castleCol=4, players=4;
+    cin>>castleRow>>castleCol>>players;
+    
+    queue<pair<pair<int,int>,int>> castleQ[10];
+    queue<pair<pair<int,int>,int>> ncastleQ;
+    for(int i=1; i<=players; i++)
+    {
+        cin>>playerMv[i];
+    }
+    
+    for(int i=0; i<castleRow; i++)
+        for(int j=0; j<castleCol; j++)
+        {
+            cin>>castleMap[i][j];
+            if('1'<=castleMap[i][j] && castleMap[i][j]<='9')
+            {
+                castleQ[castleMap[i][j]-'0'].push({{i,j},playerMv[castleMap[i][j]-'0']});
+                playerCnt[castleMap[i][j]-'0']++;
+            }
+        }
+
+        while (1) {
+        bool tmpFlag=false;
+        for(int i=1; i<=players; i++)
+        {
+            ncastleQ = castleQ[i];
+            while(!ncastleQ.empty())
+            {
+                int row = ncastleQ.front().first.first;
+                int col = ncastleQ.front().first.second;
+                int cnt = ncastleQ.front().second;
+                ncastleQ.pop();
+
+                if(cnt == playerMv[i])
+                    castleQ[i].pop();
+                if(cnt==0)continue;
+
+                for(int j=0; j<4; j++)
+                {
+                    int nrow = row +mAV[j];
+                    int ncol = col +mAH[j];
+
+                    if(0<= nrow && nrow < castleRow && 0<= ncol && ncol <castleCol)
+                    {
+                        if(castleMap[nrow][ncol]=='.')
+                        {
+                            tmpFlag =true;
+                            playerCnt[i]++;
+                            castleMap[nrow][ncol] = i+'0';
+                            castleQ[i].push({{nrow,ncol},playerMv[i]});
+                            ncastleQ.push({{nrow,ncol},cnt-1});
+                        }
+                    }
+                }
+            }
+        }
+        if(!tmpFlag)break;
+    }
+
+    for(int i=0; i<players; i++)cout <<playerCnt[i+1]<<" ";
+    cout<<endl;
+    
+    return 0;
+}
