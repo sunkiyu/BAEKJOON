@@ -1,0 +1,23 @@
+#include<iostream>
+
+using namespace std;
+
+int main(){
+    
+    int nn =0,max5=0,max2=0;
+    cin>>nn;
+    
+    if (nn == 1 || nn == 3)
+    {
+        cout << -1 << endl;
+        return  0;
+    }
+    max5 = nn/5;
+
+    while((nn-max5*5)%2)
+    {
+       max5--;
+    }
+    cout<<max5+(nn-max5*5)/2<<endl;
+    return 0;
+}
