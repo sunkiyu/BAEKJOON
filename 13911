@@ -1,0 +1,87 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<functional>
+
+using namespace std;
+
+vector<pair<int, int>> msDB[10010];
+int msDBDP[10010][2]={0,};
+bool self[10010]={0,};
+
+int main()
+{
+    int macDummy =10001, starDummy = 10002, msEndPoint = 8, msLineNo = 11;
+    int macCount=2,macLimit =6,starCount=1,starLimit =4;
+    cin>>msEndPoint>>msLineNo;
+
+    for (int i = 1; i <= msEndPoint; i++)
+    {
+        msDBDP[i][0] = 987654321;
+        msDBDP[i][1] = 987654321;
+    }
+ 
+    for (int i = 0; i < msLineNo; i++)
+    {
+        int a, b, c; cin >> a >> b >> c;
+        msDB[a].push_back(make_pair(b, c));
+        msDB[b].push_back(make_pair(a, c));
+    }
+    cin >> macCount >> macLimit;
+    for (int i = 0; i < macCount; i++)
+    {
+        int a; cin >> a;
+        msDB[macDummy].push_back(make_pair(a, 0));
+        self[a] = true;
+    }
+    cin >> starCount >> starLimit;
+    for (int i = 0; i < starCount; i++)
+    {
+        int a; cin >> a;
+        msDB[starDummy].push_back(make_pair(a, 0));
+        self[a] = true;
+    }
+
+    auto Find_Distance=[&](int N, int Idx)
+{
+    queue<pair<int, int>> Q;
+    Q.push(make_pair(N, 0));
+    msDBDP[N][Idx] = 0;
+ 
+    while (Q.empty() == 0)
+    {
+        int Current = Q.front().first;
+        int Distance = Q.front().second;
+        Q.pop();
+ 
+        for (int i = 0; i < msDB[Current].size(); i++)
+        {
+            int Next = msDB[Current][i].first;
+            int NCost = msDB[Current][i].second;
+ 
+            if (Distance + NCost < msDBDP[Next][Idx])
+            {
+                msDBDP[Next][Idx] = Distance + NCost;
+                Q.push(make_pair(Next, Distance + NCost));
+            }
+        }
+    }
+};
+
+    Find_Distance(macDummy, 0);
+    Find_Distance(starDummy, 1);
+
+     int Min_Dist = 987654321;
+    for (int i = 1; i <= msEndPoint; i++)
+    {
+        if (self[i] == true) continue;
+        if (msDBDP[i][0] > macLimit || msDBDP[i][1] > starLimit) continue;
+ 
+        Min_Dist = min(Min_Dist, msDBDP[i][0] + msDBDP[i][1]);
+    }
+    if (Min_Dist == 987654321) cout << -1 << endl;
+    else cout << Min_Dist << endl;
+    
+    return 0;
+}
