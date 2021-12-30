@@ -1,0 +1,27 @@
+#include <iostream>
+
+using namespace std;
+
+int tsDayPrice[2][1500001] = {0,};
+int tsDP[1500001] = {0,};
+
+int main()
+{
+    int remainDays=7;
+    cin>>remainDays;
+    
+    for(int i=1; i<=remainDays; i++)
+    {
+        cin >> tsDayPrice[0][i] >> tsDayPrice[1][i];
+    }
+    int Current_Max = 0,Answer=0;   
+    for (int i = 1; i <= remainDays + 1; i++)
+    {
+       Current_Max = max(Current_Max, tsDP[i]);
+       if (i + tsDayPrice[0][i] > remainDays + 1) continue;
+       tsDP[i + tsDayPrice[0][i]] = max(Current_Max + tsDayPrice[1][i], tsDP[i + tsDayPrice[0][i]]);
+    }
+    Answer = Current_Max;
+    cout<<Answer<<endl;
+    return 0;
+}
