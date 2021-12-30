@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int longestDP4[1001] ={0,};
+vector<int> longestCheck[1001];
+vector<int> longestAsn;
+vector<int> longestVal;
+int main()
+{
+    int numLength =6;
+    cin>>numLength;
+    longestVal.resize(numLength+1,0);
+    for(int i=1; i<=numLength; i++)cin>>longestVal[i];
+    
+    for(int i=1; i<=numLength; i++)
+    {
+        longestDP4[i] =1;
+         longestCheck[i].push_back(longestVal[i]);
+        for(int j=1; j<i; j++)
+        {
+            if(longestVal[i]>longestVal[j])
+            {
+                if (longestDP4[i] < longestDP4[j] + 1)
+                {
+                     longestCheck[i].clear();
+                     longestCheck[i] = longestCheck[j];
+                     longestCheck[i].push_back(longestVal[i]);
+                     longestDP4[i] = longestDP4[j] + 1;
+                }
+            }
+       }
+        
+        if (longestAsn.size() < longestCheck[i].size())
+        {
+              longestAsn = longestCheck[i];
+        }
+    }
+
+    cout << longestAsn.size() << endl;
+    for (int i = 0; i < longestAsn.size(); i++) cout << longestAsn[i] << " ";
+    cout << endl;
+    return 0;
+}
