@@ -1,2 +1,2 @@
 # BAEKJOON
-C++
+Solve in C++
