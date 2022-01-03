@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+int SumIncreaseDP[1001] = {0,};
+int SumIncreaseVal[1001] = {0,};
+int main()
+{
+    int maxSumNo =10;
+    cin>>maxSumNo;
+    for(int i=0; i<maxSumNo; i++)cin>>SumIncreaseVal[i];
+    int maxSumValDP=0;
+    for(int i=0; i<maxSumNo; i++)
+    {
+        SumIncreaseDP[i] =SumIncreaseVal[i];
+        for(int j=0; j<i; j++)
+        {
+            if(SumIncreaseVal[i]>SumIncreaseVal[j])
+            {
+                if(SumIncreaseVal[i]+SumIncreaseDP[j]>SumIncreaseDP[i])
+                    SumIncreaseDP[i]=SumIncreaseVal[i]+SumIncreaseDP[j];
+            }
+        }
+       maxSumValDP = max(maxSumValDP,SumIncreaseDP[i]);
+    }
+    cout<<maxSumValDP<<endl;
+    return 0;
+}
