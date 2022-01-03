@@ -1,0 +1,24 @@
+#include <iostream>
+#include <vector>
+int cardDP[1001] = {0,};
+int cardValue[1001] = {0,};
+using namespace std;
+
+int main()
+{
+     int cardCnt = 10, totalValue =0;
+    cin>>cardCnt;
+    for(int i=1; i<=cardCnt; i++)cin>>cardValue[i];
+
+    cardDP[1] = cardValue[1];
+    cardDP[2] = max(cardDP[1]+cardDP[1],cardValue[2]);
+   for(int i=3; i<=cardCnt; i++)
+    {
+        for(int j=1; j<=i; j++)
+        {
+            cardDP[i] = max(cardDP[i-j]+cardValue[j],cardDP[i]);
+        }
+    }
+    cout<< cardDP[cardCnt]<<endl;
+    return 0;
+}
