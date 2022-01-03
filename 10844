@@ -1,0 +1,43 @@
+#include <iostream>
+#define MODULER 1000000000
+using namespace std;
+int countDP[101][10] = {0,};
+int main()
+{
+    int dpcnt = 2;
+    cin>>dpcnt;
+ 
+    countDP[1][1] = 1;
+    countDP[1][2] = 1;
+    countDP[1][3] = 1;
+    countDP[1][4] = 1;
+    countDP[1][5] = 1;
+    countDP[1][6] = 1;
+    countDP[1][7] = 1;
+    countDP[1][8] = 1;
+    countDP[1][9] = 1;
+    countDP[0][1] = 1;
+
+      for(int i=2; i<=dpcnt; i++)
+    {
+        for(int j=1; j<=9; j++)
+        {
+            if(j==9)
+            {
+                countDP[i][j] = countDP[i-1][j-1];
+            }
+            else if(j==1)
+            {
+                countDP[i][j] = countDP[i-2][j]+countDP[i-1][j+1];
+            }
+            else
+                countDP[i][j] = countDP[i-1][j+1] + countDP[i-1][j-1];
+             countDP[i][j] = countDP[i][j] % MODULER;
+        }
+    }
+    long long retsum=0;
+    for(int i=1; i<=9; i++)
+        retsum+=countDP[dpcnt][i];
+    cout<<retsum%MODULER<<endl;
+    return 0;
+}
