@@ -1,0 +1,54 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+int main()
+{
+    int N=0;
+    cin >> N;
+    vector<vector<int>> bMap(N,vector<int>(N,0));
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            cin >> bMap[i][j];
+        }
+    }
+
+    vector<vector<int>> mapAns(bMap.size(),vector<int>(bMap.size(),0));
+
+    int DFSVisit[101][101] = {0,};
+
+    function<void(int,int,int)> mapBFS = [&](int start, int ns,int ne)
+    {
+        for(int i=0; i<bMap.size(); i++)
+        {
+            if(bMap[ns][i]==1 && !DFSVisit[start][i])
+            {
+                mapAns[start][i] = 1;
+                DFSVisit[start][i] = 1;
+                mapBFS(start,i,0);
+            }
+        }
+
+    };
+    
+    for(int i=0; i<bMap.size(); i++)
+    {
+        for(int j=0; j<bMap[0].size(); j++)
+            mapBFS(i,i,j);
+    }
+      for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        { 
+            cout << mapAns[i][j] << " ";
+        }
+        cout << endl;
+      }
+    return 0;
+}
