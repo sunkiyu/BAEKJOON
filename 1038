@@ -1,0 +1,43 @@
+#include <iostream>
+#include <queue>
+long long decNumDP[1000001];
+using namespace std;
+
+int main()
+{
+   using LL = long long;
+   int decNumCnt=-1, decNumN = 500000;
+   cin>>decNumN;
+   queue<LL> decNumQ;
+
+   for(int i=1; i<=9; i++)
+   {
+        decNumDP[i] = i;
+       decNumQ.push(i);
+   }
+   
+   if(0<=decNumN && decNumN<=10)
+   {
+       cout << decNumN<<endl;
+       return 0;
+   }
+   
+   decNumCnt=10;
+    
+   while(decNumCnt<=decNumN && !decNumQ.empty())
+   {
+       int front = decNumQ.front()%10;
+       LL org = decNumQ.front();
+       decNumQ.pop();
+
+       for(int i=0; i<front; i++)
+       {
+           decNumQ.push(org * 10 + i);
+           decNumDP[decNumCnt++] = org * 10 + i;
+       }
+   }
+     if (decNumCnt >= decNumN && decNumDP[decNumN] != 0) cout << decNumDP[decNumN] << endl;
+    else cout << -1 << endl;
+
+   return 0;
+}
