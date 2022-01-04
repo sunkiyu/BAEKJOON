@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <algorithm>
+
+using namespace std;
+int ppInfo[2197][2197];
+int main()
+{
+    int papers = 9;
+    cin>>papers;
+    //vector<vector<int>> ppInfo(papers,vector<int>(papers,0));
+    
+    for(int i=0; i<papers; i++)
+        for(int j=0; j<papers; j++)
+        {
+            cin>>ppInfo[i][j];
+        }
+    
+    int minusOne=0,zero=0,one=0;
+    function<void(pair<int,int>,int)> paperDFS = [&](pair<int,int> startPoint,int length)
+    {
+        int row,col=0;
+        row = startPoint.first;
+        col = startPoint.second;
+        int init = ppInfo[row][col];
+        bool perfect = true;
+        for(int i= row; i<row+length; i++)
+        {
+            for(int j=col; j<col+length; j++)
+            {
+                if(init!=ppInfo[i][j])
+                {
+                    perfect =false;
+                    break;
+                }
+            }
+            if(!perfect)
+                break;
+        }
+
+        if(!perfect)
+        {
+            paperDFS({row,col},length/3);
+            paperDFS({row,col+length/3},length/3);
+            paperDFS({row,col+length/3+length/3},length/3);
+            paperDFS({row+length/3,col},length/3);
+            paperDFS({row+length/3,col+length/3},length/3);
+            paperDFS({row+length/3,col+length/3+length/3},length/3);
+            paperDFS({row+length/3+length/3,col},length/3);
+            paperDFS({row+length/3+length/3,col+length/3},length/3);
+            paperDFS({row+length/3+length/3,col+length/3+length/3},length/3);
+
+        }
+        else
+        {
+            if(init==-1)
+                minusOne++;
+            else if(init ==0)
+                zero++;
+            else if(init==1)
+                one++;
+            return;
+        }
+
+    };
+
+    paperDFS({0,0},papers);
+    
+    cout<<minusOne<<endl;
+    cout<<zero<<endl;
+    cout<<one<<endl;
+    
+    return 0;
+}
