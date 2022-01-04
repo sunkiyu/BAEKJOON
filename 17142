@@ -1,0 +1,102 @@
+#include <iostream>
+#include <functional>
+#include <queue>
+#include <vector>
+#include <cstring>
+using namespace std;
+
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+int lab3[51][51]={0,};
+int lab3Visit[51][51]={0,};
+int lab3VirusVisit[11]={0,};
+
+int main()
+{
+    int lab3sz = 7, virusM=3,infect=0;
+    vector<pair<int,int>> virusPos3;
+    cin >> lab3sz >> virusM;
+    for (int i = 0; i < lab3sz; i++)
+    {
+        for (int j = 0; j < lab3sz; j++)
+        {
+            cin >> lab3[i][j];
+            if (lab3[i][j] == 0) infect++;
+            else if (lab3[i][j] == 2) virusPos3.push_back({i, j});
+        }
+    }
+
+   bool isAll = false;
+   int lab3minTime = 2e9;
+
+   function<void(int,int)> lab3DFS = [&](int cnt,int idx)
+   {
+       if(cnt == virusM)
+       {
+            queue<pair<pair<int,int>,int>> mvVirus;
+            memset(lab3Visit,-1,sizeof(lab3Visit));
+
+            for(int iv=0; iv<virusPos3.size(); iv++)
+            {
+                if(lab3VirusVisit[iv])
+                {
+                    mvVirus.push({{virusPos3[iv].first,virusPos3[iv].second},0});
+                    lab3Visit[virusPos3[iv].first][virusPos3[iv].second] = 0;
+                }
+            };
+
+            int totalTime=0,infect2=0;
+            while(!mvVirus.empty())
+            {
+                int row = mvVirus.front().first.first;
+                int col = mvVirus.front().first.second;
+                int time = mvVirus.front().second;
+                mvVirus.pop();
+
+                for(int j=0; j<4; j++)
+                {
+                    int nrow = row + mAV[j];
+                    int ncol = col + mAH[j];
+
+                    if(0<=nrow && nrow < lab3sz && 0<=ncol && ncol <lab3sz && lab3[nrow][ncol]!=1)
+                    {
+                        if(lab3Visit[nrow][ncol]!=-1)continue;
+                        int ntime = time + 1;
+                        if (lab3[nrow][ncol] == 0)
+                        {
+                            infect2++;
+                            totalTime = ntime;
+                            lab3Visit[nrow][ncol] = ntime;
+                        }
+                        else
+                            lab3Visit[nrow][ncol] = time;
+                        mvVirus.push({{nrow,ncol},ntime});
+                    }
+                 }
+            }
+
+            if(infect==infect2)
+            {
+                isAll = true;
+                lab3minTime = min(lab3minTime,totalTime);
+            }
+            return;
+       }
+
+       for(int i=idx; i<virusPos3.size(); i++)
+       {
+            if(lab3VirusVisit[i])continue;
+            lab3VirusVisit[i]=1;
+            lab3DFS(cnt+1,i+1);
+            lab3VirusVisit[i]=0;
+       }
+   };
+
+   lab3DFS(0,0);
+
+   if(!isAll) cout<< -1 <<endl;
+   else cout <<lab3minTime<<endl;
+    return 0;
+}
