@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+
+ 
+int N, Answer;
+bool Inp_Flag;
+
+int main()
+{
+    for (int T = 1; ; T++)
+    {
+         int jelMap[126][126] = {0,};
+        vector<vector<int>> jelMapCost(126,vector<int>(126,2e9));
+
+        int jelRow = 7, jelCol =7;
+        cin>>jelRow;
+        if(jelRow==0)
+            return 0;
+        jelCol = jelRow;
+ 
+        for (int i = 0; i < jelRow; i++)
+        {
+            for (int j = 0; j < jelRow; j++)
+            {
+                cin >> jelMap[i][j];
+            }
+        }
+        int minCost = 2e9;
+        queue<pair<pair<int,int>,int>> jelQ;
+        jelQ.push({{0,0},jelMap[0][0]});
+        jelMapCost[0][0] = jelMap[0][0];
+
+        while(!jelQ.empty())
+        {
+            int row = jelQ.front().first.first;
+            int col = jelQ.front().first.second;
+            int cost = jelQ.front().second;
+            jelQ.pop();
+
+            if(row==jelRow-1 && col == jelCol-1)
+            {
+                minCost = min(minCost,cost);
+                continue;
+            }
+
+            for(int i=0; i<4; i++)
+            {
+                int nrow = row + mAV[i];
+                int ncol = col + mAH[i];
+
+                if(0<=nrow && nrow < jelRow && 0<=ncol && ncol <jelCol)
+                {
+                    if(jelMapCost[nrow][ncol]>cost+jelMap[nrow][ncol])
+                    {
+                        jelMapCost[nrow][ncol] = cost+jelMap[nrow][ncol];
+                        jelQ.push({{nrow,ncol},cost+jelMap[nrow][ncol]});
+                    }
+                }
+            }
+        }
+            cout << "Problem " << T << ": " << minCost << endl;
+    }
+
+    return 0;
+}
