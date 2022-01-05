@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <functional>
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+using namespace std;
+
+int tomatoMap[1001][1001] = {0,};
+int tomatoVisit[1001][1001] = {0,};
+int main()
+{
+   int tomatoRow =4, tomatoCol = 6;
+   cin>>tomatoCol>>tomatoRow;
+    
+   queue<pair<pair<int,int>,int>> tomatoQ;
+   for(int i=0; i<tomatoRow; i++)
+       for(int j=0; j<tomatoCol; j++)
+       {
+           cin>>tomatoMap[i][j];
+           if(tomatoMap[i][j]==1)
+           {
+               tomatoQ.push({{i,j},0});
+               tomatoVisit[i][j]=1;   
+           }
+       }
+
+   auto wholeMapCheck = [&]()
+   {
+       for(int i=0; i<tomatoRow; i++)
+           for(int j=0; j<tomatoCol; j++)
+               if(tomatoMap[i][j]==0) return false;
+       return true;
+   };
+
+   int maxYear =0;
+   while(!tomatoQ.empty())
+   {
+       int row = tomatoQ.front().first.first;
+       int col = tomatoQ.front().first.second;
+       maxYear = tomatoQ.front().second;
+       tomatoQ.pop();
+
+       for(int i=0; i<4; i++)
+       {
+           int nrow = row + mAV[i];
+           int ncol = col + mAH[i];
+
+           if(0<=nrow && nrow < tomatoRow && 0<= ncol && ncol <tomatoCol && tomatoMap[nrow][ncol]==0)
+           {
+               if(tomatoVisit[nrow][ncol])continue;
+               tomatoVisit[nrow][ncol] = 1;
+               tomatoMap[nrow][ncol] = 1;
+               tomatoQ.push({{nrow,ncol},maxYear+1});
+           }
+       }
+   }
+   if (wholeMapCheck() == false) cout << -1 << endl;
+   else cout << maxYear << endl;
+
+    return 0;
+}
