@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+int mNiteV[8]={-1,-2,2,1,2,1,-2,-1};
+int mNiteH[8]={2,1,1,2,-1,-2,-1,-2};
+vector<vector<int>> niteMap;
+int niteVisit[301][301] ={0,};
+int main()
+{
+    int gameCnt=0,niteLength = 10;
+    cin>>gameCnt;
+    
+    for(int g=0; g<gameCnt; g++)
+    {
+        memset(niteVisit, false, sizeof(niteVisit));
+        cin>>niteLength;
+    niteMap.resize(niteLength,vector<int>(niteLength,0));
+
+    pair<int,int> nitePos;
+    pair<int,int> desPos;
+    int tmpRow=0, tmpCol=0;
+    cin>>tmpRow>>tmpCol;
+    nitePos = {tmpRow,tmpCol};
+    cin>>tmpRow>>tmpCol;
+    desPos = {tmpRow,tmpCol};
+    queue<pair<pair<int,int>,int>> niteQ;
+    niteQ.push({{nitePos},0});
+
+    while(!niteQ.empty())
+    {
+        int row = niteQ.front().first.first;
+        int col = niteQ.front().first.second;
+        int mvCnt = niteQ.front().second;
+        niteQ.pop();
+
+        if(row == desPos.first && col == desPos.second)
+        {
+            cout<<mvCnt<<endl;
+            break;
+        }
+        for(int i=0; i<8; i++)
+        {
+            int nrow = row + mNiteV[i];
+            int ncol = col + mNiteH[i];
+
+            if(0<=nrow && nrow <niteLength && 0<= ncol && ncol <niteLength)
+            {
+                if(niteVisit[nrow][ncol])continue;
+                niteVisit[nrow][ncol] =1;
+                niteQ.push({{nrow,ncol},mvCnt+1});
+            }
+        }
+    }
+    }
+    
+    return 0;
+}
