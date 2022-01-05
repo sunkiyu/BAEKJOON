@@ -1,2 +1,2 @@
 # BAEKJOON
-Solve in C++
+Baekjoon Online Judge Solve in C++
