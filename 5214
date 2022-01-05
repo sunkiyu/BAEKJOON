@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+vector<int> cityLink[200001];
+int cityCheck[200001]={0,};
+vector<int> cityCost(200001,0);
+int main(){
+     int n=9,k=3,hyper=5;
+    cin>>n>>k>>hyper;
+    for(int i=1; i<=hyper; i++)
+    {
+        for(int j=0; j<k; j++)
+        {
+            int a; cin >> a;
+            cityLink[a].push_back(i + n);
+            cityLink[i + n].push_back(a);
+        }
+    }
+      queue<pair<int,int>> cityQ;
+    cityQ.push({1,1});
+    cityCheck[1]=1;
+    cityCost[1]=1;
+    int minReached = 2e9;
+    bool canReached =false;
+    while(!cityQ.empty())
+    {
+        int city = cityQ.front().first;
+        int cnt = cityQ.front().second;
+        cityQ.pop();
+         if (city == n) 
+         {
+             canReached = 1;
+             minReached= cityCost[city];
+             break;
+         }
+
+        for(int i=0; i<cityLink[city].size(); i++)
+        {
+             int Next = cityLink[city][i];
+            if (cityCost[Next] == 0)
+            {
+                if (Next > n) cityCost[Next] = cityCost[city];
+                else cityCost[Next] = cityCost[city] + 1;
+                cityQ.push({Next,cnt+1});
+            }
+        }
+    }
+    if(!canReached) cout<<-1<<endl;
+    else cout<<minReached<<endl;
+     return 0;   
+}
