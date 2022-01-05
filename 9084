@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <string.h>
+using namespace std;
+int coinDP[10001] ={0,};
+
+int main()
+{
+      ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int repeat = 0;
+    cin>>repeat;
+    for(int tc=1; tc<=repeat; tc++)
+    {
+        memset(coinDP,0,sizeof(coinDP));
+        int coinSz = 2;
+        cin>>coinSz;
+        int coinCheck[21] = {0,};
+        for(int i=0; i<coinSz; i++)cin>>coinCheck[i];
+        int totCoin =22;
+        cin>>totCoin;
+
+        coinDP[0] =1;
+
+        for(int i=0; i<coinSz; i++)
+        {
+            for(int j=coinCheck[i]; j<=totCoin; j++)
+            {
+                coinDP[j]+=coinDP[j-coinCheck[i]];
+            }
+        }
+        cout<<coinDP[totCoin]<<endl;
+    }
+    
+    return 0;
+}
