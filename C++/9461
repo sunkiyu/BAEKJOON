@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+using custumLong = long long;
+custumLong triangleDP[101] = {0,};
+int main()
+{
+    int rotate =0;
+    cin>>rotate;
+       int N=0;
+    for(int t=1; t<=rotate; t++)
+    {
+        memset(triangleDP, 0, sizeof(triangleDP));
+        cin>>N;
+        triangleDP[0]=0;
+        triangleDP[1]=1;
+        triangleDP[2]=1;
+
+        for(int i=3; i<=N; i++)
+        {
+            triangleDP[i]  = triangleDP[i-2]+triangleDP[i-3];
+        }
+        cout<<triangleDP[N]<<endl;
+    }
+    
+    return 0;
+}
