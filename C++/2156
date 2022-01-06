@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int grapeCupDP[10001] ={0,};
+
+int main()
+{
+    int cupCnt=6;
+    cin>>cupCnt;
+    vector<int> grapeCups(cupCnt+1,0);
+    
+    for(int i=1; i<=cupCnt; i++)
+        cin>>grapeCups[i];
+
+    grapeCupDP[1]= grapeCups[1];
+
+    for(int i=2; i<=cupCnt; i++)
+    {
+        if(i==2)
+            grapeCupDP[i]= grapeCupDP[1]+grapeCups[2];
+        else{
+            grapeCupDP[i] = max(grapeCupDP[i-2]+grapeCups[i],grapeCupDP[i-3]+grapeCups[i-1]+grapeCups[i]);
+            grapeCupDP[i] = max(grapeCupDP[i - 1], grapeCupDP[i]);   
+        }
+    }
+    
+    cout << grapeCupDP[cupCnt] << endl;
+    
+    return 0;
+}
