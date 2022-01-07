@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+int mkOneDP[1000001] = {0,};
+int main()
+{
+    int mkOne = 10;
+    cin>>mkOne;
+
+    mkOneDP[mkOne] = 0;
+
+    while(mkOne!=1)
+    {
+        if(mkOne%3==0)
+        {
+            if(mkOneDP[mkOne/3]>mkOneDP[mkOne]+1 || !mkOneDP[mkOne/3])
+                mkOneDP[mkOne/3]=mkOneDP[mkOne]+1;
+        }
+        if(mkOne%2==0)
+        {
+            if(mkOneDP[mkOne/2]>mkOneDP[mkOne]+1|| !mkOneDP[mkOne/2])
+                mkOneDP[mkOne/2]=mkOneDP[mkOne]+1;
+        }
+
+        if(mkOneDP[mkOne-1]>mkOneDP[mkOne]+1|| !mkOneDP[mkOne-1])
+            mkOneDP[mkOne-1]=mkOneDP[mkOne]+1;
+        mkOne--;
+    }
+    
+    cout<< mkOneDP[1]<<endl;
+    
+    return 0;
+}
