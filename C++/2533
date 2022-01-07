@@ -1,1 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <functional>
+ 
+#define endl "\n"
+using namespace std;
+ 
+int peoples=0;
+int minEarlyAdopter[1000001][2];
+vector<bool> Visit;
+vector<int> peopleVec[1000001];
+vector<int> Tree[1000001];
 
+int main()
+{
+    cin >> peoples;
+    for (int i = 0; i <peoples - 1; i++)
+    {
+        int a, b; cin >> a >> b;
+        peopleVec[a].push_back(b);
+        peopleVec[b].push_back(a);
+    }
+    Visit.resize(1000001, false);
+    
+    function<void(int)> doTree = [&](int Cur)
+    {
+        Visit[Cur] = true;
+        for (int i = 0; i < peopleVec[Cur].size(); i++)
+        {
+            int Next = peopleVec[Cur][i];
+            if (Visit[Next] == false)
+            {
+                Tree[Cur].push_back(Next);
+                doTree(Next);
+            }
+        }
+    };
+    doTree(1);
+      memset(minEarlyAdopter, -1, sizeof(minEarlyAdopter));
+
+    
+    function<int(int,int)> DFS = [&](int Cur, int State)
+    {
+        if (minEarlyAdopter[Cur][State] != -1) return minEarlyAdopter[Cur][State];
+        if (State == 1)
+        {
+            minEarlyAdopter[Cur][State] = 1;
+            for (int i = 0; i < Tree[Cur].size(); i++)
+            {
+                int Next = Tree[Cur][i];
+                minEarlyAdopter[Cur][State] += min(DFS(Next, 0), DFS(Next, 1));
+            }
+        }
+        else
+        {
+            minEarlyAdopter[Cur][State] = 0;
+            for (int i = 0; i < Tree[Cur].size(); i++)
+           {
+               int Next = Tree[Cur][i];
+                minEarlyAdopter[Cur][State] += DFS(Next, 1);
+            }
+        }
+        return minEarlyAdopter[Cur][State];
+    };
+    cout<<min(DFS(1,0),DFS(1,1))<<endl;
+
+
+    return 0;
+}
+ 
