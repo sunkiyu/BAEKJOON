@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include <queue>
+
+using namespace std;
+int deathVisit[201][201] = {0,};
+int deathKnightMap[201][201] = {0,};
+int deathRow[6] = {-2,-2,0,0,2,2};
+int deathCol[6] = {-1,1,-2,2,-1,1};
+int main()
+{
+   int dMapsz =7;
+    cin>>dMapsz;
+   int dSR = 6, dSC =6, dER=0, dEC=1;
+    cin>>dSR>>dSC>>dER>>dEC;
+   queue<pair<pair<int,int>,int>> deathQ;
+   deathQ.push({{dSR,dSC},0});
+   int dCnt = 2e9;
+
+   while(!deathQ.empty())
+   {
+       int row = deathQ.front().first.first;
+       int col = deathQ.front().first.second;
+       int cnt = deathQ.front().second;
+       deathQ.pop();
+
+       if(row ==dER && col == dEC)
+       {
+           cout<< cnt<<endl;
+           return 0;
+       }
+
+       for(int i=0; i<6; i++)
+       {
+           int nrow = row + deathRow[i];
+           int ncol = col + deathCol[i];
+
+           if(0<=nrow && nrow <dMapsz && 0<=ncol && ncol <dMapsz)
+           {
+               if(deathVisit[nrow][ncol])continue;
+               deathVisit[nrow][ncol] =1;
+               deathQ.push({{nrow,ncol},cnt+1});
+           }
+       }
+
+   }
+   cout<<-1<<endl;
+    return 0;
+}
