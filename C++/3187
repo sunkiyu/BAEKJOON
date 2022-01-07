@@ -1,0 +1,80 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+char vkMap[251][251] = {0,};
+int vkMapCheck[251][251] = {0,};
+
+int main()
+{
+    
+    int vkRow =6, vkCol =6;
+    cin>>vkRow>>vkCol;
+
+    vector<pair<int,int>> vPos;
+
+    for(int i=0; i<vkRow; i++)
+    {
+        for(int j=0; j<vkCol; j++)
+        {
+            cin>>vkMap[i][j];
+            if(vkMap[i][j]=='v'||vkMap[i][j]=='k')
+                vPos.push_back({i,j});
+        }
+    }
+   int totV=0,totK=0;
+   for(int i=0; i<vPos.size(); i++)
+   {
+        int vCount =0, kCount =0;
+        if(vkMapCheck[vPos[i].first][vPos[i].second])continue;
+        queue<pair<int,int>> vQ;
+        vQ.push({vPos[i].first,vPos[i].second});
+        vkMapCheck[vPos[i].first][vPos[i].second]=1;
+        if(vkMap[vPos[i].first][vPos[i].second]=='v')
+            vCount++;
+        else if(vkMap[vPos[i].first][vPos[i].second]=='k')
+            kCount++;
+        while(!vQ.empty())
+        {
+            int row = vQ.front().first;
+            int col = vQ.front().second;
+            vQ.pop();
+
+            for(int j=0; j<4; j++)
+            {
+                int nrow = row +mAV[j];
+                int ncol = col +mAH[j];
+
+                if(0<=nrow && nrow <vkRow && 0<=ncol && ncol<vkCol)
+                {
+                    if(vkMap[nrow][ncol]!='#' && !vkMapCheck[nrow][ncol])
+                    {
+                        if(vkMap[nrow][ncol]=='v')
+                        {
+                            vCount++;
+                        }
+                        else if(vkMap[nrow][ncol]=='k')
+                        {
+                            kCount++;
+                        }
+                        vkMapCheck[nrow][ncol] = 1;
+                        vQ.push({nrow,ncol});
+                    }
+                }
+            }
+        }
+        if(kCount>vCount)
+        {
+            totK+=kCount;
+        }
+        else
+        {
+            totV+=vCount;
+        }
+   }
+    cout<<totK<<" "<<totV<<endl;
+    
+    return 0;
+}
