@@ -1,0 +1,103 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+int iceBerg[301][301] = {0,};
+int iceMelting[301][301] = {0,};
+int iceCheck[301][301] = {0,};
+int main()
+{
+    int iceRow = 5, iceCol = 7;
+    cin>>iceRow>>iceCol;
+    for(int i=0; i<iceRow; i++)
+        for(int j=0; j<iceCol; j++)
+            cin>>iceBerg[i][j];
+    bool allZero = true;
+    auto oneYear = [&](){
+    for(int i=0; i<iceRow; i++)
+        for(int j=0; j<iceCol; j++)
+        {
+            if(iceBerg[i][j])
+            {
+                allZero = false;
+                for(int ice=0; ice<4; ice++)
+                {
+                    int nrow = i+mAV[ice];
+                    int ncol = j +mAH[ice];
+
+                    if(0<=nrow && nrow < iceRow && 0<= ncol && ncol <iceCol)
+                    {
+                        if(!iceBerg[nrow][ncol])
+                            iceMelting[i][j]++;
+                    }
+                }  
+            }
+        }
+           for(int i=0; i<iceRow; i++)
+                for(int j=0; j<iceCol; j++)
+                {
+                    if(iceMelting[i][j])
+                    {
+                        iceBerg[i][j]-=iceMelting[i][j];
+                        if(iceBerg[i][j]<0) iceBerg[i][j]=0;
+                        iceMelting[i][j]-=iceMelting[i][j];
+                    }
+                }
+    };
+
+    int island=0;
+
+    auto islandCount = [&](){
+    for(int i=0; i<iceRow; i++)
+        for(int j=0; j<iceCol; j++)
+        {
+            if(iceBerg[i][j] && !iceCheck[i][j])
+            {
+                island++;
+                queue<pair<int,int>> search;
+                search.push({i,j});
+                iceCheck[i][j]=1;
+                while(!search.empty())
+                {
+                    int row = search.front().first;
+                    int col = search.front().second;
+                    search.pop();
+
+                    for(int ic=0; ic<4; ic++)
+                    {
+                        int nrow = row + mAV[ic];
+                        int ncol = col + mAH[ic];
+
+                        if(0<= nrow && nrow < iceRow && 0<= ncol && ncol <iceCol && iceBerg[nrow][ncol])
+                        {
+                            if(iceCheck[nrow][ncol])continue;
+                            iceCheck[nrow][ncol] =1;
+                            search.push({nrow,ncol});
+                        }
+                    }
+                }
+            }
+        }
+    return island;
+    };
+
+    int years =0;
+    while(1)
+    {
+        oneYear();
+        if(allZero){years=0; break;}
+        allZero = true;
+        years++;
+        if(2<=islandCount()) break;
+        else
+            island = 0;
+        memset(iceCheck,0,sizeof(iceCheck));
+
+    }
+    cout<< years<<endl;
+    return 0;
+}
