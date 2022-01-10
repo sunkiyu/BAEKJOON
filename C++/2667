@@ -1,0 +1,66 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+
+int houseMap[26][26] = {0,};
+int houseCheck[26][26]= {0,};
+
+int main()
+{
+    int houseSz = 0,areaCnt=0;
+    vector<pair<int,int>> housePos;
+    vector<int> areaSize;
+    cin>>houseSz;
+    
+    for(int i=0; i<houseSz; i++)
+    {
+        string s="";
+        cin>>s;
+        for(int j=0; j<s.length(); j++)
+        {
+            houseMap[i][j]=s[j]-'0';
+            if(houseMap[i][j])
+                housePos.push_back({i,j});
+        }
+    }
+    for(int i=0; i<housePos.size(); i++)
+    {
+        int r = housePos[i].first, c =housePos[i].second;
+        if(houseCheck[r][c])continue;
+        houseCheck[r][c] =1;
+        int tmpSz= 0;
+        queue<pair<int,int>> houseQ;
+        houseQ.push({r,c});
+        areaCnt++;
+        tmpSz++;
+        while (!houseQ.empty()) {
+            int row = houseQ.front().first;
+            int col = houseQ.front().second;
+            houseQ.pop();
+            for(int j=0; j<4; j++)
+            {
+                int nrow = row + mAV[j];
+                int ncol = col + mAH[j];
+
+                if(0<= nrow && nrow <houseSz && 0<= ncol && ncol <houseSz&& houseMap[nrow][ncol]==1)
+                {
+                    if(houseCheck[nrow][ncol])continue;
+                    houseCheck[nrow][ncol]=1;
+                    houseQ.push({nrow,ncol});
+                    tmpSz++;
+                }
+            }
+
+        }
+        areaSize.push_back(tmpSz);
+    }
+    cout<<areaCnt<<endl;
+    sort(areaSize.begin(),areaSize.end());
+    for(int i=0; i<areaSize.size(); i++)cout<<areaSize[i]<<endl;
+    return 0;
+}
