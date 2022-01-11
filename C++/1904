@@ -1,0 +1,20 @@
+#include<iostream>
+#include<vector>
+int tileDP[1000001] = {0,};
+using namespace std;
+
+int main()
+{
+    int n=0;
+    cin>>n;
+    tileDP[1] =1;
+    tileDP[2] =2;
+    
+    for(int i=3; i<=n; i++)
+    {
+        tileDP[i] = tileDP[i-1] +tileDP[i-2];
+        tileDP[i]%=15746;
+    }
+    cout<<tileDP[n]<<endl;
+    return 0;
+}
