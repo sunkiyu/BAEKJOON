@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+long long jmapDP[101][101] = {0,};
+
+
+int main()
+{
+    int mapsz =0;
+    cin>>mapsz;
+    vector<vector<int>> jumpMap(mapsz,vector<int>(mapsz,0));
+    for(int i=0; i<mapsz; i++)
+        for(int j=0; j<mapsz; j++)
+        {
+            cin>>jumpMap[i][j];
+        }
+    jmapDP[0][0] = 1;
+
+    for(int i=0; i<mapsz; i++)
+    {
+        for(int j=0; j<mapsz; j++)
+        {
+            if( i==(mapsz-1) && j == (mapsz-1)) continue;
+            int value = jumpMap[i][j];
+            jmapDP[i+value][j]=jmapDP[i+value][j]+jmapDP[i][j]*1;
+            jmapDP[i][j+value]=jmapDP[i][j+value]+jmapDP[i][j]*1;
+
+        }
+    }
+    cout<<jmapDP[mapsz-1][mapsz-1]<<endl;
+    return 0;
+}
