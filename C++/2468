@@ -1,0 +1,100 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+    int mAH[4] = {1,-1,0,0};
+    int mAV[4] = {0,0,1,-1};
+using namespace std;
+
+int main()
+{
+     int landsz =5;
+    int rainCheck[101][101] = {0,};
+    cin>>landsz;
+    int maxHeight =0;
+    vector<vector<int>> rainMap(landsz,vector<int>(landsz,0));
+    for(int i=0; i<landsz; i++)
+        for(int j=0; j<landsz; j++)
+        {
+            cin>>rainMap[i][j];
+            maxHeight = max(maxHeight,rainMap[i][j]);
+        }
+    int maxCounter =0;
+    for(int i=0; i<=maxHeight; i++)
+    {
+        int safePoint =0;
+        auto process = [&,rainCheck]()mutable{
+             int sCheck =false;
+        for(int j=0; j<landsz; j++)
+        {
+            for(int k=0; k<landsz; k++)
+            {
+                if(rainMap[j][k]<=i)
+                    rainCheck[j][k] =1;
+                else
+                    sCheck = true;
+            }
+
+            if(!sCheck)
+                continue;
+        }
+
+
+        queue<pair<int,int>> rQ;
+
+        auto search = [&](){
+        while(!rQ.empty())
+        {
+            int row = rQ.front().first;
+            int col = rQ.front().second;
+            rQ.pop();
+
+            for(int i=0; i<4; i++)
+            {
+                int nrow = row + mAV[i];
+                int ncol = col +mAH[i];
+
+                if(0<=nrow && nrow <landsz && 0<= ncol && ncol <landsz)
+                {
+                    if(!rainCheck[nrow][ncol])
+                    {
+                        rainCheck[nrow][ncol] =1;
+                        rQ.push({nrow,ncol});
+                    }
+                }
+            }
+        }
+        };
+
+        while(1)
+        {
+             bool clear = true;
+            for(int j=0; j<landsz; j++){
+                for(int k=0; k<landsz; k++)
+                {
+                    if(!rainCheck[j][k])
+                    {
+                        rainCheck[j][k]=1;
+                        rQ.push({j,k});
+                        clear = false;
+                        break;
+                    }
+                }
+                if(!clear)
+                    break;
+            }
+
+            if(!clear)
+            {
+                search();
+                safePoint++;
+            }
+            else
+                break;
+        }
+        maxCounter = max(maxCounter,safePoint);
+        };
+        process();
+    }
+    cout<<maxCounter<<endl;
+    return 0;
+}
