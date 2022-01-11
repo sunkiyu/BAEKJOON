@@ -1,0 +1,66 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cmath>
+#include <functional>
+#include <algorithm>
+
+using namespace std;
+vector<pair<int,double>> starInfo[101];
+vector<pair<double,double>> starPos;
+int starVisit[101] = {0,};
+int main()
+{
+    int starCnt = 3;
+    cin>>starCnt;
+    
+    for(int i=0; i<starCnt; i++)
+    {
+        double a,b=0;
+        cin>>a>>b;
+        starPos.push_back({a,b});
+    }
+
+   auto calcDist = [&](double sRow, double sCol, double eRow, double eCol)->double
+   {
+       return sqrt(pow(eRow-sRow,2)+pow(eCol-sCol,2));
+   };
+
+   for(int i=0; i<starCnt; i++)
+   {
+       for(int j= i+1; j<starCnt; j++)
+       {
+           if(i==j)continue;
+           double dist = calcDist(starPos[i].first,starPos[i].second,starPos[j].first,starPos[j].second);
+           starInfo[i].push_back({j,dist});
+           starInfo[j].push_back({i,dist});
+       }
+   };
+
+   priority_queue<pair<double,int>> starQ;
+   for(int i=0; i<starInfo[0].size(); i++)
+       starQ.push({-starInfo[0][i].second,starInfo[0][i].first});
+
+   starVisit[0]=1;
+   double minStarCost = 0;
+   while(!starQ.empty())
+   {
+        double starDist =starQ.top().first;
+        int next = starQ.top().second;
+        starQ.pop();
+
+        if(starVisit[next])continue;
+        minStarCost += -starDist;
+        starVisit[next]=1;
+
+        for(int i=0; i<starInfo[next].size(); i++)
+        {
+            int nnext = starInfo[next][i].first;
+            double dist = -calcDist(starPos[next].first,starPos[next].second,starPos[nnext].first,starPos[nnext].second);
+            starQ.push({dist,nnext});
+        }
+   }
+    
+    cout<<minStarCost<<endl;
+    return 0;
+}
