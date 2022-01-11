@@ -1,0 +1,31 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+    string arg="",parse="";
+     getline(cin, arg);
+    getline(cin, parse);
+    int offset = 0,parseFound=0;
+    
+     if (arg.length() < parse.length())
+    {
+        cout << 0 << endl;
+        return 0;
+    }
+    
+    while(1)
+    {
+        int idx =arg.find(parse.c_str(),offset,parse.length());
+        if(idx>=0)
+        {
+            offset=(idx+parse.length());
+            parseFound++;
+        }
+        else
+            break;
+    }
+    cout<<parseFound<<endl;
+    return 0;
+}
