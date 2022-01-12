@@ -1,0 +1,146 @@
+#include <iostream>
+#include <cstring>
+#include <queue>
+#include <functional>
+ 
+using namespace std;
+ 
+int n, m, k, answer;
+int jswMap[21][21] = {0,};
+bool jswconVisit[21][21] = {0,};
+ 
+int jsw[7] = { 0, 1, 2, 3, 4, 5, 6 };
+int jswV[] = { 0, 0, 1, -1 };
+int jswH[] = { 1, -1, 0, 0 };
+ 
+int main() {
+    
+    cin >> n >> m >> k;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> jswMap[i][j];
+        }
+    }
+    
+    auto changeDir = [&](int d, int ret) {
+    if (ret > 0) {
+        switch (d) {
+        case 0:
+            return 2;
+        case 1:
+            return 3;
+        case 2:
+            return 1;
+        case 3:
+            return 0;
+        }
+    }
+    else if (ret < 0) {
+        switch (d) {
+        case 0:
+            return 3;
+        case 1:
+            return 2;
+        case 2:
+            return 0;
+        case 3:
+            return 1;
+        }
+    }
+    return d;
+};
+
+ 
+auto updateDiceState=[&](int d) {
+    int d1 = jsw[1];
+    int d2 = jsw[2];
+    int d3 = jsw[3];
+    int d4 = jsw[4];
+    int d5 = jsw[5];
+    int d6 = jsw[6];
+ 
+    switch (d) {
+    case 0 :
+        jsw[1] = d4;
+        jsw[4] = d6;
+        jsw[6] = d3;
+        jsw[3] = d1;
+        break;
+    case 1:
+        jsw[1] = d3;
+        jsw[3] = d6;
+        jsw[6] = d4;
+        jsw[4] = d1;
+        break;
+    case 2:
+        jsw[1] = d2;
+        jsw[2] = d6;
+        jsw[6] = d5;
+        jsw[5] = d1;
+        break;
+    case 3:
+        jsw[1] = d5;
+        jsw[5] = d6;
+        jsw[6] = d2;
+        jsw[2] = d1;
+        break;
+    }
+};
+    int row = 0, col=0, d=0,jswAns=0;
+    
+    for (int i = 0; i < k; i++) {
+        int nrow = row + jswV[d];
+        int ncol = col + jswH[d];
+        if (nrow < 0 || ncol < 0 || nrow >= n || ncol >= m) {
+                switch (d) {
+                    case 0:
+                    d= 1;
+                    break;
+                    case 1:
+                    d= 0;
+                    break;
+                    case 2:
+                    d= 3;
+                    break;
+                    case 3:
+                    d= 2;
+                    break;
+                }
+            nrow = row + jswV[d];
+            ncol = col + jswH[d];
+        }
+        int score= 1;
+        queue<pair<int,int>> jswQ;
+        jswQ.push({nrow,ncol});
+        memset(jswconVisit,0,sizeof(jswconVisit));
+        jswconVisit[nrow][ncol]= 1;
+        while(!jswQ.empty())
+        {
+            int jrow = jswQ.front().first;
+            int jcol = jswQ.front().second;
+            jswQ.pop();
+
+            for(int j=0; j<4; j++)
+            {
+                int jnrow = jrow + jswV[j];
+                int jncol= jcol + jswH[j];
+
+                if(0<=jnrow && jnrow<n && 0<=jncol && jncol <m && jswMap[jnrow][jncol] ==jswMap[nrow][ncol])
+                {
+                    if(jswconVisit[jnrow][jncol])continue;
+                    jswconVisit[jnrow][jncol] =1;
+                    jswQ.push({jnrow,jncol});
+                    score++;
+                }
+            }
+        }           
+        jswAns+= (jswMap[nrow][ncol] * score);
+        updateDiceState(d);
+        d = changeDir(d, jsw[6] - jswMap[nrow][ncol]);
+        row = nrow;
+        col = ncol;
+    }
+    cout << jswAns << endl;
+    
+    return 0;
+}
