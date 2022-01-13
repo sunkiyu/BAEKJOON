@@ -1,0 +1,67 @@
+#include <iostream>
+#include <queue>
+#include <functional>
+#include <string.h>
+
+using namespace std;
+int dbVisit[1001] = {0,};
+priority_queue<int> dbInfo[1001];
+priority_queue<int> dbInfo2[1001];
+int main()
+{
+       int dbCnt =4, dbLine =5, dbstart =1;
+    cin>>dbCnt>>dbLine>>dbstart;
+    for(int i=0; i<dbLine; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        dbInfo[a].push(-b);
+        dbInfo[b].push(-a);
+        dbInfo2[a].push(-b);
+        dbInfo2[b].push(-a);
+    }
+
+   function<void(int,int)> dbDFS = [&](int start, int cnt)
+   {
+       int sz = dbInfo[start].size();
+       for(int i=0; i<sz; i++)
+       {
+           int next = dbInfo[start].top();
+           dbInfo[start].pop();
+           if(dbVisit[-next])continue;
+           dbVisit[-next] =1;
+           cout<<-next<<' ';
+           dbDFS(-next,cnt);
+       }
+   };
+
+   cout<<dbstart<<' ';
+   dbVisit[dbstart]= true;
+   dbDFS(dbstart,0);
+   cout<<endl;
+   memset(dbVisit,0,sizeof(dbVisit));
+
+   queue<int> dbBFSQ;
+   dbBFSQ.push(dbstart);
+
+   cout<<dbstart<<' ';
+   dbVisit[dbstart]= true;
+   while(!dbBFSQ.empty())
+   {
+       int cur = dbBFSQ.front();
+       dbBFSQ.pop();
+        int sz = dbInfo2[cur].size();
+       for(int i=0; i<sz; i++)
+       {
+           int next = dbInfo2[cur].top();
+           dbInfo2[cur].pop();
+           if(dbVisit[-next])continue;
+           dbVisit[-next]=1;
+           cout<< -next<< ' ';
+           dbBFSQ.push(-next);
+       }
+   }
+   cout<<endl;
+
+    return 0;
+}
