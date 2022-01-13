@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+
+using namespace std;
+int ckFriends[901][901] = {0,};
+int cntFriends[901] = {0,};
+int okFriends[901] = {0,};
+
+int main()
+{
+    int k,n,f=0;
+    cin>>k>>n>>f;
+    
+    for (int i = 0; i < f; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        ckFriends[a][b]=1;
+        ckFriends[b][a]=1;
+        cntFriends[a]++;
+        cntFriends[b]++;
+    }
+
+    vector<int> friendAns;
+    bool outflag =false;
+
+     function<void(int,int)> friendDFS = [&](int idx, int cnt)
+    {
+        if(outflag) return;
+        if(cnt ==k){
+            for(int i=1; i<=n; i++){
+                if(okFriends[i])
+                    cout <<i<<endl;
+            }
+         outflag = true;
+         return;
+        }
+
+        for(int i=idx+1; i<=n; i++)
+        {
+            if(!ckFriends[idx][i])continue;
+            bool noProblem = true;
+            for(int j=1; j<=n; j++){
+                if(okFriends[j])
+                    if(!ckFriends[i][j]){noProblem=false; break;}
+            }
+            if(!noProblem) continue;
+            okFriends[i]= 1;
+            friendDFS(i,cnt+1);
+            okFriends[i]=0;
+        }
+    };
+
+    for(int i=1; i<=n; i++)
+    {
+        if(cntFriends[i]<k-1) continue;
+        okFriends[i] = 1;
+        friendDFS(i,1);
+        if(outflag)break;
+        okFriends[i]=0;
+    }
+
+    if(!outflag) cout<< -1 <<endl;
+    return 0;
+}
