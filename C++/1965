@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+int boxDP[1001] = {0,};
+vector<int> boxer;
+
+int main()
+{
+     int boxes=10;
+    cin>>boxes;
+    boxer.resize(boxes,0);
+    
+    for(int i=0; i<boxes; i++)
+        cin>>boxer[i];
+    
+    boxDP[0] = 1;
+    boxDP[1] = (boxer[1]>boxer[0])?2:1;
+
+    for(int i=2; i<boxes; i++)
+    {
+        boxDP[i] = 1;
+        for(int j=i-1; j>=0; j--)
+        {
+            if(boxer[j]<boxer[i])
+                boxDP[i] = max(boxDP[i],boxDP[j]+1);
+        }
+    }
+    int answer = -1;
+    for(int i=0; i<boxes; i++) answer=  max(answer,boxDP[i]);
+    cout<<answer<<endl;
+    return 0;
+}
