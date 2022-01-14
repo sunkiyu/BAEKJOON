@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+
+using namespace std;
+int tetroMap[501][501] ={0,};
+int tetroVisit[501][501]={0,};
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+int main()
+{
+     int tetroRow = 5, tetroCol =5;
+    cin>>tetroRow>>tetroCol;
+    
+    for(int i=0; i<tetroRow; i++)
+    {
+        for(int j=0; j<tetroCol; j++)
+        {
+            cin>>tetroMap[i][j];
+        }
+    }
+    int tetMax= 0;
+ 
+   for(int i=0; i<tetroRow; i++)
+   {
+       for(int j=0; j<tetroCol; j++)
+       {
+           function<void(int,int,int,int)> tetroDFS = [&](int row, int col,int sum,int cnt)
+           {
+               if(cnt==4)
+               {       
+                   tetMax = max(tetMax,sum);  
+                   return;
+               }
+              
+               for(int i=0; i<4; i++)
+               {
+                   int nrow = row+mAV[i];
+                   int ncol = col +mAH[i];
+
+                   if(0<=nrow && nrow<tetroRow && 0<=ncol && ncol <tetroCol)
+                   {
+                       if(tetroVisit[nrow][ncol])continue;
+                       sum +=tetroMap[nrow][ncol];
+                       tetroVisit[nrow][ncol]=1;
+                       tetroDFS(nrow,ncol,sum,cnt+1);
+                       sum-=tetroMap[nrow][ncol];
+                       tetroVisit[nrow][ncol]=0;
+                   }
+               }
+           };
+           tetroVisit[i][j]=1;
+           tetroDFS(i,j,tetroMap[i][j],1);
+           tetroVisit[i][j]=0;
+           int x= i, y=j;
+           if (i - 1 >= 0 && j + 2 < tetroCol) 
+           {
+               int Tmp_Sum = 0;
+               Tmp_Sum = tetroMap[x][y] + tetroMap[x][y + 1] + tetroMap[x][y + 2] + tetroMap[x - 1][y + 1];
+               if (Tmp_Sum > tetMax) tetMax = Tmp_Sum;
+           }
+            
+          if (j + 2 < tetroCol && i + 1 < tetroRow) 
+           {
+               int Tmp_Sum = 0;
+               Tmp_Sum = tetroMap[x][y] + tetroMap[x][y + 1] + tetroMap[x][y + 2] + tetroMap[x + 1][y + 1];
+               if (Tmp_Sum > tetMax) tetMax = Tmp_Sum;
+           }
+            
+           if (i + 2 < tetroRow && j + 1 < tetroCol) 
+           {
+               int Tmp_Sum = 0;
+               Tmp_Sum = tetroMap[x][y] + tetroMap[x + 1][y] + tetroMap[x + 2][y] + tetroMap[x + 1][y + 1];
+               if (Tmp_Sum > tetMax) tetMax = Tmp_Sum;
+           }
+            
+           if (i + 1 < tetroRow && i - 1 >= 0 && j + 1 < tetroCol)
+           {
+               int Tmp_Sum = 0;
+               Tmp_Sum = tetroMap[x][y] + tetroMap[x - 1][y + 1] + tetroMap[x][y + 1] + tetroMap[x + 1][y + 1];
+               if (Tmp_Sum > tetMax) tetMax = Tmp_Sum;
+           }
+       }
+   }
+    cout<< tetMax<<endl;
+    return 0;
+}
