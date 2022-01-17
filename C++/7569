@@ -1,0 +1,94 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+int tmtMap[101][101][101] ={0,};
+int tmtVisit[101][101][101] = {0,};
+int mAH[6] = {1,-1,0,0,0,0};
+int mAV[6] = {0,0,1,-1,0,0};
+int mAHE[6] = {0,0,0,0,1,-1};
+
+bool AllFried = true;
+
+using namespace std;
+int main()
+{
+    struct tmtPos
+   {
+       tmtPos(int r,int c,int h)
+       {
+           row = r;
+           col = c;
+           height = h;
+       };
+       int row,col,height;
+   };
+   int tmtDays =0;
+   queue<tmtPos> friedtmt;
+   int tmtRow = 3, tmtCol=5, tmtHeight =1;
+    cin>>tmtCol>>tmtRow>>tmtHeight;
+    
+    for(int k=0; k<tmtHeight; k++)
+        for(int i=0; i<tmtRow; i++)
+            for(int j=0; j<tmtCol; j++)
+            {
+                cin>>tmtMap[k][i][j];
+                if(tmtMap[k][i][j]==1)
+                {
+                    friedtmt.push(tmtPos(i,j,k));       
+                }
+                if(tmtMap[k][i][j]==0)AllFried = false;
+            }
+
+   auto friedCheck = [&]()
+   {
+       bool isFried=  true;
+       for(int k=0; k<tmtHeight; k++)
+           for(int i=0; i<tmtRow; i++)
+               for(int j=0; j<tmtCol; j++)
+               {
+                   if(tmtMap[k][i][j]==0)return false;
+               }
+       return true;
+   };
+
+    if(AllFried)
+    {
+        cout<<0<<endl;
+        return 0;
+    }
+    
+   while (!friedtmt.empty()) {
+       int initTmt = friedtmt.size();
+       for(int i=0; i<initTmt; i++)
+       {
+           int row = friedtmt.front().row;
+           int col = friedtmt.front().col;
+           int height = friedtmt.front().height;
+           friedtmt.pop();
+
+           for(int j=0; j<6; j++)
+           {
+               int nrow  = row +mAV[j];
+               int ncol =  col +mAH[j];
+               int nheight = height +mAHE[j];
+
+               if(0<=nrow && nrow <tmtRow && 0<=ncol && ncol <tmtCol &&
+                  0<=nheight && nheight < tmtHeight &&tmtMap[nheight][nrow][ncol]==0)
+               {
+                   if(tmtVisit[nheight][nrow][ncol])continue;
+                   tmtVisit[nheight][nrow][ncol]=1;
+                   tmtMap[nheight][nrow][ncol]=1;
+                   friedtmt.push(tmtPos(nrow,ncol,nheight));
+               }
+           }
+       }
+       tmtDays++;
+   }
+    
+    if(friedCheck()==false)
+        cout<<-1<<endl;
+    else
+        cout<<tmtDays-1<<endl;
+
+    return 0;
+}
