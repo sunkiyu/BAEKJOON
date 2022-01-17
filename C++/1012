@@ -1,0 +1,65 @@
+#include <iostream>
+#include <queue>
+#include <string.h>
+
+using namespace std;
+int baeChoo[51][51] = {0,};
+int main()
+{
+    int testCase = 0;
+    int vRow =8;
+    int vCol =10;
+    int vn = 17;
+    cin>>testCase;
+    
+    int bV[4] = {1,-1,0,0};
+    int bH[4] = {0,0,1,-1};
+    
+    for(int tc=0; tc<testCase; tc++)
+    {
+        cin>>vRow>>vCol>>vn;
+        for(int v=0; v<vn; v++)
+        {
+            int r,c=0;
+            cin>>r>>c;
+            baeChoo[r][c] =1;
+        }
+    int bugs = 0;
+    for(int i=0; i<vRow; i++)
+    {
+        for(int j=0; j<vCol; j++)
+        {
+            if(baeChoo[i][j]==1)
+            {
+                queue<pair<int,int>> bQ;
+                bQ.push({i,j});
+
+                while(!bQ.empty())
+                {
+                    int row = bQ.front().first;
+                    int col = bQ.front().second;
+                    bQ.pop();
+                    for(int k=0; k<4; k++)
+                    {
+                        int nRow = row+bV[k];
+                        int nCol = col+bH[k];
+                        if(0<=nRow && 0<= nCol && nRow<vRow && nCol <vCol)
+                        {
+                            if(baeChoo[nRow][nCol]==1)
+                            {
+                                baeChoo[nRow][nCol]=0;
+                                bQ.push({nRow,nCol});
+                            }
+                        }
+                    }
+                }
+                bugs++;
+            }
+        }
+    }
+        cout<<bugs<<endl;
+        memset(baeChoo,0,sizeof(baeChoo));
+    }
+
+    return 0;
+}
