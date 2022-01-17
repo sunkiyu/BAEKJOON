@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+int fiboVal[41]={0,};
+int fiboDP0[41]={0,};
+int fiboDP1[41]={0,};
+int main()
+{
+    int tryCnt =3;
+    cin>>tryCnt;
+    for(int i=0; i<tryCnt; i++)cin>>fiboVal[i];
+    
+    fiboDP0[0]=1;
+    fiboDP1[0]=0;
+
+    fiboDP0[1]=0;
+    fiboDP1[1]=1; 
+    
+    for(int j=0; j<tryCnt; j++)
+    {
+        for(int i=2; i<=fiboVal[j]; i++)
+        {
+            fiboDP0[i] =fiboDP0[i-1]+fiboDP0[i-2];
+            fiboDP1[i] =fiboDP1[i-1]+fiboDP1[i-2];
+        }
+        cout<<fiboDP0[fiboVal[j]]<<" "<<fiboDP1[fiboVal[j]]<<endl;
+    }
+    return 0;
+}
