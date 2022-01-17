@@ -1,0 +1,57 @@
+#include <iostream>
+#include <functional>
+
+using namespace std;
+
+int main()
+{
+   int rectN = 10;
+
+    int rAsn=512;
+    int cAsn=512;
+    
+    cin>>rectN>>rAsn>>cAsn;
+    int initSz = 1;
+
+    for(int i=0; i<rectN; i++)
+        initSz*=2;
+
+    int visitCnt= 0;
+
+    function<void(int,int,int)> rectDFS = [&](int initRow, int initCol,int initSz)
+    {
+        if(initSz==2)
+        {
+            for(int i=initRow; i<initRow+initSz; i++)
+                for(int j=initCol; j<initCol+initSz; j++)
+                {
+                       if(i==rAsn && j==cAsn)
+                       {
+                           cout<<visitCnt<<endl;
+                           return;
+                       }
+                       visitCnt++;
+                }
+            return;
+        }
+        if(initRow<=rAsn && rAsn <initRow+initSz/2 && initCol<=cAsn && cAsn <initCol+initSz/2)
+            rectDFS(initRow,initCol,initSz/2);
+        else
+            visitCnt+= initSz/2*initSz/2;
+        if(initRow<=rAsn && rAsn <initRow+initSz/2 && initCol+initSz/2<=cAsn && cAsn <initCol+initSz/2+initSz/2)
+            rectDFS(initRow,initCol+initSz/2,initSz/2);
+        else
+            visitCnt+= initSz/2*initSz/2;
+        if(initRow+initSz/2<=rAsn && rAsn <initRow+initSz/2+initSz/2 && initCol<=cAsn && cAsn <initCol+initSz/2)
+            rectDFS(initRow+initSz/2,initCol,initSz/2);
+        else
+            visitCnt+= initSz/2*initSz/2;
+        if(initRow+initSz/2<=rAsn && rAsn <initRow+initSz/2+initSz/2 && initCol+initSz/2<=cAsn && cAsn <initCol+initSz/2+initSz/2)
+            rectDFS(initRow+initSz/2,initCol+initSz/2,initSz/2);
+        else
+            visitCnt+= initSz/2*initSz/2;
+    };
+
+    rectDFS(0,0,initSz);
+    return 0;
+}
