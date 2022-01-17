@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include<cstring>
+#include <functional>
+using namespace std;
+int hSmap[51][51] ={0,};
+int hSmapCycle[51][51] ={0,};
+int hSmapDP[51][51] ={0,};
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+int main()
+{
+    int hrow =4, hcol =4;
+    cin >> hrow >> hcol;
+    for (int i = 0; i < hrow; i++)
+    {
+        string S; cin >> S;
+        for (int j = 0; j < S.length(); j++)
+        {
+            if (S[j] == 'H') hSmap[i][j] = 0;
+            else hSmap[i][j] = S[j] - '0';
+        }
+    }
+
+    function<int(int,int,int)> hSmapDFS = [&](int row,int col,int mv)
+    {
+        if(!(0<=row && row <hrow && 0<=col && col<hcol))return 0;
+        if(hSmap[row][col]==0)return 0;
+        if (hSmapCycle[row][col] == true)
+        {
+            cout << -1 << endl;
+            exit(0);
+        }
+        if (hSmapDP[row][col] != -1) return hSmapDP[row][col];
+        
+        hSmapCycle[row][col] = true;
+           hSmapDP[row][col] = 0;
+           for (int i = 0; i < 4; i++)
+           {
+               int nrow = row +  mAV[i]*mv;
+               int ncol = col +  mAH[i]*mv;
+               hSmapDP[row][col] = max(hSmapDP[row][col], hSmapDFS(nrow,ncol,hSmap[nrow][ncol]) + 1);
+           }
+           hSmapCycle[row][col] = false;
+           return hSmapDP[row][col];
+    };
+
+    memset(hSmapDP, -1, sizeof(hSmapDP));
+    cout <<  hSmapDFS(0, 0,hSmap[0][0]) << endl;
+    
+    return 0;
+}
