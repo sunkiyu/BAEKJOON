@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+#define endl "\n"
+int pelindromDBsz;
+int pelindromDB[2011];
+bool pelindromDP[2011][2011];
+vector<pair<int, int>> pQ;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    {
+    cin>>pelindromDBsz;
+    for(int i=1; i<=pelindromDBsz; i++)
+    {
+        cin>>pelindromDB[i];
+    }
+
+   int pelindromQ =4;
+    cin>>pelindromQ;
+    
+    for(int i=0; i<pelindromQ; i++)
+    {
+        int a,b; cin>>a>>b;
+        pQ.push_back({a,b});
+    }
+    }
+    {
+
+   for (int i = 1; i <= pelindromDBsz; i++) 
+   {
+       pelindromDP[i][i] = true;
+   }
+  
+    for (int i = 1; i < pelindromDBsz; i++)
+   {
+       if (pelindromDB[i] == pelindromDB[i + 1]) pelindromDP[i][i + 1] = true;
+   }
+
+    
+   for(int diff = 3; diff<=pelindromDBsz; diff++)
+   {
+       for(int s=1; s<=pelindromDBsz-diff+1; s++)
+       {
+           int start = s, end = diff+s-1;
+           if(pelindromDB[start]==pelindromDB[end] && pelindromDP[start+1][end-1]==true){
+               pelindromDP[start][end] = true;
+           }
+       }
+   }
+    
+   for(int i=0; i<pQ.size(); i++)
+   {
+        cout<<pelindromDP[pQ[i].first][pQ[i].second]<<endl;
+   }
+    }
+    
+    return 0;
+}
