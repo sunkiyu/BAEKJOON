@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstring>
+#include <queue>
+#include <vector>
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+char bomoolMap[51][51]={0,};
+int bomoolVisit[51][51]={0,};
+using namespace std;
+
+int main()
+{
+   int boRow =5,boCol =7;
+    cin>>boRow>>boCol;
+    for(int i=0; i<boRow; i++)
+        for(int j=0; j<boCol; j++)
+        {
+            cin>>bomoolMap[i][j];
+        }
+
+   int island =0;
+   int mxbo=0;
+   vector<pair<int,int>> islandPos;
+   for(int i= 0; i<boRow; i++)
+   {
+       for(int j=0; j<boCol; j++)
+       {
+           int row = i,col =j;
+           if(!bomoolVisit[row][col] && bomoolMap[row][col]== 'L')
+           {
+               bomoolVisit[row][col]= 1;
+               queue<pair<pair<int,int>,int>> boQ;
+               boQ.push({{row,col},0});
+
+               while(!boQ.empty())
+               {
+                   int r= boQ.front().first.first;
+                   int c = boQ.front().first.second;
+                   int cnt = boQ.front().second;
+                   boQ.pop();
+
+                   for(int k=0; k<4; k++)
+                   {
+                       int nrow = r+mAV[k];
+                       int ncol = c+mAH[k];
+
+                       if(0<=nrow && nrow <boRow && 0<=ncol && ncol <boCol && bomoolMap[nrow][ncol]== 'L')
+                       {
+                           if(bomoolVisit[nrow][ncol])continue;
+                           bomoolVisit[nrow][ncol]=1;
+                           mxbo= max(mxbo,cnt+1);
+                           boQ.push({{nrow,ncol},cnt+1});
+                       }
+                   }
+               }
+           }
+           memset(bomoolVisit,0,sizeof(bomoolVisit));
+       }
+   }
+    
+    cout<<mxbo<<endl;
+    return 0;
+}
