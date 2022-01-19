@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+int longestIncrese2[1000000] = {0,};
+int lInc2DP[1000000] = {0,};
+vector<int> tmpVec;
+
+int main()
+{
+   int lgstInc =6;
+    cin>>lgstInc;
+    
+    for(int i=0; i<lgstInc; i++)cin>>longestIncrese2[i];
+      for(int i=0; i<lgstInc; i++)
+      {
+          int a = longestIncrese2[i];
+          if (tmpVec.size() == 0)
+              tmpVec.push_back(a);
+          else if (a < tmpVec[0])
+              tmpVec[0] = a;
+          else if (a > tmpVec.back())
+              tmpVec.push_back(a);
+          else
+          {
+              auto it = lower_bound(tmpVec.begin(), tmpVec.end(), a);
+              *it = a;
+          }
+      }
+       cout<<tmpVec.size()<<endl;
+    return 0;
+}
