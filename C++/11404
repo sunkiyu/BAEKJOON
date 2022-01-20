@@ -1,0 +1,79 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#define endl "\n"
+using namespace std;
+
+int floyedCost[101][101] = {0,};
+int floyedMinDP[101][101] = {0,};
+
+
+//queue를 사용한 플로이드와샬
+int main()
+{
+     int floyedVil = 5, floyedBus =14;
+    cin>>floyedVil;
+    cin>>floyedBus;
+    
+    [&]()
+    {
+        for(int i=1; i<=100; i++)
+            for(int j=1; j<=100; j++){
+                floyedMinDP[i][j]= 2e9;
+                 floyedCost[i][j]=2e9;   
+            }
+    }();
+    
+    for(int i=0; i<floyedBus; i++)
+    {
+        int a,b,c=0;
+        cin>>a>>b>>c;
+        floyedCost[a][b]= min(floyedCost[a][b],c);
+    }
+    
+        for(int i=1; i<=floyedVil; i++)
+    {
+        for(int j=1; j<=floyedVil; j++)
+        {
+            if(i==j) {cout<<0<<' '; continue;}
+            int start = i,end = j;
+            queue<pair<int,int>> fQ;
+            fQ.push({start,0});
+            bool reach = false;
+            int curMin = 2e9;
+            while(!fQ.empty())
+            {
+                int cur = fQ.front().first;
+                int curCost = fQ.front().second;
+                fQ.pop();
+
+                if(cur==end)
+                {
+                    reach = true;
+                    curMin = min(curMin,curCost);
+                    continue;
+                }
+
+                for(int k=1; k<=floyedVil; k++)
+                {
+                    if(floyedCost[cur][k]==2e9) continue;
+                   int next = k;
+                   int cost = floyedCost[cur][next];
+                   if(floyedMinDP[start][next]>=curCost+cost){
+                   floyedMinDP[start][next] = curCost+cost;
+                   fQ.push({next,curCost+cost});
+                   }
+                }
+            }
+            if(reach){
+                cout<<curMin<<' ';
+                floyedMinDP[start][end] = curMin;
+            }
+            else
+                cout<<0<<' ';
+        }
+        cout<<endl;
+    }
+    
+    return 0;
+}
