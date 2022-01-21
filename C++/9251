@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cstring>
+int lcsDP[1001][1001] ={0,};
+using namespace std;
+
+int main()
+{
+  char as[1001] = "ACAYKP",bs[1001] = "CAPCAK";
+  cin>>as;cin>>bs;
+
+  for (int i = 1; i <= strlen(as); i++)
+  {
+      for (int j = 1; j <= strlen(bs); j++)
+      {
+          if (as[i - 1] == bs[j - 1])
+              lcsDP[i][j] = lcsDP[i - 1][j - 1] + 1;
+          else
+              lcsDP[i][j] = max(lcsDP[i - 1][j], lcsDP[i][j - 1]);
+      }
+  }
+  cout << lcsDP[strlen(as)][strlen(bs)] << endl;
+    
+    return 0;
+}
