@@ -1,0 +1,7 @@
+import Foundation
+
+let nums = readLine()!
+let numArr = nums.split(separator: " ")
+let first = Int(numArr[0])!
+let second = Int(numArr[1])!
+print(first-second)
