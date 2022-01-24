@@ -1,0 +1,130 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <cstring>
+int bSharkMap[21][21] = {0,};
+int sharkVisit[21][21] = {0,};
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+using namespace std;
+
+int main()
+{
+   int sharkMapSz= 6;
+    cin>>sharkMapSz;
+   pair<int,int> sharkSz = {2,0};
+
+   vector<pair<int,pair<int,int>>> fishDist;
+
+   auto eatable = [&]()
+   {
+       bool ret = fishDist.size();
+       if(fishDist.size())
+       {
+           sort(fishDist.begin(),fishDist.end(),[&](auto a, auto b){
+               if(a.first > b.first)
+                   return false;
+               else
+               {
+                  if(a.first==b.first)
+                  {
+                      if(a.second.first> b.second.first)
+                          return false;
+                      else
+                      {
+                          if(a.second.first == b.second.first)
+                          {
+                              if(a.second.second > b.second.second)
+                                  return false;
+                              else
+                              {
+                                  if(a.second.second == b.second.second)
+                                  {
+                                      return false;
+                                  }
+                                  else
+                                      return true;
+                              }
+                          }
+                          else
+                              return true;
+                      }
+                  }
+                  else
+                      return true;
+               }
+           });
+       }
+       return ret;
+   };
+
+   pair<pair<int,int>,int> sharkPos;
+   for(int i=0; i<sharkMapSz; i++)
+       for(int j=0; j<sharkMapSz; j++)
+       {
+           cin>> bSharkMap[i][j];
+           if(bSharkMap[i][j]==9){
+               sharkPos = {{i,j},0};
+           };
+       }
+    int sharkAsn =0;
+   while(1)
+   {
+       fishDist.clear();
+       memset(sharkVisit,0,sizeof(sharkVisit));
+       queue<pair<pair<int,int>,int>> sharkQ;
+       sharkQ.push(sharkPos);
+       sharkVisit[sharkPos.first.first][sharkPos.first.second]=1;
+
+       while(!sharkQ.empty())
+       {
+                int row = sharkQ.front().first.first;
+                int col = sharkQ.front().first.second;
+                int time = sharkQ.front().second;
+                sharkQ.pop();
+
+                for(int i=0; i<4; i++)
+                {
+                    int nrow = row + mAV[i];
+                    int ncol = col + mAH[i];
+
+                    if(0<= nrow  && nrow < sharkMapSz && 0<= ncol && ncol <sharkMapSz && bSharkMap[nrow][ncol]<=sharkSz.first)
+                    {
+                        if(sharkVisit[nrow][ncol])continue;
+                        sharkVisit[nrow][ncol] =1;
+                        if(bSharkMap[nrow][ncol]!=0 && bSharkMap[nrow][ncol]<sharkSz.first)
+                        {
+                            fishDist.push_back({time+1,{nrow,ncol}});
+                        }
+                        sharkQ.push({{nrow,ncol},time+1});
+                    }
+                }
+        }
+
+       if(fishDist.size())
+       {
+           eatable();
+           bSharkMap[sharkPos.first.first][sharkPos.first.second]=0;
+           sharkPos.first.first = fishDist[0].second.first;
+           sharkPos.first.second = fishDist[0].second.second;
+           sharkAsn = sharkPos.second = fishDist[0].first;
+           bSharkMap[sharkPos.first.first][sharkPos.first.second]=9;
+           sharkSz.second++;
+           if(sharkSz.first<=sharkSz.second)
+           {
+               sharkSz.first++;
+               sharkSz.second =0;
+           }
+       }
+       else
+       {
+           cout<<sharkAsn<<endl;
+           return 0;
+       }
+   }
+
+    return 0;
+}
