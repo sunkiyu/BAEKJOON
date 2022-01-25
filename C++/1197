@@ -1,0 +1,49 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+vector<pair<int,int>> vLineInfo[10001];
+int vVisit[10001] = {0,};
+
+int main()
+{
+    int vertext= 0, lines =0,vans=0;
+    cin>>vertext>>lines;
+    
+    for(int i=1; i<=lines; i++)
+    {
+        int a,b,c=0;
+        cin>>a>>b>>c;
+        vLineInfo[a].push_back({b,c});
+        vLineInfo[b].push_back({a,c});
+    }
+    
+    priority_queue<pair<int, int>> PQ;
+    for (int i = 0; i < vLineInfo[1].size(); i++)
+    {
+        PQ.push(make_pair(-vLineInfo[1][i].second, vLineInfo[1][i].first));
+    }
+    vVisit[1] = true;
+
+    while (PQ.empty() == 0)
+    {
+        //항상 최소값을 먼저 탐색한다. 프림 알고리즘
+        int Cost = -PQ.top().first;
+        int Cur = PQ.top().second;
+        PQ.pop();
+
+        if (vVisit[Cur] == true) continue;
+        vVisit[Cur] = true;
+        vans = vans + Cost;
+
+        for (int i = 0; i < vLineInfo[Cur].size(); i++)
+        {
+            int nCost = vLineInfo[Cur][i].second;
+            int Next = vLineInfo[Cur][i].first;
+
+            if (vVisit[Next] == false) PQ.push(make_pair(-nCost, Next));
+        }
+    }
+    cout<<vans<<endl;
+    return 0;
+}
