@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+int minMap[51][51] ={0,};
+int minVisit[51][51][4][4] = {0,};
+int minTime = 2e9;
+int Answer=2e9;
+int main()
+{
+    int mWidth =3, mHeight =2;
+    cin >> mHeight >>mWidth;
+    string param="";
+    int sr,sc=0;
+    int cCnt=0;
+    for(int i=0; i<mHeight; i++)
+    {
+        cin>>param;
+        for(int j=0; j<param.length(); j++)
+        {
+             minMap[i][j] = param[j];
+            if(minMap[i][j]=='C') {
+                if(cCnt==1)
+                {
+                    minMap[i][j]='D';
+                    continue;
+                }
+                else
+                    cCnt++;
+            }
+            else if(minMap[i][j]=='S')
+            {
+                sr = i;
+                sc = j;
+            }
+        }
+    }
+
+    //r,c,t,d,cnt
+    enum minDir{NONE,UP,DOWN,LEFT,RIGHT};
+    queue<pair<pair<int,int>,pair<pair<int,int>,string>>> minDat;
+    minDat.push({{sr,sc},{{0,NONE},""}});
+    vector<pair<int,int>> presentPos;
+    int mAH[4] = {1,-1,0,0};
+    int mAV[4] = {0,0,1,-1};
+    int minTime = 2e9;
+    while(!minDat.empty())
+    {
+        int row = minDat.front().first.first;
+        int col = minDat.front().first.second;
+        int lastTime =minDat.front().second.first.first;
+        int dir = minDat.front().second.first.second;
+        string Cnt = minDat.front().second.second;
+        minDat.pop();
+
+        if(Cnt.length()==2)
+        {
+            minTime = min(minTime,lastTime);
+            break;
+        }
+
+        for(int i=0; i<4; i++)
+        {
+            int nrow = row +mAV[i];
+            int ncol = col +mAH[i];
+            int ndir = NONE;
+            if(0<=nrow && 0<=ncol && nrow < mHeight && ncol <mWidth && minMap[nrow][ncol]!='#')
+            {
+                if(i==0)
+                    ndir = RIGHT;
+                else if(i==1)
+                    ndir = LEFT;
+                else if(i==2)
+                    ndir = DOWN;
+                else if(i==3)
+                    ndir = UP;
+
+                int nCheck =0;
+                if(Cnt=="C")
+                    nCheck = 1;
+                else if(Cnt=="D")
+                    nCheck =2 ;
+                else if(Cnt=="")
+                    nCheck =0;
+
+                if(dir!=ndir && !minVisit[nrow][ncol][ndir][nCheck])
+                {
+                    minVisit[nrow][ncol][ndir][nCheck]=1;
+                    if(minMap[nrow][ncol]=='C')
+                    {
+                        if(Cnt!="C")
+                            minDat.push({{nrow,ncol},{{lastTime+1,ndir},Cnt+'C'}});
+                    }
+                    else if(minMap[nrow][ncol]=='D')
+                    {
+                        if(Cnt!="D")
+                            minDat.push({{nrow,ncol},{{lastTime+1,ndir},Cnt+'D'}});
+                    }
+                    else
+                        minDat.push({{nrow,ncol},{{lastTime+1,ndir},Cnt}});
+                }
+            }
+        }
+    }
+        if (minTime == 2e9) cout << -1 << endl;
+    else cout << minTime << endl;
+    return 0;
+}
