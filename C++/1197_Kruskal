@@ -1,0 +1,74 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<functional>
+
+using namespace std;
+
+vector<pair<int,pair<int, int>>> Node;
+bool Visit[10001]={0,};
+int Parent[10001]={0,};
+using NodeParam = pair<int,pair<int, int>>;
+
+int main(int argc, char *argv[])
+{
+    int nodes,lines=0;
+    cin>>nodes>>lines;
+    
+    for(int i=1; i<=nodes; i++)
+    {
+        Parent[i]=i;
+    }
+    
+    for(int i=0; i<lines; i++)
+    {
+        int a,b,c=0;cin>>a>>b>>c;
+         Node.push_back({c,{a,b}});
+    }
+
+   function<int(int)> findParent = [&](int node1)
+   {
+        if(Parent[node1]==node1)
+            return node1;
+        else
+            return Parent[node1] = findParent(Parent[node1]);
+   };
+
+   auto unionNode = [&](int node1, int node2)
+   {
+       node1 = findParent(node1);
+       node2 = findParent(node2);
+       Parent[node2]=Parent[node1] = min(node1,node2);
+   };
+
+   auto sameAncient = [&](int node1, int node2)
+   {
+       node1 = findParent(node1);
+       node2 = findParent(node2);
+       if(node1!=node2)
+           return false;
+       else
+           return true;
+   };
+
+   sort(Node.begin(),Node.end(),[&](NodeParam a, NodeParam b){return a.first<b.first;});
+
+   int krucalCost = 0;
+   for(int i=0; i<Node.size(); i++)
+   {
+         int cost = Node[i].first;
+         int start = Node[i].second.first;
+         int end=  Node[i].second.second;
+
+         if(sameAncient(start,end))
+             continue;
+         else
+         {
+             unionNode(start,end);
+             krucalCost+=cost;
+         }
+
+   }
+    cout<<krucalCost<<endl;
+    return 0;
+}
