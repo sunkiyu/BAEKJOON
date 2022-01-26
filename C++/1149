@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int ColorDP[1001][3] ={0,};
+
+int main()
+{
+    int colorValue[1001][3];
+    int home =3;
+    cin >> home;
+    
+    for(int i=0; i<home; i++)
+    {
+        cin >> colorValue[i][0] >> colorValue[i][1] >> colorValue[i][2];
+    }
+    ColorDP[0][0]  = colorValue[0][0];
+    ColorDP[0][1]  = colorValue[0][1];
+    ColorDP[0][2]  = colorValue[0][2];
+
+    for(int i=1; i<home; i++)
+    {
+        ColorDP[i][0] = min(ColorDP[i-1][1]+colorValue[i][0],ColorDP[i-1][2]+colorValue[i][0]);
+        ColorDP[i][1] = min(ColorDP[i-1][0]+colorValue[i][1],ColorDP[i-1][2]+colorValue[i][1]);
+        ColorDP[i][2] = min(ColorDP[i-1][0]+colorValue[i][2],ColorDP[i-1][1]+colorValue[i][2]);
+    }
+    cout<<min(min(ColorDP[home-1][0],ColorDP[home-1][1]),ColorDP[home-1][2])<<endl;
+
+    return 0;
+}
