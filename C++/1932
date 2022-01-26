@@ -1,0 +1,41 @@
+#include <iostream>
+#include <algorithm>
+int maxTri[501][501];
+int trivec[501][501];
+
+using namespace std;
+
+int main()
+{
+    int triNo =5;
+    cin>>triNo;
+    
+    for(int i=0; i<triNo; i++)
+    {
+        for(int j=0; j<=i; j++)
+        {
+            cin>>trivec[i][j];
+        }
+    }
+    
+    maxTri[0][0] = trivec[0][0];
+
+    int retVal =0;
+    for(int i=1; i<triNo; i++)
+    {
+        for(int j=0; j<i; j++)
+        {
+            maxTri[i][j] = max(maxTri[i][j],maxTri[i-1][j]+trivec[i][j]);
+            maxTri[i][j+1] =max(maxTri[i][j+1], maxTri[i-1][j]+trivec[i][j+1]);
+        }
+    }
+    
+    int Max = 0;
+    for (int i = 0; i < triNo; i++)
+    {
+        if (maxTri[triNo-1][i] > Max) Max = maxTri[triNo-1][i];
+    }
+    cout<< Max<<endl;
+    
+    return 0;
+}
