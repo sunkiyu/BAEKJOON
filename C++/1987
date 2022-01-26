@@ -1,0 +1,47 @@
+#include <iostream>
+#include <functional>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+int rcMap[21][21] = {0,};
+int rcCheck[27] = {0,};
+using namespace std;
+
+int main()
+{
+    int rcRow = 3, rcCol =6;
+    cin>>rcRow>>rcCol;
+    for(int i=0; i<rcRow; i++)
+    {
+        string str="";
+        cin>>str;
+        for(int j=0; j<str.length(); j++)
+        {
+            rcMap[i][j] = str[j];
+        }
+    }
+    rcCheck[rcMap[0][0]-'A']++;
+
+    int rcMaxCnt=0;
+
+    function<void(int,int,int)> rcDFS = [&](int cRow,int cCol, int cnt)
+    {
+        rcMaxCnt = max(rcMaxCnt,cnt);
+
+        for(int i=0; i<4; i++)
+        {
+            int nrow = cRow +mAV[i];
+            int ncol = cCol +mAH[i];
+
+            if(0<=nrow && nrow <rcRow && 0<= ncol && ncol< rcCol)
+            {
+                if(rcCheck[rcMap[nrow][ncol]-'A'])continue;
+                rcCheck[rcMap[nrow][ncol]-'A'] =1;
+                rcDFS(nrow,ncol,cnt+1);
+                rcCheck[rcMap[nrow][ncol]-'A']=0;
+            }
+        }
+    };
+    rcDFS(0,0,1);
+    cout<<rcMaxCnt<<endl;
+    return 0;
+}
