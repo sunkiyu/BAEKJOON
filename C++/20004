@@ -1,0 +1,12 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{ 
+    int param=0; 
+    cin>>param;
+    for(int n=1;n<=param;n++) 
+        if(30%(n+1)==0) 
+            cout<<n<<endl; 
+    return 0; 
+}
