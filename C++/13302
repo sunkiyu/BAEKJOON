@@ -1,0 +1,43 @@
+#include <iostream>
+#include <functional>
+int sooImpossible[101] ={0,};
+int sooDP[101][101] ={0,};
+
+using namespace std;
+int main()
+{
+     for(int i=0; i<101; i++)
+       for(int j=0; j<101; j++)
+       {
+           sooDP[i][j] = 2e9;
+       }
+
+   int days= 13,impDays=0;
+    cin>>days>>impDays;
+    for(int i=1; i<=impDays; i++){
+        int tmpDay=0;
+        cin>>tmpDay;
+        sooImpossible[tmpDay]=1;
+    }
+
+   function<int(int,int)> sooDFS = [&](int day, int coupon)
+   {
+       if (day > days) return 0;
+       if (sooDP[day][coupon] != 2e9) return sooDP[day][coupon];
+           if (sooImpossible[day] == true)
+           {
+               sooDP[day][coupon] = sooDFS(day + 1, coupon);
+               return sooDP[day][coupon];
+           }
+
+           sooDP[day][coupon] = min(sooDP[day][coupon], sooDFS(day + 1, coupon) + 10000);
+           sooDP[day][coupon] = min(sooDP[day][coupon], sooDFS(day + 3, coupon + 1) + 25000);
+           sooDP[day][coupon] = min(sooDP[day][coupon], sooDFS(day + 5, coupon + 2) + 37000);
+           if (coupon >= 3) sooDP[day][coupon] = min(sooDP[day][coupon], sooDFS(day + 1, coupon - 3));
+
+           return sooDP[day][coupon];
+   };
+
+   cout<< sooDFS(1,0)<<endl;
+    return 0;
+}
