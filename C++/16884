@@ -1,0 +1,21 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int gameCount = 0;
+    cin>>gameCount;
+    
+    for(int t=0; t<gameCount; t++)
+    {
+        int mapSz = 0;
+        cin>>mapSz;
+        
+        if(!(mapSz%2))
+            cout<<"cubelover"<<endl;
+        else
+            cout<<"koosaga"<<endl;
+    }
+    return 0;
+}
