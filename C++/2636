@@ -1,0 +1,103 @@
+#include<iostream>
+#include<set>
+#include<queue>
+#include<string.h>
+
+int cheeseMap[101][101] = {0,};
+int cheeseArea[101][101]= {0,};
+using namespace std;
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+int main()
+{
+   int cheeseRow = 8, cheeseCol =9;
+  
+    cin>>cheeseRow >>cheeseCol;
+    
+    for(int i=0; i<cheeseRow; i++)
+        for(int j=0; j<cheeseCol; j++)
+        {
+            cin>>cheeseMap[i][j];
+        }
+    
+   auto makeDiv = [&](){
+       int areaNum =1;
+
+       for(int i=0; i< cheeseRow; i++)
+       {
+           for(int j=0; j<cheeseCol; j++)
+           {
+               if(cheeseMap[i][j]==0 && cheeseArea[i][j]==0)
+               {
+                   cheeseArea[i][j] = areaNum;
+                   queue<pair<int,int>> cheeseQ;
+                   cheeseQ.push({i,j});
+
+                   while(!cheeseQ.empty())
+                   {
+                       int row = cheeseQ.front().first;
+                       int col = cheeseQ.front().second;
+                       cheeseQ.pop();
+
+                       for(int k=0; k<4; k++)
+                       {
+                           int nrow = row + mAV[k];
+                           int ncol = col + mAH[k];
+
+                           if(0<=nrow && nrow <cheeseRow && 0<=ncol && ncol <cheeseCol && cheeseMap[nrow][ncol]==0 && cheeseArea[nrow][ncol]==0)
+                           {
+                               cheeseArea[nrow][ncol]=areaNum;
+                               cheeseQ.push({nrow,ncol});
+                           }
+                       }
+                   }
+                   areaNum++;
+               }
+           }
+       }
+   };
+
+     int meltingTime=0,lastMelting=0;
+   while(1)
+   {
+       memset(cheeseArea,0,sizeof(cheeseArea));
+       makeDiv();
+       bool isMelt =false;
+       int meltCnt= 0;
+       for(int i=0; i< cheeseRow; i++)
+       {
+           for(int j=0; j<cheeseCol; j++)
+           {
+               if(cheeseMap[i][j]==1)
+               {
+                   for(int k=0; k<4; k++)
+                   {
+                       int nrow = i+ mAV[k];
+                       int ncol = j+ mAH[k];
+
+                       if(0<=nrow && nrow < cheeseRow && 0<=ncol && ncol <cheeseCol)
+                       {
+                           if(cheeseArea[nrow][ncol]==1)
+                           {
+                                isMelt = true;
+                                cheeseMap[i][j]=0;
+                                meltCnt++;
+                                break;
+                           }
+                       }
+                   }
+               }
+           }
+       }
+       if(isMelt)
+       {
+           meltingTime++;
+           lastMelting = meltCnt;
+       }
+       else break;
+   }
+   cout<<meltingTime<<endl;
+   cout<<lastMelting<<endl;
+  
+    return 0;
+}
