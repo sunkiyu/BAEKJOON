@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+int N;
+int lines[10];
+
+int main(void)
+{
+        cin >> N;
+        for (int i = 0; i < N; i++)
+        {
+                 int left;
+                 cin >> left;
+                 for (int j = 0; j < N; j++)
+                         if (left == 0 && lines[j] == 0)
+                         {
+                                 lines[j] = i + 1;
+                                 break;
+
+                         }
+                         else if (lines[j] == 0)
+                                 left--;
+        }
+
+        for (int i = 0; i < N; i++)
+                 cout << lines[i] << " ";
+        cout << "\n";
+        return 0;
+}
