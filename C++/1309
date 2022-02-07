@@ -1,0 +1,19 @@
+#include <iostream>
+int lionDP[100001][3] = {0,};
+using namespace std;
+
+int main()
+{
+    lionDP[0][0] = 1;lionDP[0][1] = 1;lionDP[0][2] = 1;
+    int lionN =4,lionSum=0;cin>>lionN;
+    for(int i=1; i<lionN; i++)
+    {
+        lionDP[i][0] = lionDP[i-1][0]+lionDP[i-1][1]+lionDP[i-1][2];
+        lionDP[i][1] = lionDP[i-1][0]+lionDP[i-1][2];
+        lionDP[i][2] = lionDP[i-1][0]+lionDP[i-1][1];
+        for(int j=0; j<3; j++)lionDP[i][j]%=9901;
+    }
+    for(int i=0; i<3; i++)lionSum+=lionDP[lionN-1][i];
+    cout<<lionSum%9901<<endl;
+    return 0;
+}
