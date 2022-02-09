@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+bool divPelinDP[2501][2501] = {0,};
+int minPelin[2501] = {0,};
+int main()
+{
+     string str = "QWERTYTREWQWERT";
+    cin >> str;
+   int pelinLen = str.length();
+
+  for (int i = 0; i < pelinLen; i++) divPelinDP[i][i] = true;
+    for (int i = 0; i < pelinLen-1; i++)
+    {
+        if (str[i] == str[i + 1]) divPelinDP[i][i + 1] = true;
+    }
+    
+   for(int i=2; i<pelinLen; i++)
+   {
+       for(int j=0; j<pelinLen-i; j++)
+       {
+           if(str[j]==str[j+i])
+           {
+               if(divPelinDP[j+1][j+i-1]){
+                   divPelinDP[j][j+i]=1;
+               }
+           }
+       }
+   }
+
+   for (int End = 0; End < pelinLen; End++)
+      {
+          minPelin[End] = 2e9;
+          for (int Start = 0; Start <= End; Start++)
+          {
+              if (divPelinDP[Start][End] == true)
+              {
+                  if((Start - 1) < 0) minPelin[End] = min(minPelin[End], 1);
+                  else minPelin[End] = min(minPelin[End], minPelin[Start - 1] + 1);
+              }
+          }
+      }
+    
+    cout << minPelin[pelinLen-1]<<endl;
+    return 0;
+}
