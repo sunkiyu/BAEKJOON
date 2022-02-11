@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<string> arrBg;
+int main()
+{
+    int num =0;
+    cin>>num;
+    
+    for(int i=0; i<num; i++)
+    {
+        int nums = 0;
+        cin>>nums;
+        arrBg.push_back(to_string(nums));
+    }
+    
+   sort(arrBg.begin(),arrBg.end(),[&](string a, string  b){
+  
+          if(a+b > b+a) return true;
+          else return false;
+   });
+    
+    string ans="";
+	if(arrBg[0]=="0") {
+		cout<<"0";
+		return 0;
+	}
+	for(int i=0;i<arrBg.size();i++){
+		ans+=arrBg[i];
+	}
+	cout<< ans;
+    return 0;
+}
