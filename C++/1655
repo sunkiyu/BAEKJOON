@@ -1,0 +1,42 @@
+#include <iostream>
+#include <queue>
+#define endl "\n"
+using namespace std;
+int customHeapDat[100001] ={0,};
+
+priority_queue<int, vector<int>, less<int>> maxH;
+priority_queue<int, vector<int>, greater<int>> minH;
+
+int main()
+{
+
+    int heapN= 7,valIdx=0;
+    cin>>heapN;
+    for(int i=0; i<heapN; i++)
+    {
+        cin>>customHeapDat[i];
+    }
+    
+    for(int i=0; i<heapN; i++)
+    {
+        if (maxH.size() > minH.size()) minH.push(customHeapDat[i]);
+        else maxH.push(customHeapDat[i]);
+        
+        if (maxH.empty() == false && minH.empty() == false)
+        {
+            if (maxH.top() > minH.top())
+            {
+                int maxVal = maxH.top();
+                int minVal = minH.top();
+ 
+                maxH.pop(); 
+                minH.pop();
+                
+                maxH.push(minVal);
+                minH.push(maxVal);
+            }
+        }
+        cout << maxH.top() << endl;
+    }
+    return 0;
+}
