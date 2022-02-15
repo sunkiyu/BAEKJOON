@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+int childLineDP[201] = {0,};
+int childLine[201] = {0,};
+
+int main()
+{
+ int childs = 7,maxIncrese = 0;
+    cin>>childs;
+   for(int i=1; i<=childs; i++)cin>>childLine[i];
+   
+   for(int i=1; i<=childs; i++)
+   {
+       childLineDP[i] = 1;
+
+       for(int j=1; j<i; j++)
+       {
+            if(childLine[i]>childLine[j])
+                childLineDP[i] = max(childLineDP[i],childLineDP[j]+1);
+       }
+       maxIncrese = max(maxIncrese,childLineDP[i]);
+   }
+   cout<<childs-maxIncrese<<endl;
+    return 0;
+}
