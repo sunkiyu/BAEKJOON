@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+     int seatN[41] ={0,};
+    int seatDP[41] ={0,};
+
+    seatDP[0] = 1;
+    seatDP[1] = 1;
+    seatDP[2] = 2;
+
+    int sNo = 9,ckParam;
+    
+    cin>>sNo>>ckParam;
+    for(int i=0; i<ckParam; i++)
+    {
+        int tmp =0;
+        cin>>tmp;
+        seatN[tmp] =1;
+    }
+        
+    for(int i = 3; i <= sNo; i++)
+        seatDP[i] = seatDP[i - 1] + seatDP[i - 2];
+
+    int s=1;
+    vector<int> diffs;
+    for(int i=1; i<=sNo; i++)
+    {
+        if(seatN[i])
+        {
+            diffs.push_back((i-1)-s+1);
+            s = i+1;
+        }
+    }
+
+    if(s<=sNo)
+    {
+        diffs.push_back(sNo-s+1);
+    }
+
+    int mulitpleAns = 1;
+    for(int i=0; i<diffs.size(); i++)
+    {
+        mulitpleAns*=seatDP[diffs[i]];
+    }
+    cout<<mulitpleAns<<endl;
+    return 0;
+}
