@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+ 
+#define endl "\n"
+#define MAX 110
+using namespace std;
+ 
+int songs, startVol, maxVol;
+int Volume[MAX];
+bool DP[MAX][1010];
+
+int volDP[101][1001] = {0,};
+int volCheck[101] = {0,};
+int main()
+{
+    cin >> songs >> startVol>>maxVol;
+     vector<int> volDiff(songs,0);
+    
+    for (int i = 0; i < songs; i++) cin >> volDiff[i];
+    
+    if(startVol+volDiff[0]<=maxVol) volDP[0][startVol+volDiff[0]]= true;
+    if(startVol-volDiff[0]>=0) volDP[0][startVol-volDiff[0]]= true;
+    
+    for(int i=1; i<songs; i++)
+    {
+        for(int j=0; j<=maxVol; j++)
+        {
+            if(volDP[i-1][j])
+            {
+                if(j+volDiff[i]<=maxVol) volDP[i][j+volDiff[i]]=true;
+                if(j-volDiff[i]>=0) volDP[i][j-volDiff[i]] = true;
+            }
+        }
+    }
+   for (int i = maxVol; i >= 0; i--)
+    {
+        if (volDP[songs-1][i] == true)
+        {
+            cout << i << endl;
+            return 0;
+        }
+    }
+    
+    cout<<-1<<endl;
+
+    return 0;
+}
+
