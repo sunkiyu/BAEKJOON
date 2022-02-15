@@ -1,0 +1,31 @@
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+long long ggNDP[68]= {0,};
+int main()
+{
+   int ggN=30,testCase =0;
+    cin>>testCase;
+    
+    for(int t=0; t<testCase; t++)
+    {
+       memset(ggNDP,0,sizeof(ggNDP));
+       
+       cin>>ggN;
+        
+       ggNDP[0] = 1;
+       ggNDP[1] = 1;
+       ggNDP[2] = 2;
+       ggNDP[3] = 4;
+
+       for(int i=4; i<=ggN; i++)
+       {
+           ggNDP[i] = ggNDP[i-1] + ggNDP[i-2] + ggNDP[i-3] + ggNDP[i-4];
+       } 
+       cout<<ggNDP[ggN]<<endl;
+    }
+   
+    return 0;
+}
