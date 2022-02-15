@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <functional>
+
+using namespace std;
+
+
+int paperPart[8] = {0,};
+vector<int> tmpPaper;
+set<int> sosuVisit;
+
+int main()
+{
+    vector<int> sno;
+   int ssAns = 0;
+
+   function<void(int)> snoDFS = [&](int cnt)
+   {
+       string tmpNum="";
+       for(int ii=0; ii<tmpPaper.size(); ii++) tmpNum+=tmpPaper[ii]+'0';
+       int num = atoi(tmpNum.c_str());
+       if (sosuVisit.find(num) == sosuVisit.end())
+       {
+            sosuVisit.insert(num);
+            int scnt = 0;
+            if (num >= 2)
+            {
+               bool sosuFlag = true;
+              for (int ij = 2; ij * ij <= num; ij++)
+              {
+                  if (num % ij == 0){sosuFlag =false; break;}
+              }
+              if(sosuFlag)ssAns++;
+            }
+       }
+       for(int i=0; i<sno.size(); i++)
+       {
+           if(paperPart[i])continue;
+           tmpPaper.push_back(sno[i]);
+           paperPart[i]=1;
+           snoDFS(cnt+1);
+           paperPart[i]=0;
+           tmpPaper.pop_back();
+       }
+   };
+    
+    int Tc;
+    cin >> Tc;
+    for (int T = 1; T <= Tc; T++)
+    {
+        string input="";
+        sno.clear();
+        tmpPaper.clear();
+        sosuVisit.clear();
+        for(int i=0; i<8; i++)paperPart[i]=0;
+        ssAns=0;
+        cin>>input;
+        for(int i=0; i<input.length(); i++)
+        {
+            sno.push_back(input[i]-'0');
+        }
+       snoDFS(0);
+        cout<<ssAns<<endl;
+    }
+    
+    return 0;
+}
