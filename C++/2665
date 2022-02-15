@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+using namespace std;
+vector<vector<int>> bwCheck(51,vector<int>(51,2e9));
+int main()
+{
+    int bwSz =8;
+    cin>>bwSz;
+    vector<vector<int>> blackWite(bwSz,vector<int>(bwSz,0));
+
+    for (int i = 0; i < bwSz; i++)
+    {
+        string S; cin >> S;
+        for (int j = 0; j < S.length(); j++)
+        {
+            blackWite[i][j] = S[j] - '0';
+        }
+    }
+
+    
+    queue<pair<pair<int,int>,int>> bwQ;
+    bwQ.push({{0,0},0});
+    bwCheck[0][0]=0;
+    int minAns = 2e9;
+
+    while (!bwQ.empty())
+    {
+        int row = bwQ.front().first.first;
+        int col = bwQ.front().first.second;
+        int change = bwQ.front().second;
+        bwQ.pop();
+
+        if(row == bwSz -1 && col == bwSz -1)
+        {
+            minAns =min(minAns,change);
+            continue;
+        }
+
+        for(int i=0; i<4; i++)
+        {
+            int nrow = row +mAV[i];
+            int ncol = col +mAH[i];
+            if(0<= nrow && nrow < bwSz && 0<=ncol && ncol <bwSz)
+            {
+                if(!blackWite[nrow][ncol] && bwCheck[nrow][ncol] >change+1)
+                {
+                    bwCheck[nrow][ncol]=min(bwCheck[nrow][ncol],change+1);
+                    bwQ.push({{nrow,ncol},change+1});
+                }
+                else if(blackWite[nrow][ncol] &&bwCheck[nrow][ncol]>change)
+                {
+                    bwCheck[nrow][ncol]=min(bwCheck[nrow][ncol],change);
+                    bwQ.push({{nrow,ncol},change});
+                }
+            }
+        }
+    }
+    cout<<minAns<<endl;
+
+    return 0;
+}
