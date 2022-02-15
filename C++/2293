@@ -1,0 +1,24 @@
+#include <iostream>
+#include <functional>
+int coins[101] ={0,};
+int coinsDP[10001] ={0,};
+using namespace std;
+int main()
+{
+    int coinN =3, valueSum =10, numofCanMake =0;
+    cin>>coinN>>valueSum;
+    
+    for(int i=1; i<=coinN; i++)
+        cin>>coins[i];
+
+    coinsDP[0] = 1;
+    for (int i = 1; i <= coinN; i++)
+    {
+        for (int j = coins[i]; j <= valueSum; j++)
+        {
+            coinsDP[j] += coinsDP[j - coins[i]];
+        }
+    }
+    cout << coinsDP[valueSum] << endl;
+    return 0;
+}
