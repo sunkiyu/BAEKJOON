@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+int maxLineDP[2][3] ={0,};
+int minLineDP[2][3] ={0,};
+int downLine[100001][3]={0,};
+int main()
+{
+    int lines = 3;
+    cin>>lines;
+
+    bool last0 = true;
+    
+    for(int i=0; i<lines; i++)
+        for(int j=0; j<3; j++)
+            cin>>downLine[i][j];
+    
+    minLineDP[0][0] = maxLineDP[0][0] = downLine[0][0];
+    minLineDP[0][1] = maxLineDP[0][1] = downLine[0][1];
+    minLineDP[0][2] = maxLineDP[0][2] = downLine[0][2];
+
+     for(int i=1; i<lines; i++)
+    {
+        int a,b=0;
+        if(last0) {a=1;b=0;}
+        else {a=0;b=1;}
+        for(int j=0; j<3; j++)
+        {
+            if(j==0)
+            {
+                maxLineDP[a][j] = max(maxLineDP[b][j]+downLine[i][j],maxLineDP[b][j+1]+downLine[i][j]);
+                minLineDP[a][j] = min(minLineDP[b][j]+downLine[i][j],minLineDP[b][j+1]+downLine[i][j]);
+            }
+            else if(j==1)
+            {
+                maxLineDP[a][j] = max(max(maxLineDP[b][j]+downLine[i][j],maxLineDP[b][j+1]+downLine[i][j]),maxLineDP[b][j-1]+downLine[i][j]);
+                minLineDP[a][j] = min(min(minLineDP[b][j]+downLine[i][j],minLineDP[b][j+1]+downLine[i][j]),minLineDP[b][j-1]+downLine[i][j]);
+            }
+            else if(j==2)
+            {
+                maxLineDP[a][j] = max(maxLineDP[b][j]+downLine[i][j],maxLineDP[b][j-1]+downLine[i][j]);
+                minLineDP[a][j] = min(minLineDP[b][j]+downLine[i][j],minLineDP[b][j-1]+downLine[i][j]);
+            }
+        }
+        if(last0) last0 =false;
+        else last0  =true;
+    }
+   
+    int maxVal = 0, minVal = 2e9;
+    int ansIdx=0;
+    if(lines%2) ansIdx =0;
+    else ansIdx=1;
+    for(int i=0; i<3; i++)
+    {
+
+        maxVal = max(maxLineDP[ansIdx][i],maxVal);
+        minVal = min(minLineDP[ansIdx][i],minVal);
+    }
+
+    cout <<maxVal<<" "<<minVal<<endl;
+    return 0;
+}
