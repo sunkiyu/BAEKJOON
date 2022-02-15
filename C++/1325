@@ -1,0 +1,63 @@
+#include<iostream>
+#include <queue>
+#include <vector>
+#include <functional>
+#include <string.h>
+using namespace std;
+vector<int> compDP[10001];
+int compCheck[10001];
+int main()
+{
+    int computers = 5, queryCnt = 4;
+    cin>>computers >>queryCnt;
+    
+    for(int i=0; i<queryCnt; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        compDP[b].push_back(a);
+    };
+
+
+     vector<int> cmpAns;
+    int infection =0;
+
+    function<void(int,int)> computerDFS = [&](int compNo,int cnt)
+    {
+        for(int i=0; i<compDP[compNo].size(); i++)
+        {
+            if(compCheck[compDP[compNo][i]])continue;
+            compCheck[compDP[compNo][i]]=1;
+            infection++;
+            computerDFS(compDP[compNo][i],cnt+1);
+        }
+    };
+
+    int Tmp_Answer=0;
+    for(int i=1; i<=computers; i++)
+    {
+        compCheck[i]=1;
+        computerDFS(i,0);
+        if(Tmp_Answer == infection)
+        {
+            cmpAns.push_back(i);
+        }
+        else if(Tmp_Answer < infection)
+        {
+            Tmp_Answer = infection;
+            cmpAns.clear();
+            cmpAns.push_back(i);
+        }
+        memset(compCheck,0,sizeof(compCheck));
+        infection=0;
+    }
+
+    sort(cmpAns.begin(),cmpAns.end());
+    for (int i = 0; i < cmpAns.size(); i++)
+    {
+       cout << cmpAns[i] << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
