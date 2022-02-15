@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+vector<int> spLineCheck[1001];
+int spStopped[1001];
+
+int main()
+{
+       int spCnt=0;
+        int stopPoint = 6;
+    int spLines= 5;
+    cin>>stopPoint>>spLines;
+    
+    for(int i=0; i<spLines; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        spLineCheck[a].push_back(b);
+        spLineCheck[b].push_back(a);
+    }
+    for(int k=1; k<= stopPoint; k++)
+    {
+        if(spStopped[k])continue;
+
+        queue<int> spQ;
+        spQ.push(k);
+        spStopped[k]=1;
+
+        while (!spQ.empty())
+        {
+              int cur = spQ.front();
+              spQ.pop();
+
+              for(int i=0; i<spLineCheck[cur].size(); i++)
+              {
+                  if(spStopped[spLineCheck[cur][i]]) continue;
+                  spStopped[spLineCheck[cur][i]] = 1;
+                  spQ.push(spLineCheck[cur][i]);
+              }
+        }
+        spCnt++;
+    }
+    cout<<spCnt<<endl;
+    return 0;
+}
