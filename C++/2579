@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+     int maxSval[301] = {0,};
+    int sValue[301] = {0,};
+    int stairs = 6;
+    cin>>stairs;
+    for(int i=0; i<stairs; i++) cin>>sValue[i];
+
+    maxSval[0] = sValue[0];
+    maxSval[1] = maxSval[0] +sValue[1];
+    maxSval[2] = max(maxSval[0] +sValue[2], sValue[1] + sValue[2]);
+
+    for(int i=3; i<stairs; i++)
+    {
+        maxSval[i] = max(maxSval[i-2]+ sValue[i],maxSval[i-3] + sValue[i-1] + sValue[i]);
+    }
+    
+    cout<<maxSval[stairs-1]<<endl;
+    return 0;
+}
