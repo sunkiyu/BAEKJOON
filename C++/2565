@@ -1,0 +1,45 @@
+#include <iostream>
+#include  <vector>
+#include <algorithm>
+
+using namespace std;
+int electroLine[101] = {0,};
+int main()
+{
+    int sz =0;
+    vector<pair<int,int>> eLine;
+    cin>>sz;
+    
+    for(int i=0; i<sz; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        eLine.push_back({a,b});
+    }
+     sort(eLine.begin(),eLine.end(),[&](pair<int,int> &a,pair<int,int>& b){
+        return a.first<b.first;
+    });
+
+     int upMax =0;
+
+     for(int i=0; i<eLine.size(); i++)
+    {
+        if(i==0)
+            electroLine[i] = 1;
+        else
+        {
+            electroLine[i]=1;
+            
+            for(int j=0; j<i; j++)
+            {
+                if(eLine[j].second<eLine[i].second)
+                {
+                    electroLine[i] = max(electroLine[i],electroLine[j]+1);
+                    upMax = max(upMax,electroLine[i]);
+                }
+            }
+        }
+    }
+    cout <<sz-upMax<<endl;
+    return 0;
+}
