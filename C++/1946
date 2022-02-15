@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <iostream>
+#include <time.h>
+
+using namespace std;
+
+int main()
+{
+	int tot,people,agrade,bgrade,min,ret;
+	vector<pair<int,int>> score;
+	cin>>tot;
+	
+	while(tot--)
+	{
+		ret=0;
+        score.clear();
+		cin>>people;
+		
+		for(int i=0; i<people; i++)
+		{
+			cin>>agrade>>bgrade;
+			score.push_back(make_pair(agrade,bgrade));
+		}
+		
+		sort(score.begin(),score.end());
+		
+		for(int i=0; i<score.size(); i++)
+		{
+			if(i==0)
+			{
+				min = score[i].second;
+				ret++;
+			}
+			else
+			{
+				if(min>score[i].second)
+				{
+					min = score[i].second;
+					ret++;
+				}
+			}
+		}
+		cout<<ret<<endl;
+	}
+    return 0;
+}
