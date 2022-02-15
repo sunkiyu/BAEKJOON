@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+#include <functional>
+using namespace std;
+int panDaDP[501][501] = {0,};
+int panDaCheck[501][501] = {0,};
+
+int main()
+{
+    int panDaN = 4;
+    cin>>panDaN;
+    vector<vector<int>> pandaMap(panDaN,vector<int>(panDaN,0));
+    memset(panDaDP,-1,sizeof(panDaDP));
+    for(int i=0; i<panDaN; i++)
+        for(int j=0; j<panDaN; j++)
+            cin>>pandaMap[i][j];
+            
+    int mAH[4] = {1,-1,0,0};
+    int mAV[4] = {0,0,1,-1};
+    
+    int maxMoving =0;
+    
+     for(int i=0; i<panDaN; i++)
+        for(int j=0; j<panDaN; j++)
+        {
+            int row = i;
+            int col = j;
+
+            function<int(int,int)> pandaDFS =[&](int row,int col)
+            {
+                if(panDaDP[row][col]!=-1) return panDaDP[row][col];
+                panDaDP[row][col] = 1;
+
+                for(int k=0; k<4; k++)
+                {
+                    int nrow = row + mAV[k];
+                    int ncol = col + mAH[k];
+
+                    if(0<=nrow && nrow <panDaN && 0<=ncol && ncol <panDaN && pandaMap[nrow][ncol]>pandaMap[row][col])
+                    {
+                            panDaDP[row][col] = max(panDaDP[row][col], pandaDFS(nrow,ncol)+1);
+                    }
+                }
+                return panDaDP[row][col];
+            };
+            maxMoving = max(maxMoving,pandaDFS(row,col));
+        }
+    cout<<maxMoving<<endl;
+    return 0;
+}
