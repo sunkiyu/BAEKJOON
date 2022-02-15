@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+int squareMap[101][101] = {0,};
+using namespace std;
+
+vector<pair<pair<int,int>,pair<int,int>>> sqInfo;
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+int main()
+{
+     int sqRow =5, sqCol =7, sqCnt =3;
+    cin>>sqRow>>sqCol>>sqCnt;
+    sqInfo.resize(sqCnt,pair<pair<int,int>,pair<int,int>>{{0,0},{0,0}});
+    
+    for(int i=0; i<sqCnt; i++)
+    {
+        int lr,lc,rr,rc=0;
+        cin>>lr>>lc>>rr>>rc;
+        sqInfo[i]={{lc,lr},{rc,rr}};
+    }
+
+    for(int i=0; i<sqCnt; i++)
+    {
+        int lRow = sqInfo[i].first.first;
+        int lCol = sqInfo[i].first.second;
+        int rRow = sqInfo[i].second.first;
+        int rCol = sqInfo[i].second.second;
+
+        for(int i= lRow; i<=rRow-1; i++)
+        {
+            for(int j=lCol; j<=rCol-1; j++)
+            {
+                squareMap[i][j] =1;
+            }
+        }
+    }
+
+    int remainWidth=0,widthCheck=2;
+    vector<int> remainW;
+    for(int i=0; i<sqRow; i++)
+        for(int j=0; j<sqCol; j++)
+        {
+            if(squareMap[i][j]==0)
+            {
+                queue<pair<int,int>> mvPoint;
+                mvPoint.push({i,j});
+                squareMap[i][j] = widthCheck;
+                while (!mvPoint.empty())
+                {
+                    int row = mvPoint.front().first;
+                    int col = mvPoint.front().second;
+                    mvPoint.pop();
+
+                    for(int i=0; i<4; i++)
+                    {
+                        int nrow = row + mAV[i];
+                        int ncol = col + mAH[i];
+
+                        if(0<=nrow && nrow< sqRow && 0<=ncol && ncol <sqCol)
+                        {
+                            if(squareMap[nrow][ncol]!=0)continue;
+                            remainWidth++;
+                            squareMap[nrow][ncol] = widthCheck;
+                            mvPoint.push({nrow,ncol});
+                        }
+                    }
+                }
+                remainW.push_back(remainWidth+1);
+                remainWidth =0;
+                widthCheck++;
+            }
+        };
+    
+    sort(remainW.begin(),remainW.end());
+    cout<<widthCheck-2<<endl;
+    for(int i=0; i<remainW.size(); i++)cout<<remainW[i]<<" ";
+    
+}
