@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string.h>
+using namespace std;
+int sbRoomDP[101] = {0,};
+int main()
+{
+   int test = 0;
+   cin>>test;
+    for(int t=0; t<test; t++){
+        memset(sbRoomDP,0,sizeof(sbRoomDP));
+   int sbN = 100;
+        cin>>sbN;
+
+   int openRoom = 0;
+   for(int i=1; i<=sbN; i++){
+       sbRoomDP[i] = 1;
+       openRoom++;
+   }
+   for(int i=2; i<=sbN; i++)
+   {
+       for(int j=i; j<=sbN; j+=i)
+       {
+           if(!sbRoomDP[j])
+           {
+               sbRoomDP[j]=1;
+               openRoom++;
+           }
+           else{
+               sbRoomDP[j]=0;
+               openRoom--;
+           }
+       }
+   }
+        cout<<openRoom<<endl;
+    }
+ 
+    return 0;
+}
