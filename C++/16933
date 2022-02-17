@@ -1,0 +1,82 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+#include <functional>
+#include <algorithm>
+#include <cstring>
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+using namespace std;
+
+int breakWall3[1001][1001] = {0,};
+int breakWall3Visit[1001][1001][11] = {0,};
+int main()
+{
+   int breakRow =6, breakCol=4, breakCnt =1;
+    cin>>breakRow>>breakCol >>breakCnt;
+ 
+    for (int i = 0; i < breakRow; i++)
+    {
+        string Inp; cin >> Inp;
+        for (int j = 0; j < Inp.length(); j++)
+        {
+            breakWall3[i][j] = Inp[j] - '0';
+        }
+    }
+   
+   //row,col,cnt,dark,wall
+   queue<pair<tuple<int,int,int>,pair<int,int>>> break3Q;
+   break3Q.push({{0,0,1},{0,0}});
+    breakWall3Visit[0][0][0] =1;
+   while(!break3Q.empty())
+   {
+       int row = get<0>(break3Q.front().first);
+       int col = get<1>(break3Q.front().first);
+       int cnt = get<2>(break3Q.front().first);
+       int dark = break3Q.front().second.first;
+       int wall = break3Q.front().second.second;
+       break3Q.pop();
+
+       if(row == breakRow-1 && col == breakCol-1)
+       {
+           cout<<cnt<<endl;
+           return 0;
+       }
+
+       for(int i=0; i<4; i++)
+       {
+           int nrow = row + mAV[i];
+           int ncol = col + mAH[i];
+
+           if(0<=nrow && nrow <breakRow && 0<= ncol && ncol <breakCol)
+           {
+               if(breakWall3[nrow][ncol]==0)
+               {
+                   if(breakWall3Visit[nrow][ncol][wall])continue;
+                   breakWall3Visit[nrow][ncol][wall] =1;
+                   break3Q.push({make_tuple(nrow,ncol,cnt+1),{!dark,wall}});
+               }
+               else
+               {
+                   if(wall<breakCnt)
+                   {
+                       if(breakWall3Visit[nrow][ncol][wall])continue;
+                       if(dark)
+                       {
+                          break3Q.push({make_tuple(row,col,cnt+1),{!dark,wall}});
+                       }
+                       else if(!dark)
+                       {
+                          breakWall3Visit[nrow][ncol][wall] = 1;
+                          break3Q.push({make_tuple(nrow,ncol,cnt+1),{!dark,wall+1}});
+                       }
+                   }           
+               }
+           }
+       }
+   }
+    cout<<-1<<endl;
+    return 0;
+}
