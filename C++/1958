@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+#define endl "\n"
+using namespace std;
+int lcsDP[101][101][101] ={0,};
+string lcsStr[1001][1001];
+string as,bs,cs = "";
+
+int main()
+{
+  cin>>as>>bs>>cs;
+
+  for (int i = 1; i <= as.length(); i++)
+  {
+      for (int j = 1; j <= bs.length(); j++)
+      {
+          for(int k= 1; k<= cs.length(); k++)
+          {
+              if(as[i-1]==bs[j-1] && bs[j-1]==cs[k-1])
+              {
+                    lcsDP[i][j][k] = lcsDP[i-1][j-1][k-1] + 1;
+              }
+              else
+              {
+                    lcsDP[i][j][k] = max(lcsDP[i-1][j][k],max(lcsDP[i][j-1][k],lcsDP[i][j][k-1]));
+              }
+          }
+       }
+  }
+  cout << lcsDP[as.length()][bs.length()][cs.length()] << endl;
+  return 0;
+}
