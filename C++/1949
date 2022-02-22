@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <cstring>
+using namespace std;
+
+int mauelpeople[10001] = {0,};
+vector<int> mauelCon[10001];
+int mauelDP[10001][2] = {0,};
+int mauelVisit[10001]= {0,};
+int main()
+{
+
+   int mauel = 7;
+    cin>>mauel;
+    for(int i=1; i<=mauel; i++)cin>>mauelpeople[i];
+    for(int i=0; i<mauel-1; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        mauelCon[a].push_back(b);
+        mauelCon[b].push_back(a);
+    }
+   function<void(int)> mauelDFS = [&](int cur)
+   {
+       mauelVisit[cur]=1;
+       mauelDP[cur][0]=0;
+       mauelDP[cur][1] = mauelpeople[cur];
+
+        for(int i=0; i<mauelCon[cur].size(); i++)
+        {
+             int next = mauelCon[cur][i];
+             if(mauelVisit[next])continue;
+             mauelDFS(next);
+
+             mauelDP[cur][0] += max(mauelDP[next][0],mauelDP[next][1]);
+             mauelDP[cur][1] += mauelDP[next][0];
+        }
+   };
+
+   mauelDFS(1);
+   cout << max(mauelDP[1][0], mauelDP[1][1])<<endl;
+    return 0;
+}
