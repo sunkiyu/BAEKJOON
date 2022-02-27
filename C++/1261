@@ -48,17 +48,17 @@ int main()
 			{
 				if (algoMap[nrow][ncol] == 1)
 				{
-					if (visit[nrow][ncol] > visit[row][col] + 1)
+					if (visit[nrow][ncol] > cnt + 1)
                     {
-                        visit[nrow][ncol] = visit[row][col] + 1;
+                        visit[nrow][ncol] = cnt + 1;
 					    algoQ.push({ {nrow,ncol},cnt + 1 });
                     }
 				}
 				else
 				{
-					if (visit[nrow][ncol] > visit[row][col])
+					if (visit[nrow][ncol] > cnt)
                     {
-                        visit[nrow][ncol] = visit[row][col];
+                        visit[nrow][ncol] = cnt;
 					    algoQ.push({ {nrow,ncol},cnt});
                     }
 				}
