@@ -12,8 +12,8 @@ int mAV[4] = { 0,0,1,-1 };
 
 int main()
 {
-	int arow = 6, acol = 6;
 
+    int arow = 6, acol = 6;
     cin>>acol>>arow;
     
     for(int i=0; i<arow; i++)
@@ -27,47 +27,46 @@ int main()
         }
     }
 	
-	queue<pair<pair<int, int>, int>> algoQ;
-	algoQ.push({ {0,0},0 });
-	visit[0][0] = 0;
+    queue<pair<pair<int, int>, int>> algoQ;
+    algoQ.push({ {0,0},0 });
+    visit[0][0] = 0;
 
-	int ret = 2e9;
-	while (!algoQ.empty())
-	{
-		int row = algoQ.front().first.first;
-		int col = algoQ.front().first.second;
-		int cnt = algoQ.front().second;
-		algoQ.pop();
+    int ret = 2e9;
+    while (!algoQ.empty())
+    {
+        int row = algoQ.front().first.first;
+        int col = algoQ.front().first.second;
+        int cnt = algoQ.front().second;
+        algoQ.pop();
 
-		for (int i = 0; i < 4; i++)
-		{
-			int nrow = row + mAV[i];
-			int ncol = col + mAH[i];
+        for (int i = 0; i < 4; i++)
+        {
+             int nrow = row + mAV[i];
+             int ncol = col + mAH[i];
 
-			if (0 <= nrow && nrow < arow && 0 <= ncol && ncol<acol)
-			{
-				if (algoMap[nrow][ncol] == 1)
-				{
-					if (visit[nrow][ncol] > cnt + 1)
-                    {
-                        visit[nrow][ncol] = cnt + 1;
-					    algoQ.push({ {nrow,ncol},cnt + 1 });
-                    }
-				}
-				else
-				{
-					if (visit[nrow][ncol] > cnt)
-                    {
-                        visit[nrow][ncol] = cnt;
-					    algoQ.push({ {nrow,ncol},cnt});
-                    }
-				}
-			}
-		}
-
-	}
+             if (0 <= nrow && nrow < arow && 0 <= ncol && ncol<acol)
+             {
+                   if (algoMap[nrow][ncol] == 1)
+                   {
+                        if (visit[nrow][ncol] > cnt + 1)
+                        {
+                              visit[nrow][ncol] = cnt + 1;
+                              algoQ.push({ {nrow,ncol},cnt + 1 });
+                        }
+                   }
+                   else
+                   {
+                        if (visit[nrow][ncol] > cnt)
+                        {
+                             visit[nrow][ncol] = cnt;
+                             algoQ.push({ {nrow,ncol},cnt});
+                        }
+                   }
+             }
+        }
+    }
 	
-	cout << visit[arow-1][acol-1] << endl;
-	return 0;
+    cout << visit[arow-1][acol-1] << endl;
+    return 0;
 
 }
