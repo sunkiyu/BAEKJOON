@@ -1,0 +1,50 @@
+#include<iostream>
+
+using namespace std;
+
+int longestBitonic[1001] = {0,};
+int lgstBDP[1001] = {0,};
+int rlgstBDP[1001] = {0,};
+int main()
+{
+   int lgstBN = 10,maxlgstBN = 0;
+    
+    cin>>lgstBN;
+    
+    for(int i=1; i<=lgstBN; i++)
+        cin>>longestBitonic[i];
+
+   //center
+    for (int i = 1; i <= lgstBN; i++)
+    {
+        lgstBDP[i] = 1;
+        for (int j = 1; j <= i; j++)
+        {
+            if (longestBitonic[j] < longestBitonic[i])
+            {
+                lgstBDP[i] = max(lgstBDP[i], lgstBDP[j] + 1);
+            }
+        }
+    }
+ 
+    for (int i = lgstBN; i >= 1; i--)
+    {
+        rlgstBDP[i] = 1;
+        for (int j = lgstBN; j >= i; j--)
+        {
+            if (longestBitonic[i] > longestBitonic[j])
+            {
+                rlgstBDP[i] = max(rlgstBDP[i],rlgstBDP[j] + 1);
+            }
+        }
+    }
+ 
+    int Answer = 0;
+    for (int i = 0; i <= lgstBN; i++)
+    {
+        Answer =max(Answer, lgstBDP[i] + rlgstBDP[i] - 1);
+    }
+    cout << Answer << endl;
+
+    return 0;
+}
