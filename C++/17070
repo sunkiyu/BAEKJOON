@@ -1,0 +1,109 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int house[33][33] = { 0, };
+int visit[33][33][3] = {0,};
+enum Dir{H=0,D,V};
+int mHH[2] = { 1,1};
+int mHV[2] = { 0,1 };
+int mVH[2] = { 0,1 };
+int mVV[2] = { 1,1 };
+int mDH[3] = { 1,0,1};
+int mDV[3] = { 0,1,1};
+int main()
+{
+    int pipeN = 4;
+    cin>>pipeN;
+    for(int i=0; i<pipeN; i++)
+        for(int j=0; j<pipeN; j++)
+        {
+            cin>>house[i][j];
+        }
+   
+    queue<pair<pair<int, int>, int>> pipeQ;
+    pipeQ.push({{0,1},H });
+    int ans = 0;
+
+    while (!pipeQ.empty())
+    {
+        int row = pipeQ.front().first.first;
+        int col = pipeQ.front().first.second;
+        Dir dir = (Dir)pipeQ.front().second;
+        pipeQ.pop();
+
+        if (row == pipeN - 1 && col == pipeN - 1)
+        {
+            ans++;
+            continue;
+        }
+        if (dir == Dir::H)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                int nrow = row + mHV[i];
+                int ncol = col + mHH[i];
+                if (0 <= nrow && nrow < pipeN && 0 <= ncol && ncol < pipeN)
+                {
+                    if(i==0)
+                    {
+                        if(house[nrow][ncol])continue;
+                        pipeQ.push({ {nrow,ncol},H });
+                    }
+                    if (i == 1) {
+                        if(!(house[nrow][ncol] == 0 && house[row + 1][col] == 0 && house[row][col + 1] == 0))continue;
+                        pipeQ.push({ {nrow,ncol},D });
+                    }
+                }
+            }
+        }
+        else if (dir == Dir::V)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                int nrow = row + mVV[i];
+                int ncol = col + mVH[i];
+
+                if (0 <= nrow && nrow < pipeN && 0 <= ncol && ncol < pipeN)
+                {
+                    if (i == 0) {
+                        if(house[nrow][ncol])continue;
+                        pipeQ.push({ {nrow,ncol},V });
+                    }
+                    if (i == 1)  {
+                        if(!(house[nrow][ncol] == 0 && house[row + 1][col] == 0 && house[row][col + 1] == 0))continue;
+                        pipeQ.push({ {nrow,ncol},D });
+                    }
+                }
+            }
+        }
+        else if (dir == Dir::D)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                int nrow = row + mDV[i];
+                int ncol = col + mDH[i];
+
+                if (0 <= nrow && nrow < pipeN && 0 <= ncol && ncol < pipeN)
+                {
+                    if (i == 0) {
+                        if(house[nrow][ncol])continue;
+                        pipeQ.push({ {nrow,ncol},H });
+                    }
+                    if (i == 1) {
+                        if(house[nrow][ncol])continue;
+                        pipeQ.push({ {nrow,ncol},V });
+                    }
+                    if (i == 2) {
+                         if(!(house[nrow][ncol] == 0 && house[row + 1][col] == 0 && house[row][col + 1] == 0))continue;
+                        pipeQ.push({ {nrow,ncol},D });
+                    }
+                }
+            }
+        }
+    }
+    cout<< ans <<endl;
+    return 0;
+}
+
