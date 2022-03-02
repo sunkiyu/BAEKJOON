@@ -1,0 +1,123 @@
+#include <iostream>
+#include <queue>
+#include <functional>
+#include<cstring>
+using namespace std;
+
+using LLong = long long;
+
+int house[33][33] = { 0, };
+LLong visit[33][33][3] = {0,};
+enum Dir{H=0,D,V};
+int mHH[2] = { 1,1};
+int mHV[2] = { 0,1 };
+int mVH[2] = { 0,1 };
+int mVV[2] = { 1,1 };
+int mDH[3] = { 1,0,1};
+int mDV[3] = { 0,1,1};
+int pipeN = 4;
+  auto Can_Turn=[](int x, int y)
+    {
+        if (house[x + 1][y] == 0 && house[x][y + 1] == 0 && house[x + 1][y + 1] == 0) return true;
+        return false;
+    };
+
+LLong pipeDFS(int row,int col,int dir)
+    {
+        if (visit[row][col][dir] != -1) return visit[row][col][dir];
+        if (row == pipeN - 1 && col == pipeN - 1) return 1;
+        visit[row][col][dir] = 0;
+
+        if (dir == Dir::H)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                int nrow = row + mHV[i];
+                int ncol = col + mHH[i];
+
+                if (0 <= nrow && nrow < pipeN && 0 <= ncol && ncol < pipeN)
+                {
+                    if (i == 0) 
+                    {
+                        if (house[nrow][ncol] == 0)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, dir);
+                    }
+                    if (i == 1) 
+                    {
+                        if (Can_Turn(row, col) == true)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, D);
+                    }
+                }
+            }
+        }
+        else if (dir == Dir::V)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                int nrow = row + mVV[i];
+                int ncol = col + mVH[i];
+
+                if (0 <= nrow && nrow < pipeN && 0 <= ncol && ncol < pipeN)
+                {
+                    if (i == 0) 
+                    {
+                        if (house[nrow][ncol] == 0)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, dir);
+                    }
+                    if (i == 1) 
+                    {
+                        if (Can_Turn(row, col) == true)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, D);
+                    }
+                }
+            }
+        }
+        else if (dir == Dir::D)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                int nrow = row + mDV[i];
+                int ncol = col + mDH[i];
+
+                if (0 <= nrow && nrow < pipeN && 0 <= ncol && ncol < pipeN)
+                {
+                    if (i == 0) 
+                    {
+                        if (house[nrow][ncol] == 0)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, H);
+                    }
+                    if (i == 1) 
+                    {
+                        if (house[nrow][ncol] == 0)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, V);
+                    }
+                    if (i == 2) 
+                    {
+                        if (Can_Turn(row, col) == true)
+                            visit[row][col][dir] = visit[row][col][dir] + pipeDFS(nrow, ncol, D);
+                    }
+                }
+            }
+        }
+         return visit[row][col][dir];
+    };
+
+int main()
+{
+    cin>>pipeN;
+    for(int i=0; i<pipeN; i++)
+        for(int j=0; j<pipeN; j++)
+        {
+            cin>>house[i][j];
+        }
+   
+   LLong ans = 0;
+      memset(visit, -1, sizeof(visit));
+
+
+         ans = pipeDFS(0, 1, H);
+            cout<<ans<<endl;
+
+    return 0;
+}
+
