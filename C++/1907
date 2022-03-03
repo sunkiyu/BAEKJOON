@@ -1,0 +1,115 @@
+#include<iostream>
+#include <functional>
+#include <vector>
+
+using namespace std;
+int xs[11] = {0,};
+vector<int> xsVisit;
+//idx, char, = cnt
+int xsInfo[3][27];
+
+int main()
+{
+   string orgxs = "COH+H2O=H3CO2";
+    cin>>orgxs;
+   string xs1 = "", xs2= "", xs3 = "";
+   string tmp="";
+   int in=0;
+   for(int i=0; i<orgxs.length(); i++)
+   {
+       if(orgxs[i]=='+'||orgxs[i]=='=')
+       {
+           if(in++==0) xs1 = tmp;
+           else xs2= tmp;
+           tmp = "";
+       }
+       else
+           tmp+=orgxs[i];
+   }
+   if(tmp!="")xs3= tmp;
+
+   auto setXsInfo = [&](string str, int idx)
+   {
+       char svChar = '-';
+       for(int i=0; i<str.length(); i++)
+       {
+             int curInt = -1;
+             char curChar = str[i];
+             if('A' <=curChar && curChar <='Z')
+             {
+                 if(svChar!='-'){
+                     xsInfo[idx][svChar-'A']++;
+                 }
+                 svChar = curChar;
+             }
+             else
+             {
+                 curInt = curChar -'0';
+                 for(int j=0; j<curInt; j++)xsInfo[idx][svChar-'A']++;
+                 svChar = '-';
+             }
+       };
+       if(svChar!= '-')xsInfo[idx][svChar-'A']++;
+   };
+
+   setXsInfo(xs1,0);
+   setXsInfo(xs2,1);
+   setXsInfo(xs3,2);
+
+   function<void(int)> chemicalDFS = [&](int cnt)
+   {
+        if(cnt==3)
+        {
+            for(int i=0; i<3; i++)
+            {
+                int plus = xsVisit[i];
+                if(plus==1)continue;
+                for(int j=0; j<27; j++)
+                {
+                    if(xsInfo[i][j])
+                    {
+                        xsInfo[i][j]*=plus;
+                    }
+                }
+            }
+
+            bool isSame = true;
+            for(int i=0; i<27; i++)
+            {
+                if(xsInfo[0][i]+ xsInfo[1][i] != xsInfo[2][i]) isSame =false;
+            }
+            if(!isSame)
+            {
+                for(int i=0; i<3; i++)
+                {
+                    int plus = xsVisit[i];
+                    if(plus==1)continue;
+                    for(int j=0; j<27; j++)
+                    {
+                        if(xsInfo[i][j])
+                        {
+                            xsInfo[i][j]/=plus;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0; i<3; i++)
+                    cout << xsVisit[i] << " ";
+                exit(0);
+            }
+
+            return;
+        }
+
+        for(int i=1; i<=10; i++)
+        {
+            xsVisit.push_back(i);
+            chemicalDFS(cnt+1);
+            xsVisit.pop_back();
+        }
+   };
+   chemicalDFS(0);
+    return 0;
+}
