@@ -1,0 +1,33 @@
+#include<iostream>
+#include<vector>
+#include <functional>
+#define endl "\n"
+using namespace std;
+vector<int> cSumValDP(100010,2e9);
+
+int main()
+{
+   int coins = 3, sumvalue = 15;
+   cin>>coins>>sumvalue;
+   for(int i=0; i<coins; i++)
+   {
+       int coinVal;cin>>coinVal;
+       cSumValDP[coinVal]=1;
+   }
+   for(int i = 2; i<=sumvalue; i++)
+   {
+       int curVal = i;
+ 
+           for(int j=1; j<curVal; j++)
+           {
+               int one = cSumValDP[j];
+               int two = cSumValDP[curVal-j];
+               if(one!=2e9 && two!=2e9)
+                   cSumValDP[curVal] = min(cSumValDP[curVal],one+two);
+           }
+       
+   }
+    if(cSumValDP[sumvalue]==2e9)cout<<-1<<endl;
+    else cout<<cSumValDP[sumvalue]<<endl;
+    return 0;
+}
