@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+#include <string>
+#include <functional>
+#include <cstring>
+bool atomVisit[50000];
+using namespace std;
+
+string strlst[] = { "h", "li", "na", "k", "rb", "cs", "fr", "be", "mg", "ca", "sr", "ba", "ra", "sc", "y", "ti", "zr", "hf", "rf", "la", "ac",
+                     "v", "nb", "ta", "db", "ce", "th", "cr", "mo", "w", "sg", "pr", "pa", "mn", "tc", "re", "bh", "nd", "u", "fe", "ru", "os",
+                     "hs", "pm", "np", "co", "rh", "ir", "mt", "sm", "pu", "ni", "pd", "pt", "ds", "eu", "am", "cu", "ag" ,"au", "rg", "gd", "cm",
+                     "zn", "cd", "hg", "cn", "tb", "bk", "b", "al", "ga", "in", "tl", "dy", "cf", "c", "si", "ge", "sn", "pb", "fl", "ho", "es",
+                     "n", "p", "as", "sb", "bi", "er", "fm", "o", "s", "se", "te", "po", "lv", "tm", "md", "f", "cl", "br", "i", "at", "yb", "no",
+                     "he", "ne", "ar", "kr", "xe", "rn","lu", "lr" };
+
+int main()
+{
+    int circulate =0;
+    cin>>circulate;
+    
+    for(int t=0; t<circulate; t++){
+        memset(atomVisit, false, sizeof(atomVisit));
+
+    string sp = "collegiate";
+     cin>>sp;
+   queue<int> atomQ;
+
+   auto findAndPushQ = [&](int idx){
+
+        for(int j=0; j<114; j++)
+        {
+            string str1 ="",str2="";
+            str1+=sp[idx];
+            str2+=sp[idx];str2+=sp[idx+1];
+            string atom = strlst[j];
+            if(str1==atom || str2 == atom){
+                    int curLen = atom.length();
+                    if(atomVisit[idx+curLen])continue;
+                    atomVisit[idx+curLen] =1;
+                    atomQ.push(idx+curLen);
+                }
+            };
+        };
+
+        atomVisit[0] =1;
+        findAndPushQ(0);
+        bool bcanMake = false;
+        while(!atomQ.empty())
+        {
+            int cur = atomQ.front();
+            atomQ.pop();
+            
+            if(cur==sp.length())
+            {
+                bcanMake = true;
+                break;
+            }
+            findAndPushQ(cur);
+        }
+   if(bcanMake)cout<<"YES"<<endl;
+   else cout<<"NO"<<endl;
+    }
+    return 0;
+};
