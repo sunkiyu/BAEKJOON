@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+vector<string> sotrWords;
+int main()
+{
+    int sortWCnt = 13;
+    cin>>sortWCnt;
+    for(int i=0; i<sortWCnt; i++)
+    {
+        string str = "";
+        cin>>str;
+        sotrWords.push_back(str);
+    }
+  
+   sort(sotrWords.begin(),sotrWords.end(),[&](string a,string b){
+       if(a.length() <=b.length())
+       {
+           if(a.length()==b.length())
+           {
+               return a<b;
+           }
+           else
+               return true;
+       }
+       else
+           return false;
+   });
+
+   string bfstr = "";
+   for(int i=0; i<sotrWords.size(); i++)
+   {
+       if(i==0){
+           bfstr = sotrWords[0];
+           cout<<sotrWords[0]<<endl;
+       }
+       else
+       {
+           if(bfstr==sotrWords[i])continue;
+           else
+           {
+               bfstr= sotrWords[i];
+               cout<<sotrWords[i]<<endl;
+           }
+       }
+   }
+    return 0;
+}
