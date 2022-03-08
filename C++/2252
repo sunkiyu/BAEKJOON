@@ -1,0 +1,42 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+int stuMaxInfo[100010] = {0,};
+vector<int> stuNode[100010];
+int main()
+{
+    int stuNo,stuCase=0;
+    cin >> stuNo >> stuCase;
+    for (int i = 0; i <stuCase; i++)
+    {
+        int a, b; cin >> a >> b;
+        stuMaxInfo[b]++;
+        stuNode[a].push_back(b);
+    }
+ 
+    queue<int> stuQ;
+    for (int i = 1; i <= stuNo; i++)
+    {
+        if (stuMaxInfo[i] == 0) stuQ.push(i);
+    }
+    
+    while (!stuQ.empty())
+    {
+        int Cur = stuQ.front();
+        stuQ.pop();
+ 
+        cout << Cur << " ";
+        for (int i = 0; i < stuNode[Cur].size(); i++)
+        {
+            int Next = stuNode[Cur][i];
+            stuMaxInfo[Next]--;
+ 
+            if (stuMaxInfo[Next] == 0) stuQ.push(Next);
+        }
+    }
+    cout << endl;
+
+    return 0;
+}
