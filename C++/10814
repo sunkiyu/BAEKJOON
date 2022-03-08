@@ -4,7 +4,8 @@
 #include <algorithm>
 #define endl "\n"
 using namespace std;
-vector<tuple<int,string,int>> bojMem;
+ using objMemTuple = tuple<int,string,int>;
+objMemTuple bojMem[100001];
 int main()
 {
    int bojMems =3;
@@ -15,10 +16,10 @@ int main()
         int age,idx =0;
         string name="";
         cin>>age>>name;
-        bojMem.push_back(tuple<int,string,int>(age,name,i));
+        bojMem[i] = objMemTuple(age,name,i);
     }
 
-   sort(bojMem.begin(),bojMem.end(),[&](tuple<int,string,int> a, tuple<int,string,int> b)
+  sort(bojMem,bojMem+bojMems,[&](objMemTuple a, objMemTuple b)
    {
       if(get<0>(a) <= get<0>(b))
       {
@@ -32,8 +33,8 @@ int main()
       else
           return false;
    });
-   
-   for(int i=0; i<bojMem.size(); i++)
+
+   for(int i=0; i<bojMems; i++)
    {
        cout<<get<0>(bojMem[i])<<" "<<get<1>(bojMem[i])<<endl;
    }
