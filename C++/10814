@@ -1,0 +1,36 @@
+#include <iostream>
+#include <tuple>
+#include <vector>
+#include <algorithm>
+#include <utility>
+
+#define endl "\n"
+
+using namespace std;
+
+int main()
+{
+   int bojMems =3;
+    cin>>bojMems;
+    vector<pair<int,string>> bojMem(bojMems);
+    
+    for(int i=0; i<bojMems; i++)
+    {
+        int age =0;
+        string name="";
+        cin>>age>>name;
+        bojMem[i] = {age,name};
+    }
+
+  
+    stable_sort(bojMem.begin(), bojMem.end(),[&](pair<int,string> a, pair<int,string> b)
+       {
+             return a.first<b.first;
+       });
+
+   for(int i=0; i<bojMems; i++)
+   {
+       cout<<bojMem[i].first<<" "<<bojMem[i].second<<endl;
+   }
+
+}
