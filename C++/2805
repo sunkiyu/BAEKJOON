@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+using namespace std;
+using BigInt = unsigned int;
+
+int cutTrees = 4; BigInt bringLen = 7;
+BigInt cutTreeHeight[1000001] = {0,};
+
+int main() {
+	cin >> cutTrees >> bringLen;
+	for (int i = 0; i < cutTrees; i++)
+		cin >> cutTreeHeight[i];
+
+    BigInt tstart = 0, tend = 1000000000;
+     BigInt tMaxHeight=0;
+	while (tstart <= tend) 
+    {
+		BigInt diff = (tstart + tend) / 2;
+        
+    BigInt cnt = 0;
+	for (int i = 0; i < cutTrees; i++) 
+    {
+		if (cutTreeHeight[i] >= diff) cnt += (cutTreeHeight[i] - diff);
+		if (cnt >= bringLen)
+        {
+			tMaxHeight = diff;
+			tstart = diff + 1;
+            break;
+		}
+    }
+    if(tstart == diff + 1)continue;
+	tend = diff - 1;
+    }
+	cout<<tMaxHeight<<"\n";
+
+}
