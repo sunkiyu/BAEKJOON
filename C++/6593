@@ -1,0 +1,89 @@
+#include<iostream>
+#include <queue>
+#include<tuple>
+#include <string.h>
+
+char sLRCMap[31][31][31] = {0,};
+bool sLRCVisit[31][31][31] = {0,};
+#define endl "\n"
+using namespace std;
+using lrcTp = tuple<int,int,int>;
+int main()
+{
+    while (1)
+    {
+        bool isOk =false;
+    int sL =3, sR =4, sC = 5;
+    cin>>sL>>sR>>sC;
+    lrcTp start,end;
+    
+    memset(sLRCVisit, false, sizeof(sLRCVisit));
+    if (sL == 0 && sR == 0 && sC == 0) exit(0);
+    for (int i = 0; i < sL; i++)
+    {
+        for (int j = 0; j < sR; j++)
+        {
+            for (int k = 0; k < sC; k++)
+            {
+                cin >> sLRCMap[i][j][k];
+                if (sLRCMap[i][j][k] == 'S')
+                {
+                    start = lrcTp(i,j,k);
+                }
+                else if (sLRCMap[i][j][k] == 'E')
+                {
+                    end = lrcTp(i,j,k);
+                }
+            }
+        }
+    }
+    
+   queue<pair<lrcTp,int>> lrcQ;
+ 
+   lrcQ.push({start,0});
+   sLRCVisit[get<0>(start)][get<1>(start)][get<2>(start)] = 1;
+   int lrcR[] = { 0, 0, 1, -1, 0, 0 };
+   int lrcC[] = { 1, -1, 0, 0, 0, 0 };
+   int lrcL[] = { 0, 0, 0, 0, 1, -1 };
+
+   while(!lrcQ.empty())
+   {
+       int l = get<0>(lrcQ.front().first);
+       int r = get<1>(lrcQ.front().first);
+       int c = get<2>(lrcQ.front().first);
+       int time = lrcQ.front().second;
+       lrcQ.pop();
+
+
+       if(l ==get<0>(end) &&r ==get<1>(end) && c ==get<2>(end))
+       {
+           isOk = true;
+           cout << "Escaped in " << time << " minute(s)." << endl;
+           break;
+       }
+
+       for(int i=0; i<6; i++)
+       {
+           int nl = l + lrcL[i];
+           int nr = r + lrcR[i];
+           int nc = c + lrcC[i];
+
+           if(0<=nl && nl < sL && 0<= nr && nr < sR && 0<=nc && nc<sC)
+           {
+               if (sLRCMap[nl][nr][nc] == '#') continue;
+                
+                if (sLRCMap[nl][nr][nc] == '.' || sLRCMap[nl][nr][nc] == 'E')
+                {
+                    if (sLRCVisit[nl][nr][nc] == false)
+                    {
+                       sLRCVisit[nl][nr][nc] =true;
+                       lrcQ.push({lrcTp(nl,nr,nc),time+1});
+                    }
+               }
+           }
+       }
+   }
+    if(!isOk)cout<< "Trapped!"<<endl;
+   }
+    return 0;
+}
