@@ -1,0 +1,41 @@
+#include <iostream>
+int josepus[5001] ={0,};
+using namespace std;
+
+int main()
+{
+    int joseK =7, joseN = 3;
+    cin>>joseK>>joseN;
+    for(int i=0; i<joseK; i++)
+        josepus[i] = i+1;
+
+   int ringCount = 0;
+   int joseStart = 0,livePeople=joseK;
+    cout<<"<";
+   while(livePeople>0)
+   {
+       if(josepus[joseStart]!=0)
+       {
+           ringCount++;
+       }
+
+       if(ringCount == joseN)
+       {
+           if(livePeople==1)
+               cout<<josepus[joseStart]<<">"<<endl;
+           else
+               cout<<josepus[joseStart]<<", ";
+           josepus[joseStart] =0;
+           ringCount=0;
+           livePeople--;
+       }
+
+       if(joseStart+1>=joseK)
+       {
+           joseStart =0;
+       }
+       else
+           joseStart++;
+   }
+    return 0;
+}
