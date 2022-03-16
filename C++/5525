@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+#define endl "\n"
+
+using namespace std;
+
+int main()
+{
+   int cmpio=1,iolen=0;
+   string io = "OOIOIOIOIIOII";
+   cin>>cmpio>>iolen>>io;
+
+   int ioCnt =0;
+   int findO=0;
+
+   for(int i=0; i<io.length(); i++)
+   {
+         while(io[i]=='I' && io[i+1]=='O')
+         {
+             i+=2;
+             findO++;
+             if(io[i] == 'I' && findO==cmpio)
+             {
+                 findO--;
+                 ioCnt++;
+             }
+         }
+       findO=0;
+   }
+    cout<<ioCnt<<endl;
+    return 0;
+}
