@@ -1,0 +1,35 @@
+#include<iostream>
+#include <set>
+#include <string>
+#include <algorithm>
+#define endl "\n"
+using namespace std;
+set<string> cantListenSee;
+string dupleList[500001] = {"",};
+int main()
+{
+    int cantListen,cantSee=0;
+    cin>>cantListen>>cantSee;
+    int cantListenSeeCnt=0;
+    
+    for(int i=0; i<cantListen+cantSee; i++)
+    {
+        string str =  "";
+        cin>>str;
+        if(cantListenSee.find(str)==cantListenSee.end())
+            cantListenSee.insert(str);
+        else
+        {
+            dupleList[cantListenSeeCnt++] = str;
+        }
+    }
+    
+     cout<<cantListenSeeCnt<<endl;
+       sort(dupleList,dupleList+cantListenSeeCnt,[&](string a,string b){return a<b;});
+       for(int i=0; i<cantListenSeeCnt; i++)
+       {
+           cout<<dupleList[i]<<endl;
+       }
+    
+    return 0;
+}
