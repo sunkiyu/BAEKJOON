@@ -1,0 +1,39 @@
+#include<iostream>
+#include <vector>
+#include <functional>
+#define endl "\n"
+using namespace std;
+
+vector<int> warmCom[101];
+int warmComVisit[101] = {0,};
+int main()
+{
+   int allCom =7, comConect =6;
+    cin>>allCom>>comConect;
+    
+   warmComVisit[1] = 1;
+   int warmCnt = 0;
+   for(int i=0; i<comConect; i++)
+   {
+       int a, b=0;
+       cin>>a>>b;
+       warmCom[a].push_back(b);
+       warmCom[b].push_back(a);
+   }
+
+   function<void(int)> warmCheckDFS = [&](int cur)
+   {
+       for(int i=0; i<warmCom[cur].size(); i++)
+       {
+           int next = warmCom[cur][i];
+           if(warmComVisit[next])continue;
+           warmComVisit[next]=1;
+           warmCnt++;
+           warmCheckDFS(next);
+       }
+   };
+
+   warmCheckDFS(1);
+   cout<<warmCnt<<endl;
+   return 0;
+}
