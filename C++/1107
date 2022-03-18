@@ -1,0 +1,48 @@
+#include<iostream>
+#include<functional>
+#include<cstring>
+#define MIN(a,b) (a<b ? a : b)
+
+using namespace std;
+
+int mv = 500000,minRet = 2e9;
+int brokenNum[10] = {0,};
+
+int main()
+{
+    int brokenCnt=0;
+    cin>>mv>>brokenCnt;
+    
+    for(int i=0; i<10; i++)brokenNum[i] =1;
+    for(int i=0; i<brokenCnt; i++)
+    {
+        int bk =0;
+        cin>>bk;
+        brokenNum[bk]=0;
+    }    
+    minRet = min(minRet, abs(100 - mv));
+    if(brokenCnt<10) 
+    {
+         function<void(string)> find = [&](string num) 
+         {
+              for(int i=0;i<10;i++) 
+              {
+                  if(brokenNum[i]) 
+                  {
+                        string curMemory = num + to_string(i);
+                        //모든 케이스를 뒤진 후 최소를 얻음 +,-로 조작하는 횟수,   정상 버튼으로 누르는 횟수
+                        minRet = MIN(minRet, abs(mv - stoi(curMemory)) + curMemory.length());
+                      
+                        //500,000까지 번호가 있으므로 6자리인 경우까지 모두 탐색한다.
+                        if(curMemory.length() < 6) 
+                        {
+                            find(curMemory);
+                        }
+                    }
+                }
+         };
+        find("");
+    }
+    cout<<minRet<<endl;
+    return 0;   
+}
