@@ -1,0 +1,147 @@
+#include <iostream>
+using namespace std;
+
+int mise[51][51] = {0,};
+int CPmise[51][51] = {0,};
+int spreaded[51][51] = {0,};
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+int main()
+{
+   int miseRow = 7, miseCol = 8, miseTime = 50;
+    cin>>miseRow>>miseCol>>miseTime;
+    
+    int remainDust=0;
+   pair<int,int> airPuriUp = {-1,-1};
+   pair<int,int> airPuriDown = {3,0};
+    
+    for(int i=0; i<miseRow; i++)
+        for(int j=0; j<miseCol; j++)
+        {
+            cin>> mise[i][j];
+            if(mise[i][j]==-1 && airPuriUp.first==-1)
+            {
+                airPuriUp.first = i;
+                airPuriUp.second = j;
+                airPuriDown.first = i+1;
+                airPuriDown.second = j;
+            }
+        }
+
+   while(miseTime--)
+   {
+       for(int i=0; i<miseRow; i++)
+           for(int j=0; j<miseCol; j++)
+           {
+               CPmise[i][j] = mise[i][j];
+               if(CPmise[i][j]!=-1)
+                   spreaded[i][j]=1;
+               if(CPmise[i][j]!=0 && CPmise[i][j]!=-1)
+               {
+                   spreaded[i][j]=0;
+               }
+           }
+
+       //spread
+       for(int i=0; i<miseRow; i++)
+           for(int j=0; j<miseCol; j++)
+           {
+               if(!spreaded[i][j])
+               {
+                   int curDust = CPmise[i][j];
+                   int spreadDust = mise[i][j]/5;
+
+                   for(int d=0; d<4; d++)
+                   {
+                       int nrow = i+mAV[d];
+                       int ncol = j+mAH[d];
+
+                       if(0<=nrow && nrow < miseRow && 0<=ncol && ncol<miseCol && CPmise[nrow][ncol]!=-1)
+                       {
+                           curDust-=spreadDust;
+                           CPmise[nrow][ncol]+=spreadDust;
+                       }
+                   }
+                   CPmise[i][j] = curDust;
+               }
+           }
+
+       //airPurifier Up
+       int upRow = airPuriUp.first;
+       int upCol = airPuriUp.second;
+
+       int beforeDust = 0;
+       for(int i = upCol+1; i<miseCol; i++)
+       {
+           int tmpDust = CPmise[upRow][i];
+           CPmise[upRow][i] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       for(int i= upRow-1; i>=0; i--)
+       {
+           int tmpDust = CPmise[i][miseCol-1];
+           CPmise[i][miseCol-1] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       for(int i = miseCol-2; i>=0; i--)
+       {
+           int tmpDust = CPmise[0][i];
+           CPmise[0][i] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       for(int i = 1; i<upRow; i++)
+       {
+           int tmpDust = CPmise[i][0];
+           CPmise[i][0] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       //airPurifier Down
+       int downRow = airPuriDown.first;
+       int downCol = airPuriDown.second;
+
+       beforeDust = 0;
+       for(int i = downCol+1; i<miseCol; i++)
+       {
+           int tmpDust = CPmise[downRow][i];
+           CPmise[downRow][i] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       for(int i= downRow+1; i<miseRow; i++)
+       {
+           int tmpDust = CPmise[i][miseCol-1];
+           CPmise[i][miseCol-1] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       for(int i = miseCol-2; i>=0; i--)
+       {
+           int tmpDust = CPmise[miseRow-1][i];
+           CPmise[miseRow-1][i] = beforeDust;
+           beforeDust = tmpDust;
+       }
+
+       for(int i = miseRow-2; i>downRow; i--)
+       {
+           int tmpDust = CPmise[i][0];
+           CPmise[i][0] = beforeDust;
+           beforeDust = tmpDust;
+       }
+       remainDust=0;
+       for(int i=0; i<miseRow; i++)
+           for(int j=0; j<miseCol; j++)
+           {
+               if(CPmise[i][j]!=-1)
+                   remainDust+=CPmise[i][j];
+               mise[i][j] = CPmise[i][j];
+           }
+   }
+    
+    cout<<remainDust<<endl;
+    return 0;
+}
