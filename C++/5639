@@ -1,0 +1,32 @@
+#include <iostream>
+#include <functional>
+
+using namespace std;
+int dat[10001] = {0,};
+
+int main(){
+	
+    int num,cnt=0;
+    
+    while(scanf("%d",&num)!=EOF)
+		dat[cnt++] = num;
+    int i;
+     function<void(int,int)> backCirculateDFS =[&](int start, int end)
+    {
+        if(start>=end) return;
+ 
+        for(i=start+1; i<end; i++)
+        {
+            if(dat[start]<dat[i])break;
+        };
+        
+        backCirculateDFS(start+1,i);
+        backCirculateDFS(i,end);
+        cout<<dat[start]<<"\n";
+        return;
+    };
+    
+    backCirculateDFS(0,cnt);
+	
+	return 0;
+}
