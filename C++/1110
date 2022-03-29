@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+   int nCycle = 71;
+    cin>>nCycle;
+   int nCycleVal = nCycle;
+   string strN="";
+   if(nCycleVal<10)
+   {
+        strN+='0';
+        strN+=to_string(nCycleVal);
+   }
+   else
+       strN = to_string(nCycleVal);
+
+   int first = strN[0]-'0';
+   int second = strN[1]-'0';
+   int newN = first+second;
+   string nsum = "";
+   nsum+=(second +'0');
+   nsum += (newN%10) +'0';
+   nCycleVal = stoi(nsum);
+   int nCycleCnt = 1;
+
+   while(nCycleVal!=nCycle)
+   {
+       nCycleCnt++;
+       string strN ="";
+       if(nCycleVal<10)
+       {
+            strN+='0';
+            strN+=to_string(nCycleVal);
+       }
+       else
+           strN = to_string(nCycleVal);
+       int first = strN[0]-'0';
+       int second = strN[1]-'0';
+       int newN = first+second;
+       string sum = "";
+       sum+=(second +'0');
+       sum += (newN%10) +'0';
+       nCycleVal = stoi(sum);
+   }
+    cout<<nCycleCnt<<endl;
+    return 0;
+}
