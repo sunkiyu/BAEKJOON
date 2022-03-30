@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#define endl "\n"
+
+using namespace std;
+
+int main()
+{
+   string paramA = "472";
+   string paramB = "385";
+    cin>>paramA>>paramB;
+   vector<int> cadiate;
+   int mutlCnt=0;
+   for(int i=paramB.length()-1; i>=0; i--)
+   {
+        int cur = paramB[i]-'0';
+        int first =  stoi(paramA);
+        int multi = first*cur;
+        cout<<multi<<endl;
+        for(int j=0; j<mutlCnt; j++) multi*=10;
+        mutlCnt++;
+        cadiate.push_back(multi);
+   }
+   int cadiSum=0;
+   for(int i=0; i<cadiate.size(); i++)
+       cadiSum+=cadiate[i];
+   cout<<cadiSum<<endl;
+    
+    return 0;
+}
