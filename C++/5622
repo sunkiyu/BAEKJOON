@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+   string phoneNo = "UNUCIC";
+    cin>>phoneNo;
+   int numToTime[27] = {0,};
+   int pStart =0,plastTime=3;
+
+   for(int i=0; i<5; i++)
+   {
+       for(int j=0; j<3; j++)
+       {
+            numToTime[pStart++] = plastTime;
+       }
+       plastTime++;
+   }
+    for(int i=0; i<4; i++) numToTime[pStart++] = plastTime;
+   ++plastTime;
+   for(int i=0; i<3; i++) numToTime[pStart++] = plastTime;
+   ++plastTime;
+   for(int i=0; i<4; i++) numToTime[pStart++] = plastTime;
+
+   int ptotTime=0;
+   for(int i=0; i<phoneNo.length(); i++)
+   {
+       ptotTime += numToTime[phoneNo[i]-'A'];
+   }
+    cout<<ptotTime<<endl;
+    return 0;
+}
