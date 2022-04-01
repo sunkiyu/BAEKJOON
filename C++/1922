@@ -1,0 +1,50 @@
+#include<iostream>
+#include<queue>
+#include <vector>
+using namespace std;
+
+#define endl "\n"
+int comVisit[1001] = {0,};
+vector<pair<int,int>> comConnect[1001];
+int main()
+{
+   int com=6, comLines = 9;
+    cin>>com>>comLines;
+    priority_queue<pair<int,int>> comQ;
+    for(int i=0; i<comLines; i++)
+    {
+        int a,b,c =0;
+        cin>>a>>b>>c;
+        comConnect[a].push_back({b,c});
+        comConnect[b].push_back({a,c});
+       
+    }
+ for (int i = 0; i < comConnect[1].size(); i++) {
+		int to = comConnect[1][i].first;
+		int co = comConnect[1][i].second;
+		comQ.push(make_pair(-1 * co, to));
+	}
+   comVisit[1] =1;
+
+   int comConCost=0;
+   while(!comQ.empty())
+   {
+       int cost = -comQ.top().first;
+       int next = comQ.top().second;
+       comQ.pop();
+       if(comVisit[next])continue;
+       comConCost+=cost;
+       comVisit[next] =1;
+
+       for(int i=0; i<comConnect[next].size(); i++)
+       {
+           int nNext = comConnect[next][i].first;
+           int nCost = comConnect[next][i].second;
+           if(comVisit[nNext])continue;
+           comQ.push({-nCost,nNext});
+       }
+   }
+    
+    cout<<comConCost<<endl;
+    return 0;
+}
