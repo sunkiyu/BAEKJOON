@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <queue>
+#define endl "\n"
+using namespace std;
+
+vector<pair<int,int>> specificShort[801];
+vector<int> specificDP(801,2e9);
+
+int main()
+{
+   int sshtN =4,sshtLines= 6;
+    cin>>sshtN>>sshtLines;
+    
+    for(int i=0; i<sshtLines; i++)
+    {
+        int a,b,c=0;
+        cin>>a>>b>>c;
+        
+        specificShort[a].push_back({b,c});
+        specificShort[b].push_back({a,c});
+    }
+    
+    int v1,v2=0;
+    cin>>v1>>v2;
+    pair<int,int> visitPoint = {v1,v2};
+   auto getShortestDist = [&](int start,int end)
+   {
+      priority_queue<pair<int,int>> sshtQ;
+       sshtQ.push({0,start});
+
+       while(!sshtQ.empty())
+       {
+           int cost = -sshtQ.top().first;
+           int cur = sshtQ.top().second;
+           sshtQ.pop();
+
+           for(int i=0; i<specificShort[cur].size(); i++)
+           {
+               int next = specificShort[cur][i].first;
+               int nCost = specificShort[cur][i].second;
+               if(specificDP[next]<cost+nCost) continue;
+               specificDP[next] = cost+nCost;
+               sshtQ.push({-(cost+nCost),next});
+           }
+       }
+       return specificDP[end];
+   };
+
+    for(int i=1; i<=801; i++)specificDP[i] = 2e9;
+    specificDP[v1] =0;
+   int v1_v2 =getShortestDist(v1,v2);
+      
+   for(int i=1; i<=801; i++)specificDP[i] = 2e9;
+   specificDP[1] =0;
+   int start_v1= getShortestDist(1,v1);
+    
+   for(int i=1; i<=801; i++)specificDP[i] = 2e9;
+   specificDP[1] =0;
+   int start_v2= getShortestDist(1,v2);
+    
+   for(int i=1; i<=801; i++)specificDP[i] = 2e9;
+   specificDP[v2] =0;
+   int v2_end= getShortestDist(v2,sshtN);
+    
+    for(int i=1; i<=801; i++)specificDP[i] = 2e9;
+    specificDP[v1] =0;
+    int v1_end= getShortestDist(v1,sshtN);
+    
+    if(v1_v2 == 2e9){cout<<-1<<endl; return 0;}
+    cout<<min(start_v1+v1_v2+v2_end,start_v2+v1_v2+v1_end)<<endl;
+    return 0;
+}
