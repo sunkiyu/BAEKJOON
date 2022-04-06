@@ -1,0 +1,121 @@
+#include <iostream>
+#include <map>
+#include <queue>
+#include <string>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+
+char rgChaos[101][101] = {0,};
+bool rgChaosCheck[101][101] = {0,};
+map<char,int> rgDiv;
+int main()
+{
+
+   int rgChaosSz = 5;
+    cin>>rgChaosSz;
+    
+    for(int i=0; i<rgChaosSz; i++)
+    {
+        string str;
+        cin>>str;
+        
+        for(int j=0; j<str.length(); j++)
+        {
+            rgChaos[i][j] = str[j];
+        }
+    }
+    
+   for(int i=0; i<rgChaosSz; i++)
+       for(int j=0; j<rgChaosSz; j++)
+       {
+           if(rgChaosCheck[i][j])continue;
+           rgChaosCheck[i][j]= 1 ;
+           char curChar = rgChaos[i][j];
+           rgDiv[curChar]++;
+
+           queue<pair<int,int>> rgQ;
+           rgQ.push({i,j});
+
+           while(!rgQ.empty())
+           {
+               int row =rgQ.front().first;
+               int col = rgQ.front().second;
+               rgQ.pop();
+
+               for(int k=0; k<4; k++)
+               {
+                   int nrow = row + mAH[k];
+                   int ncol = col + mAV[k];
+
+                   if(0<= nrow && nrow <rgChaosSz && 0<=ncol && ncol <rgChaosSz
+                           &&!rgChaosCheck[nrow][ncol] && rgChaos[nrow][ncol] == curChar)
+                   {
+                       rgChaosCheck[nrow][ncol] = 1;
+                       rgQ.push({nrow,ncol});
+                   }
+               }
+           }
+
+       }
+
+   for(int i=0; i<rgChaosSz; i++)
+       for(int j=0; j<rgChaosSz; j++)
+       {
+           rgChaosCheck[i][j] = 0;
+       }
+
+   int rgbTot=0;
+   for(auto i=rgDiv.begin(); i !=rgDiv.end(); i++)
+   {
+          rgbTot+= i->second;
+   }
+
+   cout<< rgbTot <<' ';
+
+   rgDiv.clear();
+
+   for(int i=0; i<rgChaosSz; i++)
+       for(int j=0; j<rgChaosSz; j++)
+       {
+           if(rgChaosCheck[i][j])continue;
+           rgChaosCheck[i][j]= 1 ;
+           char curChar = rgChaos[i][j];
+           rgDiv[curChar]++;
+
+           queue<pair<int,int>> rgQ;
+           rgQ.push({i,j});
+
+           while(!rgQ.empty())
+           {
+               int row =rgQ.front().first;
+               int col = rgQ.front().second;
+               rgQ.pop();
+
+               for(int k=0; k<4; k++)
+               {
+                   int nrow = row + mAH[k];
+                   int ncol = col + mAV[k];
+
+
+                   if(0<= nrow && nrow <rgChaosSz && 0<=ncol && ncol <rgChaosSz
+                           &&!rgChaosCheck[nrow][ncol]&& (rgChaos[nrow][ncol] == curChar
+                                                          ||curChar =='R' && rgChaos[nrow][ncol]=='G' || curChar=='G' && rgChaos[nrow][ncol]=='R'))
+                   {
+                       rgChaosCheck[nrow][ncol] = 1;
+                       rgQ.push({nrow,ncol});
+                   }
+               }
+           }
+
+       }
+
+   rgbTot=0;
+   for(auto i=rgDiv.begin(); i !=rgDiv.end(); i++)
+   {
+          rgbTot+= i->second;
+   }
+
+   cout<< rgbTot<<endl;
+    return 0;
+}
