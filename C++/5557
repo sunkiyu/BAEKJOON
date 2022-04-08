@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+long long sgMake[101] = {0,};
+vector<vector<long long>> sgDP(101,vector<long long>(21,0));
+int main()
+{
+
+
+//   11
+//   8 3 2 4 8 7 2 4 0 8 8
+
+   int sgNum= 11;
+    cin>>sgNum;
+    for(int i=1; i<=sgNum; i++)
+    {
+        int no=0;
+        cin>>no;
+        sgMake[i] = no;
+    }
+
+   sgDP[1][sgMake[1]]++;
+
+   for(int i=2; i<sgNum; i++)
+   {
+       for(int j=0; j<=20; j++)
+       {
+           if(sgDP[i-1][j])
+           {
+               if(j+sgMake[i]<=20)
+                   sgDP[i][j+sgMake[i]]+=sgDP[i-1][j];
+               if(j-sgMake[i]>=0)
+                   sgDP[i][j-sgMake[i]]+=sgDP[i-1][j];
+           }
+       }
+   }
+    
+    cout<<sgDP[sgNum-1][sgMake[sgNum]]<<"\n";
+    
+    return 0;
+}
