@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+  //  25
+//7000000000000000000000000
+    int arg = 0;
+    cin>>arg;
+    
+    string str="";
+    cin>>str;
+    int asn=0;
+    for(int i=0; i<str.length(); i++)
+    {
+        char a = str[i];
+        asn+=a-'0';  
+    }
+    cout<<asn<<endl;
+    return 0;
+}
