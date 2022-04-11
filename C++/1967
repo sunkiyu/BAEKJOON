@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+using namespace std;
+
+vector<pair<int,int>> treeNodes[10001];
+int treeNodeDP[10001],treeNodeVisit[10001] ={0,};
+int main()
+{
+
+//   12
+//   1 2 3
+//   1 3 2
+//   2 4 5
+//   3 5 11
+//   3 6 9
+//   4 7 1
+//   4 8 7
+//   5 9 15
+//   5 10 4
+//   6 11 6
+//   6 12 10
+
+   int trees=12;
+  cin>>trees;
+    for(int i=0; i<trees-1; i++)
+    {
+        int a,b,c=0;
+        cin>>a>>b>>c;
+        treeNodes[a].push_back({b,c});
+        treeNodes[b].push_back({a,c});
+    }
+
+   int treeWideLength =0;
+
+   function<void(int,int)> treeNodeDFS = [&](int cur,int curCost)
+   {
+       treeWideLength = max(treeWideLength,curCost);
+
+       for(int i=0; i<treeNodes[cur].size(); i++)
+       {
+           int next = treeNodes[cur][i].first;
+           int cost = treeNodes[cur][i].second;
+           if(treeNodeVisit[next])continue;
+           treeNodeVisit[next]=1;
+           if(treeNodeDP[next]>cost+curCost)continue;
+           treeNodeDP[next]= cost+curCost;
+           treeNodeDFS(next,cost+curCost);
+       }
+   };
+
+   for(int i=1; i<=trees; i++)
+   {
+       for(int j=0; j<=10001; j++){
+           treeNodeDP[j] = 0;
+           treeNodeVisit[j]=0;
+       };
+       treeNodeDP[i]=0;
+       treeNodeVisit[i]=1;
+       treeNodeDFS(i,0);
+   };
+    
+    cout<<treeWideLength<<endl;
+    return 0;
+}
