@@ -1,0 +1,46 @@
+#include<iostream>
+
+using namespace std;
+
+int novelSum[501] = {0,};
+int novelInfo[501] ={0,};
+int novelDP[501][501]={0,};
+int main()
+{
+//   2
+//   4
+//   40 30 30 50
+//   15
+//   1 21 3 4 5 35 5 4 3 5 98 21 14 17 32
+
+    int testCase=0;
+    cin>>testCase;
+    
+    while(testCase--)
+    {
+       int novelCnt = 4, minNovelCost=2e9;
+        cin>>novelCnt;
+        
+        for(int i=1; i<=novelCnt; i++)
+        {
+            int val=0;
+            cin>>val;
+            novelInfo[i] = val;
+            novelSum[i] = novelSum[i-1]+val;
+        }
+        
+       for (int i = 1; i <= novelCnt; i++)
+           {
+               for (int j = 1; j <= novelCnt - i; j++)
+               {
+                   novelDP[j][i + j] = 2e9;
+                   for (int k = j; k < i + j; k++)
+                   {
+                       novelDP[j][i + j] = min(novelDP[j][i + j], novelDP[j][k] + novelDP[k + 1][i + j] + novelSum[i + j] - novelSum[j - 1]);
+                   }
+               }
+           }
+       cout << novelDP[1][novelCnt] << endl;
+    }
+    return 0;
+}
