@@ -21,7 +21,7 @@ int main()
        int novelCnt = 4, minNovelCost=2e9;
         cin>>novelCnt;
         
-        for(int i=1; i<=novelCnt; i++)
+        for(int i=0; i<novelCnt; i++)
         {
             int val=0;
             cin>>val;
@@ -29,18 +29,28 @@ int main()
             novelSum[i] = novelSum[i-1]+val;
         }
         
-       for (int i = 1; i <= novelCnt; i++)
-           {
-               for (int j = 1; j <= novelCnt - i; j++)
-               {
-                   novelDP[j][i + j] = 2e9;
-                   for (int k = j; k < i + j; k++)
-                   {
-                       novelDP[j][i + j] = min(novelDP[j][i + j], novelDP[j][k] + novelDP[k + 1][i + j] + novelSum[i + j] - novelSum[j - 1]);
-                   }
-               }
-           }
-       cout << novelDP[1][novelCnt] << endl;
+        //diff를 1부터 novelCnt -1까지 증가시키면서 비교한다.
+        //Diff 1일때 0~1, 1~2, 2~3, ...novelCnt-2~novelCnt-1 구함.
+        //Diff 2일때 0~2(min(0~0+1~2,0~1+2~2), 1~3(1~1+2~3,1~2+3~3)...
+        //Diff 3일때 0~3(min(0~0+1~3,0~1+2~3,0~2+3~3)...
+       for(int diff=1; diff<novelCnt; diff++)
+      {
+          for(int start=0; start<novelCnt-diff; start++)
+          {
+              int end = start+diff;
+              novelDP[start][end] = 2e9;
+
+              for(int realDidff = 0; realDidff<diff; realDidff++)
+              {
+                  int firstEnd =start+realDidff;
+                  int secondStart = start+realDidff+1;
+                  if(start-1>=0) novelDP[start][end] = min(novelDP[start][end],novelDP[start][firstEnd]+novelDP[secondStart][end]+novelSum[end]-novelSum[start-1]);
+                  else novelDP[start][end] = min(novelDP[start][end],novelDP[start][firstEnd]+novelDP[secondStart][end]+novelSum[end]);
+              }
+          }
+      }
+
+      cout << novelDP[0][novelCnt-1] << endl;
     }
     return 0;
 }
