@@ -1,0 +1,95 @@
+#include <iostream>
+#include <functional>
+
+using namespace std;
+int leafParent[51]={0,};
+//left,right
+pair<int,int> leafNode[51];
+int checkLeaf[51] ={0,};
+
+int main()
+{
+    int leafNodes= 9,deleteNode = 4;
+    cin>>leafNodes;
+    
+    for(int i=0; i<leafNodes; i++)
+    {
+        int parent =0;
+        cin>> parent;
+        leafParent[i] = parent;
+    }
+    cin>>deleteNode;
+
+   for(int i=0; i<leafNodes; i++)
+   {
+       leafNode[i] = {-1,-1};
+       checkLeaf[i]=1;
+   }
+
+   for(int i=0; i<leafNodes; i++)
+   {
+       int curIdx = i;
+       int parent = leafParent[i];
+
+       if(leafNode[parent].first==-1)
+       {
+           leafNode[parent].first = curIdx;
+           checkLeaf[parent]=0;
+       }
+       else if(leafNode[parent].second==-1)
+       {
+           leafNode[parent].second = curIdx;
+           checkLeaf[parent]=0;
+       }
+   }
+
+   function<void(int)> DeleteChildDFS = [&](int cur)
+   {
+       int leftChild = leafNode[cur].first;
+       int rightChild = leafNode[cur].second;
+
+       if(leftChild==-1 && rightChild==-1)
+       {
+           checkLeaf[cur] = 0;
+           return;
+       }
+       if(leftChild!=-1)
+       {
+           checkLeaf[leftChild] = 0;
+           DeleteChildDFS(leftChild);
+       }
+
+       if(rightChild!=-1)
+       {
+           checkLeaf[rightChild] = 0;
+           DeleteChildDFS(rightChild);
+       }
+       
+       
+       
+       return;
+   };
+
+   DeleteChildDFS(deleteNode);
+    
+   checkLeaf[deleteNode] = 0;
+    
+   int deleteParent = leafParent[deleteNode];
+   if(leafNode[deleteParent].first==deleteNode)
+       leafNode[deleteParent].first = -1;
+    
+   if(leafNode[deleteParent].second == deleteNode)
+       leafNode[deleteParent].second = -1;
+
+   if(leafNode[deleteParent].first==-1 && leafNode[deleteParent].second==-1)
+       checkLeaf[deleteParent] = 1;
+
+   int totalLeaf =0;
+   for(int i=0; i<leafNodes; i++)
+   {
+       if(checkLeaf[i]==1) totalLeaf++;
+   }
+    
+    cout<<totalLeaf<<"\n";
+    return 0;
+}
