@@ -1,0 +1,111 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+char gosum[51][51]={0,};
+bool gosumVisit[51][51]={0,};
+int main()
+{
+//   5 4
+//   .D.*
+//   ....
+//   ..X.
+//   S.*.
+//   ....
+   int gosumRow =5,gosumCol=4;
+    cin>>gosumRow>>gosumCol;
+    
+   pair<int,int> gosumS = {3,0};
+   pair<int,int> gosumE = {0,1};
+   queue<pair<int,int>> gosumWater;
+    for(int i=0; i<gosumRow; i++)
+    {
+        for(int j=0; j<gosumCol; j++)
+        {
+              cin>>gosum[i][j];
+              if(gosum[i][j] == 'S')
+                  gosumS = {i,j};
+              else if(gosum[i][j]=='D')
+                  gosumE = {i,j};
+              else if(gosum[i][j]=='*')
+                  gosumWater.push({i,j});
+        }
+    }
+    
+   gosumVisit[gosumS.first][gosumS.second]=1;
+
+   queue<pair<pair<int,int>,int>> gosumQ;
+   gosumQ.push({{gosumS},0});
+   int gosumtm=-1;
+
+   bool gosumIsEnd = false;
+   while(!gosumIsEnd)
+   {
+       int processQ = gosumQ.size();
+       if(processQ==0){gosumIsEnd = true;continue;}
+
+       int process = gosumWater.size();
+       for(int j=0; j<process; j++)
+       {
+           int grow = gosumWater.front().first;
+           int gcol = gosumWater.front().second;
+           gosumWater.pop();
+
+           for(int k=0; k<4; k++)
+           {
+               int ngrow = grow + mAV[k];
+               int ngcol = gcol + mAH[k];
+
+               if(0<= ngrow && ngrow < gosumRow && 0<= ngcol && ngcol < gosumCol)
+               {
+                   if(gosum[ngrow][ngcol]=='.'||gosum[ngrow][ngcol]=='S'){
+                   gosum[ngrow][ngcol]='*';
+                   gosumWater.push({ngrow,ngcol});
+                   }
+               }
+           }
+
+        }
+       for(int q=0; q<processQ; q++)
+       {
+           int row = gosumQ.front().first.first;
+           int col = gosumQ.front().first.second;
+           int tm = gosumQ.front().second;
+           gosumQ.pop();
+
+           if(row == gosumE.first && col == gosumE.second)
+           {
+               gosumIsEnd = true;
+               gosumtm = tm;
+               break;
+           }
+
+           for(int i=0; i<4; i++)
+           {
+               int nrow = row + mAV[i];
+               int ncol = col + mAH[i];
+
+               if(0<= nrow && nrow < gosumRow && 0<= ncol && ncol < gosumCol)
+               {
+                   if(gosum[nrow][ncol]=='.'||gosum[nrow][ncol]=='D')
+                   {
+                       if(gosumVisit[nrow][ncol])continue;
+                       gosumVisit[nrow][ncol]  =1;
+                       gosumQ.push({{nrow,ncol},tm+1});
+                   }
+
+               }
+           }
+       }
+
+   }
+
+   if(gosumtm==-1) cout<<"KAKTUS"<<endl;
+   else cout<<gosumtm<<endl;
+
+    return 0;
+}
