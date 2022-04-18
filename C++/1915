@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+int sqMap[1001][1001] = {0,};
+int main()
+{
+    int sqRow =4, sqCol = 4;
+    cin>>sqRow>>sqCol;
+    
+    for(int i=1; i<=sqRow; i++)
+    {
+        string strRow = "";
+        cin>>strRow;
+        
+        for(int j=0; j<strRow.length(); j++)
+        {
+            sqMap[i][j+1] = strRow[j]-'0';
+        }
+    }
+     int maxVal = 0;
+    for(int i=1; i<=sqRow; i++)
+    {
+        for(int j=1; j<=sqCol; j++)
+        {
+            if(sqMap[i][j])
+            {
+                  int minVal = min(sqMap[i-1][j-1],min(sqMap[i][j-1],sqMap[i-1][j]));
+                  sqMap[i][j] = minVal+1;
+                  if (maxVal < minVal+1) maxVal = minVal+1;        
+            }
+        }
+    }
+    
+    cout<<maxVal*maxVal<<endl;
+    
+    return 0;
+}
