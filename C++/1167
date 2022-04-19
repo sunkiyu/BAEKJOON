@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <cstring>
+
+using namespace std;
+
+vector<pair<int,int>> treeDiameter[100001];
+int treeDiameterVisit[100001] ={0,};
+
+int main()
+{
+
+//   5
+//   1 3 2 -1
+//   2 4 4 -1
+//   3 1 2 4 3 -1
+//   4 2 4 3 3 5 6 -1
+//   5 4 6 -1
+
+   int treeVertex =5;
+    cin>>treeVertex;
+    
+    for(int i=1; i<=treeVertex; i++)
+    {
+        int cur,a,b=0;
+        cin>>cur;
+        while(1)
+        {
+            cin>>a;
+            if(a==-1)break;
+            cin>>b;
+            treeDiameter[cur].push_back({a,b});
+            treeDiameter[a].push_back({cur,b});
+        }
+    }
+
+   int maxTreeLen =0,maxNode=0;
+   function<void(int,int)> treeDiameterDFS = [&](int vertex,int curCost)
+   {
+       if(maxTreeLen<curCost)
+       {
+           maxTreeLen = curCost;
+           maxNode = vertex;
+       }
+
+       for(int i=0; i<treeDiameter[vertex].size(); i++)
+       {
+           int next = treeDiameter[vertex][i].first;
+           int cost = treeDiameter[vertex][i].second;
+           if(treeDiameterVisit[next])continue;
+           treeDiameterVisit[next]=1;
+           treeDiameterDFS(next,cost+curCost);
+       }
+   };
+
+    memset(treeDiameterVisit,0,sizeof(treeDiameterVisit));
+    treeDiameterVisit[1] = 1;
+    treeDiameterDFS(1,0);
+    
+    maxTreeLen=0;
+    memset(treeDiameterVisit,0,sizeof(treeDiameterVisit));
+    treeDiameterVisit[maxNode] = 1;
+    treeDiameterDFS(maxNode,0);
+   
+    cout<<maxTreeLen<<endl;
+    return 0;
+}
