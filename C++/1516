@@ -1,0 +1,73 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+int BuildTime[501]= {0,};
+vector<int> BuildInfo[501];
+int BuildDP[501]= {0,};
+int preBuilded[501]= {0,};
+int main()
+{
+//   5
+//   10 -1      BuildDP[1] = BuildInfo[1]  10
+//   10 1 -1    BuildDP[2] = BuildInfo[2] + BuildDP[1] 20
+//   4 1 -1     BuildDP[3] = BuildInfo[3] + BuildDP[1] 14
+//   4 3 1 -1   BuildDP[4] = BuildInfo[4] + BuildDP[3] + BuildDP[1] 18
+//   3 3 -1     BuildDP[5] = BuildInfo[5] + BuildDP[3]
+
+//   10
+//   20
+//   14
+//   18
+//   17
+
+   int buildings= 5;
+   cin>>buildings;
+    for(int i=1; i<=buildings; i++)
+    {
+        int tm=0;
+        cin>>tm;
+        BuildTime[i] = tm; 
+        while(1)
+        {
+            int a=0;
+            cin>>a;
+            if(a==-1)break;
+            BuildInfo[a].push_back(i);
+            preBuilded[i]++;
+        }
+    }
+  
+   queue<int> buildQ;
+   memset(BuildDP,-1,sizeof(BuildDP));
+
+    for (int i = 1; i <= buildings; i++)
+    {
+        if (preBuilded[i] == 0)
+        {
+            buildQ.push(i);
+            BuildDP[i] = BuildTime[i];
+        }
+    }
+    
+   while(!buildQ.empty())
+   {
+       int building = buildQ.front();
+       buildQ.pop();
+
+       for(int i=0; i<BuildInfo[building].size(); i++)
+       {
+           int nextBuilding = BuildInfo[building][i];
+           preBuilded[nextBuilding]--;
+           BuildDP[nextBuilding] = max(BuildDP[building] + BuildTime[nextBuilding], BuildDP[nextBuilding]);
+           if(!preBuilded[nextBuilding])buildQ.push(nextBuilding);
+       }
+   }
+    
+     for (int i = 1; i <= buildings; i++) cout << BuildDP[i] << endl;
+
+    return 0;
+}
