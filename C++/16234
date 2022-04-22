@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+int nationInfo[55][55] ={0,};
+
+int main()
+{
+//   2 40 50
+//   50 30
+//   20 40
+
+   int nationSz =2,nationN =40,nationR = 50;
+   cin>>nationSz>>nationN>>nationR;
+    for(int i=0; i<nationSz; i++)
+    {
+        for(int j=0; j<nationSz; j++)
+        {
+            int a =0;
+            cin>>a;
+            nationInfo[i][j]= a;
+        }
+    }
+
+     int mvTotal =0;
+   //sum,Cnt
+   pair<int,int> sumInfo[2600] = {{0,0},};
+   while(1)
+   {
+       vector<vector<int>> nationNumber(55,vector<int>(55,-1));
+       int numberCounting =0;
+       bool isMv =false;
+       for(int i=0; i<nationSz; i++)
+       {
+           for(int j=0; j<nationSz; j++)
+           {
+               if(nationNumber[i][j]!=-1)continue;
+               queue<pair<int,int>> nationQ,tmpQ;
+               nationQ.push({i,j});
+               tmpQ.push({i,j});
+               nationNumber[i][j] = numberCounting;
+               int tmpSum=nationInfo[i][j],cntCounter=1;
+               while(!nationQ.empty())
+               {
+                   int row = nationQ.front().first;
+                   int col = nationQ.front().second;
+                   nationQ.pop();
+
+                   for(int k=0; k<4; k++)
+                   {
+                       int nrow = row + mAV[k];
+                       int ncol = col + mAH[k];
+
+                       if(0<=nrow && nrow <nationSz && 0<=ncol && ncol <nationSz)
+                       {
+                           int diff = abs(nationInfo[nrow][ncol] - nationInfo[row][col]);
+
+                           if(nationNumber[nrow][ncol]==-1&&nationN <= diff && diff<=nationR)
+                           {
+                               isMv = true;
+                               tmpSum+=nationInfo[nrow][ncol];
+                               cntCounter++;
+                               nationQ.push({nrow,ncol});
+                               tmpQ.push({nrow,ncol});
+                               nationNumber[nrow][ncol] = numberCounting;
+                           }
+                       }
+                   }
+               }
+               while(!tmpQ.empty())
+               {
+                   nationInfo[tmpQ.front().first][tmpQ.front().second] = tmpSum/cntCounter;
+                   tmpQ.pop();
+               }
+               numberCounting++;
+           }
+       }
+       if(!isMv)break;
+       else mvTotal++;      
+   }
+
+   cout<<mvTotal<<endl;
+   return 0;   
+}
