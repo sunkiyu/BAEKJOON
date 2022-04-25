@@ -1,0 +1,45 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+
+using namespace std;
+
+using LL = long long;
+LL liquid[100001] = {0,}, liquidVisit[100001] = {0,};
+
+int main()
+{
+//   5
+//   -2 4 -99 -1 98
+   int liquidN = 5;
+   cin>>liquidN;
+    for(int i=0; i<liquidN; i++)
+    {
+        int liq =0;
+        cin>>liq;
+        liquid[i] = liq;
+    }
+    sort(liquid, liquid+liquidN, [&](LL a, LL b)
+   {
+           if(abs(a)<=abs(b))return true;
+           else return false;
+    });
+
+   LL minLiquid = 9223372036854775807;
+   pair<LL,LL> liquidAsn;
+
+   for(int i=0; i<liquidN-1; i++)
+   {
+       int a = liquid[i];
+       int b = liquid[i+1];
+       if(minLiquid<abs(a+b))continue;;
+       minLiquid = abs(a+b);
+       if(a<=b)liquidAsn = {a,b};
+       else liquidAsn = {b,a};
+   }
+   
+   cout<<liquidAsn.first << " "<<liquidAsn.second<<endl;
+    
+    return 0;
+}
+    
