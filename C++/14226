@@ -1,0 +1,53 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int emoticonDP[1001][1001] = {0,};
+
+int main()
+{
+   //screen,clipboard,time;
+   queue<pair<pair<int,int>,int>> emoQ;
+   emoQ.push({{1,0},0});
+   emoticonDP[1][0] = 1;
+
+   int screenEmoticon = 18;
+    cin>>screenEmoticon;
+    
+   while(!emoQ.empty())
+   {
+       int curScreen = emoQ.front().first.first;
+       int clipBoard = emoQ.front().first.second;
+       int time = emoQ.front().second;
+       emoQ.pop();
+
+       if(curScreen == screenEmoticon)
+       {
+          cout<<time<<endl;
+          break;
+       }
+
+       //case1 Copy
+       if(curScreen>0 && curScreen <=1000 &&!emoticonDP[curScreen][curScreen])
+       {
+            emoticonDP[curScreen][curScreen] = 1;
+            emoQ.push({{curScreen,curScreen},time+1});
+       }
+
+       //case2 Paste
+       if(curScreen>0 && curScreen+clipBoard<=1000 &&!emoticonDP[curScreen+clipBoard][clipBoard])
+       {
+           emoticonDP[curScreen+clipBoard][clipBoard] = 1;
+          emoQ.push({{curScreen+clipBoard,clipBoard},time+1});
+       }
+
+       //case3 Delete
+        if(curScreen>0 && curScreen <=1000 &&!emoticonDP[curScreen-1][clipBoard])
+        {
+            emoticonDP[curScreen-1][clipBoard] = 1;
+            emoQ.push({{curScreen-1,clipBoard},time+1});
+        }
+   }
+    return 0;
+}
