@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <string.h>
+#define endl "\n"
+using namespace std;
+
+vector<int> RFriends[2001];
+int rFriendVisit[2001] = {0,};
+int main()
+{
+
+//   8 8
+//   1 7
+//   3 7
+//   4 7
+//   3 4
+//   4 6
+//   3 5
+//   0 4
+//   2 7
+
+   int friendN = 8, frienRelation = 8;
+   cin>>friendN>>frienRelation;
+    for(int i=0; i<frienRelation; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        RFriends[a].push_back(b);
+        RFriends[b].push_back(a);
+    }
+
+   function<void(int,int)> rFriendDFS = [&](int cur,int cnt)
+   {
+       if(cnt>=4)
+       {
+           cout<<1<<endl;
+           exit(0);
+       }
+       
+       for(int i=0; i<RFriends[cur].size(); i++)
+       {
+           int next = RFriends[cur][i];
+           if(rFriendVisit[next])continue;
+           rFriendVisit[next] =1;
+           rFriendDFS(next, cnt+1);
+       };
+       
+       rFriendVisit[cur] =0;
+   };
+    
+   for(int i=0; i<friendN; i++)
+   {
+        memset(rFriendVisit,0,sizeof(rFriendVisit));
+       rFriendVisit[i] =1;
+        rFriendDFS(i,0);
+   }
+    
+    cout<<0<<endl;
+    return 0;
+}
