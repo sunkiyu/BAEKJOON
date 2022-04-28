@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int roadString[100001] = {0,};
+bool roadVisit[100001] = {0,};
+vector<int> printQ;
+int su =5, dong =17;
+
+int calcPath()
+{
+     queue<pair<int,int>> sudongQ;
+    sudongQ.push({su,0});
+    roadVisit[su] =1;
+    
+     while (!sudongQ.empty())
+     {
+                 int curSu = sudongQ.front().first;
+                 int cnt = sudongQ.front().second;
+                 sudongQ.pop();
+
+                 if (curSu == dong)
+                 {
+                         int idx = curSu;
+                         while (idx != su)
+                         {
+                                 printQ.push_back(idx);
+                                 idx = roadString[idx];
+                         }
+                         printQ.push_back(su);
+                         return cnt;
+                 }
+
+                 if (curSu + 1 < 100001 && !roadVisit[curSu + 1])
+                 {
+                         sudongQ.push(make_pair(curSu + 1, cnt + 1));
+                         roadVisit[curSu + 1] = true;
+                         roadString[curSu + 1] = curSu;
+                 }
+
+                 if (curSu - 1 >= 0 && !roadVisit[curSu - 1])
+                 {
+                         sudongQ.push(make_pair(curSu - 1, cnt + 1));
+                         roadVisit[curSu - 1] = true;
+                         roadString[curSu - 1] = curSu;
+                 }
+
+                 if (curSu * 2 < 100001 && !roadVisit[curSu * 2])
+                 {
+                         sudongQ.push(make_pair(curSu * 2, cnt + 1));
+                         roadVisit[curSu * 2] = true;
+                         roadString[curSu * 2] = curSu;
+                 }
+
+        }
+
+}
+
+int main(void)
+{
+        cin >> su >> dong;
+        cout << calcPath() << "\n";
+
+        for (int i = printQ.size() - 1; i >= 0; i--)
+            cout << printQ[i] << " ";
+        cout << endl;
+        return 0;
+}
+
