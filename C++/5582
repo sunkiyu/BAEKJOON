@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int dupleDP[4001][4001] = {0,};
+
+int main(int argc, char *argv[])
+{
+//   ABRACADABRA
+//   ECADADABRBCRDARA
+   //ADABR
+   string sFirst = "ABRACADABRA";
+   string sSecond = "ECADADABRBCRDARA";
+
+   cin>>sFirst>>sSecond;
+    
+   int dupleLenMax = 0;
+
+   for(int i=0; i<sFirst.length(); i++)
+   {
+       char a = sFirst[i];
+
+       for(int j=0; j<sSecond.length(); j++)
+       {
+           char b = sSecond[j];
+
+           if(a==b)
+           {
+               if(i-1>=0 && j-1>=0)
+                   dupleDP[j][i] = dupleDP[j-1][i-1]+1;
+               else
+                   dupleDP[j][i] = 1;
+               dupleLenMax = max(dupleLenMax,dupleDP[j][i]);
+           }
+       }
+   }
+    cout<<dupleLenMax<<endl;
+}
