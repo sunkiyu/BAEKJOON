@@ -1,0 +1,63 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+#include <set>
+
+using namespace std;
+
+int bowlVisit[201][201][201] = {0,};
+
+int main()
+{
+   //8 9 10
+   set<int> possibleWater;
+   int wCapacity[3],bowlEmpty[3] = {0,};
+   cin>>wCapacity[0];
+    cin>>wCapacity[1];
+    cin>>wCapacity[2];
+
+   queue<tuple<int,int,int>> bowlQ;
+   bowlQ.push({0,0,wCapacity[2]});
+
+   while(!bowlQ.empty())
+   {
+       int a = get<0>(bowlQ.front());
+       int b = get<1>(bowlQ.front());
+       int c = get<2>(bowlQ.front());
+       bowlQ.pop();
+
+       if(bowlVisit[a][b][c])continue;
+       bowlVisit[a][b][c] =1;
+
+       if(a==0) possibleWater.insert(c);
+
+       //A
+       if (a + b > wCapacity[1]) bowlQ.push({a + b - wCapacity[1], wCapacity[1], c});
+       else bowlQ.push({0, a + b, c});
+
+       if (a + c > wCapacity[2]) bowlQ.push({a + c - wCapacity[2], b, wCapacity[2]});
+       else bowlQ.push({0, b, a + c});
+
+       //B
+       if (b + a > wCapacity[0]) bowlQ.push({wCapacity[0], a + b - wCapacity[0], c});
+       else bowlQ.push({b+a, 0, c});
+
+       if (b + c > wCapacity[2]) bowlQ.push({a, b + c - wCapacity[2], wCapacity[2]});
+       else bowlQ.push({a, 0, b + c});
+
+       //C
+       if (c + a > wCapacity[0]) bowlQ.push({wCapacity[0], b, a + c - wCapacity[0]});
+       else bowlQ.push({c+a, b, 0});
+
+       if (c + b > wCapacity[1]) bowlQ.push({a, wCapacity[1],b + c - wCapacity[1]});
+       else bowlQ.push({a, b + c, 0});
+   }
+    
+   for(auto it = possibleWater.begin(); it!=possibleWater.end(); it++)
+   {
+       cout<< *it <<' ';
+   }
+   cout<<endl;
+    return 0;
+    
+}
