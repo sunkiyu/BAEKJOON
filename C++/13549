@@ -1,0 +1,49 @@
+#include<iostream>
+#include<queue>
+#include<string.h>
+#define endl "\n"
+
+int suVisit[100001] ={0,};
+
+using namespace std;
+
+int main()
+{
+   int su3 = 5, sudong3 = 17;
+    cin>>su3>>sudong3;
+    
+   queue<int> su3Q;
+   su3Q.push(su3);
+    
+   for(int i=0; i<100001; i++)
+       suVisit[i] = 2e9;
+   suVisit[su3] = 0;
+   
+    while (su3Q.empty() == 0)
+    {
+        int Pos = su3Q.front();
+        su3Q.pop();
+ 
+        if (Pos == sudong3) break;;
+        
+        if (Pos + 1 < 100001 && suVisit[Pos + 1] > suVisit[Pos] + 1)
+        {
+            suVisit[Pos + 1] = suVisit[Pos] + 1;
+            su3Q.push(Pos + 1);
+        }
+ 
+        if (Pos - 1 >= 0 && suVisit[Pos - 1] > suVisit[Pos] + 1)
+        {
+            suVisit[Pos - 1] = suVisit[Pos] + 1;
+           su3Q.push(Pos - 1);
+        }
+ 
+        if (Pos * 2 < 100001 && suVisit[Pos * 2] > suVisit[Pos])
+        {
+            suVisit[Pos * 2] = suVisit[Pos];
+            su3Q.push(Pos * 2);
+        }
+    }
+    cout<<suVisit[sudong3]<<endl;
+    return 0;
+}
