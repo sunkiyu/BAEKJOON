@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+using namespace std;
+
+int preWorksDP[10001] = {0,};
+int preWorks[10001] = {0,};
+vector<int> preWork[10001];
+int workVal[10001]={0,};
+int main()
+{
+   int works = 7;
+   cin>>works;
+    
+    for(int i=1; i<=works; i++)
+    {
+        int preBuild =0;
+        cin>> workVal[i];
+        cin>>preBuild;
+        preWorks[i] = preBuild;
+        for(int j=0; j<preBuild; j++)
+        {
+            int a=0;
+            cin>>a;
+            //a 다음 i를 수행
+            preWork[a].push_back(i);
+        }
+    }
+    
+    queue<int> workQ;
+    
+    
+    for(int i=1; i<=works; i++)
+    {
+        if(preWorks[i])continue;
+       //다음 수행할 작업이 없다면 바로 수행
+       //작업시간도 자신의 값과 동일
+       workQ.push(i);
+        preWorksDP[i] = workVal[i];
+    }
+    
+    while(!workQ.empty())
+    {
+       int cur = workQ.front();
+        workQ.pop();
+        
+        for(auto next : preWork[cur])
+        {
+            //next 다음 수행할 작업이 없다면 수행
+            if(--preWorks[next]==0)
+            {
+                workQ.push(next);
+            }
+            
+            
+            preWorksDP[next] = max(preWorksDP[next], preWorksDP[cur]+ workVal[next]);
+            
+        }
+    }
+    int ret = 0;
+    for (int n = 1; n <= works; n++) 
+    { 
+        ret = max(ret, preWorksDP[n]); 
+    }
+    
+    cout<<ret<<endl;
+    
+    return 0;
+}
