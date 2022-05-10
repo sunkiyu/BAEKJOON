@@ -1,5 +1,53 @@
 #include<iostream>
 #include<vector>
+
+using namespace std;
+
+int worksDP[10001] = {0,};
+vector<int> preWork[10001];
+int workVal[10001]={0,};
+int main()
+{
+   int works = 7;
+    cin>>works;
+    
+    for(int i=1; i<=works; i++)
+    {
+        int preBuild =0;
+        cin>> workVal[i];
+        cin>>preBuild;
+        for(int j=0; j<preBuild; j++)
+        {
+            int a=0;
+            cin>>a;
+            preWork[i].push_back(a);
+        }
+    }
+    
+   worksDP[1] = workVal[1];
+    
+   for(int i=2; i<=works; i++)
+   {
+       int curMax=0;
+       for(int j=0; j<preWork[i].size(); j++)
+       {
+           curMax = max(worksDP[preWork[i][j]],curMax);
+       }
+       worksDP[i] = workVal[i]+curMax;
+   };
+    
+   int ret =0;
+      for(int i=1; i<=works; i++)
+    {
+    ret = max(ret,worksDP[i]);
+      }
+    cout<<ret<<endl;
+    return 0;
+}
+//Solution 2
+-----------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
 #include<queue>
 
 using namespace std;
