@@ -1,0 +1,85 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+#include <cstring>
+using namespace std;
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+int enemy[5001][5001] = {0,};
+int enemyVisit[5001] = {0,};
+
+#define MAXENEMY 5001
+int main()
+{
+    //   2
+//   2
+//   0 0 1
+//   1 0 1
+//   3
+//   0 0 1
+//   2 0 1
+//   10 0 5
+    
+    int TC =0;
+    cin>>TC;
+    
+    while(TC--)
+    {
+        vector<int> link[3001];
+        memset(enemyVisit,0,sizeof(enemyVisit));
+        vector<tuple<int,int,int>> enemyPos;
+        
+        int enemys=0;
+        cin>>enemys;
+        for(int i=0; i<enemys; i++)
+        {
+            int r,c,d=0;
+            cin>>r>>c>>d;
+            enemyPos.push_back({r,c,d});
+        }
+
+   for(int i=0; i<enemyPos.size(); i++)
+   {
+       int row = get<0>(enemyPos[i]);
+       int col = get<1>(enemyPos[i]);
+       int diff = get<2>(enemyPos[i]);
+       
+       for(int j=0; j<enemyPos.size(); j++)
+       {
+           if(i!=j)
+           {
+               int row2 = get<0>(enemyPos[j]);
+               int col2 = get<1>(enemyPos[j]);
+               int diff2 = get<2>(enemyPos[j]);
+     
+               if((diff+diff2)*(diff+diff2) >= (row2-row)*(row2-row) + (col2-col)*(col2-col))
+               {
+                    link[i].push_back(j);
+               }
+           }
+       }
+   }
+   queue<int> q;
+   int enemyArea =0;
+   for(int i=0; i<enemyPos.size(); i++)
+   {
+         if(enemyVisit[i] == 0){
+            q.push(i);    
+            while(!q.empty()){
+                int cur = q.front();
+                q.pop();
+                enemyVisit[cur] = 1;
+                for(int j = 0;j<link[cur].size();j++){
+                    if(enemyVisit[link[cur][j]] == 0){
+                        enemyVisit[link[cur][j]] = 1;
+                        q.push(link[cur][j]);
+                    }
+                }
+            }
+            enemyArea++;
+        }
+   }
+            cout<<enemyArea<<"\n";
+    }
+    return 0;
+}
