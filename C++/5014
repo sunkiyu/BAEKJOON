@@ -1,0 +1,56 @@
+#include <iostream>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+int slVisit[1000001] = {0,};
+
+int main()
+{
+
+   //F,S,G,U,D
+   //10 1 10 2 1
+   //100 2 1 1 0
+
+   int slF = 100, slS =2, slG = 1, slU=1, slD =0;
+    cin>>slF>>slS>>slG>>slU>>slD;
+    
+   slVisit[slS] =1;
+   auto slDFSRet = [&]()
+   {
+       queue<pair<int,int>> slQ;
+       slQ.push({slS,0});
+
+       while(!slQ.empty())
+       {
+           int cur = slQ.front().first;
+           int cnt = slQ.front().second;
+           slQ.pop();
+
+           if(cur == slG)
+           {
+               cout<<cnt<<endl;
+               return true;
+           }
+
+           //UP
+           if(cur + slU <= slF && !slVisit[cur+slU])
+           {
+               slVisit[cur+slU] =1;
+               slQ.push({cur+slU,cnt+1});
+           }
+
+           if(cur - slD>=1 && !slVisit[cur-slD])
+           {
+               slVisit[cur-slD] = 1;
+               slQ.push({cur-slD, cnt+1});
+           }
+       }
+       return false;
+   }();
+
+   if(!slDFSRet)
+       cout<<"use the stairs"<<endl;
+    return 0;
+}
