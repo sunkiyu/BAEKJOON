@@ -1,0 +1,113 @@
+#include <iostream>
+#include <queue>
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+using namespace std;
+
+int twoIsland[101][101] = {0,};
+int twoIslandVisit[101][101] = {0,};
+int twoIslandCheck[101][101] = {0,};
+int main()
+{
+    int twoIslandLen = 10;
+    cin>>twoIslandLen;
+    
+    for(int i=0; i<twoIslandLen; i++)
+    {
+        for(int j=0; j<twoIslandLen; j++)
+        {
+            cin>>twoIsland[i][j];
+        }
+    }
+    
+   int islandCnt =0;
+   int islandNum =1;
+   for(int i=0; i<twoIslandLen; i++)
+   {
+       for(int j=0; j<twoIslandLen; j++)
+       {
+           if(!twoIslandVisit[i][j] && twoIsland[i][j])
+           {
+               queue<pair<int,int>> islandQ;
+               islandQ.push({i,j});
+
+               twoIslandVisit[i][j] =islandNum;
+
+               while(!islandQ.empty())
+               {
+                   int row = islandQ.front().first;
+                   int col = islandQ.front().second;
+                   islandQ.pop();
+
+                   for(int k=0; k<4; k++)
+                   {
+                       int nrow = row + mAV[k];
+                       int ncol = col + mAH[k];
+
+                       if(0<=nrow && nrow < twoIslandLen && 0<=ncol && ncol < twoIslandLen && twoIsland[nrow][ncol] && !twoIslandVisit[nrow][ncol])
+                       {
+                           twoIslandVisit[nrow][ncol] =islandNum;
+                           islandQ.push({nrow,ncol});
+                       }
+                   }
+               }
+               islandNum++;
+               islandCnt++;
+           }
+       }
+   }
+    
+     int shortestBridge = 2e9;
+
+   for(int i=1; i<islandNum; i++)
+   {
+       queue<pair<int,int>> brideQ;
+       for(int j=0; j<twoIslandLen; j++)
+           for(int k=0; k<twoIslandLen; k++)
+           {
+               if(twoIslandVisit[j][k] == i)
+               {
+                   twoIslandCheck[j][k] = 1;
+                   brideQ.push({j,k});
+               }
+               else
+                   twoIslandCheck[j][k] = 0;
+           }
+
+       int mv=0;
+       bool bFound = false;
+       while(!brideQ.empty())
+       {
+           int sz = brideQ.size();
+           for(int b=0; b<sz; b++)
+           {
+               int row = brideQ.front().first;
+               int col = brideQ.front().second;
+              brideQ.pop();
+
+              for(int nb =0; nb<4; nb++)
+              {
+                  int nrow = row + mAV[nb];
+                  int ncol = col + mAH[nb];
+
+                  if(0<= nrow && nrow < twoIslandLen && 0<=ncol && ncol <twoIslandLen && !twoIslandCheck[nrow][ncol])
+                  {
+                      if(twoIslandVisit[nrow][ncol]!=0 && twoIslandVisit[nrow][ncol]!= i) {bFound = true; break;};
+                      if(twoIslandVisit[nrow][ncol]==0)
+                      {
+                          twoIslandCheck[nrow][ncol]=1;
+                          brideQ.push({nrow,ncol});
+                      }
+                  }
+              }
+              if(bFound) break;
+           }
+           if(bFound)break;
+           mv++;
+       }
+       shortestBridge = min(shortestBridge,mv);
+   }
+    
+    cout<<shortestBridge<<endl;
+    return 0;
+}
