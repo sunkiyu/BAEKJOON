@@ -34,13 +34,17 @@ int main()
 			if (!studVisit[next]) {
 				studTeamDFS(next);
 			}
+			//next가 이미 방문한 노드라면 사이클 발생, 즉 팀 성립 조건 OK
 			else if (!alreadyTeam[next])
 			{
+			        //next 부터 사이클이 발생하기 전까지 팀이 될 수 있는 멤버의 수를 센다.
 				for (int i = next; i != curStud; i = studTeam[i]) {
 					cnt++;
 				}
+				//curStud 나 자신도 멤버의 수로 증가시킨다.
 				cnt++;
 			}
+			//현재 노드까지는 이미 팀이 완성됨. 계산이 끝났으므로 더 탐색해도 의미가 없다.
 			alreadyTeam[curStud] = true;
 		};
 
