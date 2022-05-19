@@ -1,0 +1,65 @@
+#include <iostream>
+#include <queue>
+#include <string>
+
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+using namespace std;
+
+int miroMap[101][101] = {0,};
+int miroVisit[101][101] = {0,};
+int main()
+{
+//   4 6
+//   101111
+//   101010
+//   101011
+//   111011
+
+   int miroRow = 4, miroCol = 6;
+    cin>>miroRow >> miroCol;
+    
+    for(int i=0; i<miroRow; i++)
+    {
+        string str = "";
+        cin >> str;
+        for(int j=0; j<str.length(); j++)
+        {
+              miroMap[i][j] = str[j] -'0';
+        }
+    }
+ 
+   queue<pair<pair<int,int>,int>> miroQ;
+   miroQ.push({{0,0},1});
+   miroVisit[0][0]=1;
+
+   while(!miroQ.empty())
+   {
+       int row = miroQ.front().first.first;
+       int col = miroQ.front().first.second;
+       int cnt = miroQ.front().second;
+       miroQ.pop();
+
+       if(row == miroRow-1 && col == miroCol-1)
+       {
+           cout<< cnt <<"\n";
+           break;
+       }
+
+       for(int i=0; i<4; i++)
+       {
+           int nrow = row + mAV[i];
+           int ncol = col + mAH[i];
+
+           if(0<=nrow && nrow < miroRow && 0<=ncol && ncol < miroCol && miroMap[nrow][ncol]==1)
+           {
+               if(miroVisit[nrow][ncol])continue;
+               miroVisit[nrow][ncol] =1;
+               miroQ.push({{nrow,ncol},cnt+1});
+           }
+       }
+
+   }
+    return 0;
+}
