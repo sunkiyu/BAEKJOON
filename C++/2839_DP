@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+int sgSugerDP[5001] = {0,};
+int main()
+{
+    
+   int totSugar =11;
+    cin>>totSugar;
+   
+   //전체 설탕량이 3키로와 5키로인 경우 최소 운반횟수는 무조건 1
+   sgSugerDP[3] = sgSugerDP[5] = 1;	
+   
+   for (int i = 6; i <= totSugar; i++) 
+   {
+           //전체 설탕량이 3으로 나누어 떨어지는 경우 전체설탕량-3의 운반 횟수 +1
+           if (sgSugerDP[i - 3]) sgSugerDP[i] = sgSugerDP[i - 3] + 1;
+           //전체 설탕량이 5로 나누어 떨어지는 경우 전체 설탕량 -5의 운반 횟수, 이미 계산된 값 중 최소 값
+           //만약 현재 설탕량이 계산되지 않았다면 전체 설탕량 -5의 운반 횟수 +1 로 설정
+           if (sgSugerDP[i - 5]) sgSugerDP[i] = sgSugerDP[i] ? min(sgSugerDP[i] , sgSugerDP[i - 5] + 1) : sgSugerDP[i - 5] + 1;
+   }
+    cout << (sgSugerDP[totSugar] == 0 ? -1 : sgSugerDP[totSugar]) << endl;
+
+    return 0;
+}
