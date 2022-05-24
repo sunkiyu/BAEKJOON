@@ -1,0 +1,44 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    
+   int totSugar =11;
+   cin>>totSugar;
+   
+   //5키로 짜리는 몇개 가능한가?
+   int bigSugar = totSugar/5;
+   //5키로로 최대 운반후 남은 설탕량
+   int remainSugar = totSugar%5;
+
+   bool canBring  = true;
+   int offsetSmallSuger = 0;
+   
+   //5키로로 최대 운반후 남은 설탕량이 3으로 나누어 떨어지는가? 
+   //나누어 떨어지지 않는다 == 운반하지 못함
+   //3으로 나누어 떨어질 때까지 운반량을 조절해본다.
+   while(remainSugar%3!=0)
+   {
+       //5키로 짜리로 최대한 운반해야 적은 횟수로 운반하기 때문에 작은 수인 3부터 뺀다.
+       totSugar = totSugar -3;
+       //위에서 3을 뺐으니 3을 1번 운반한걸로 친다.
+       offsetSmallSuger++;
+       //3을 뺀 양을 5로 몇번 운반 가능한가?
+       bigSugar = totSugar/5;
+       //3을 뺀 양을 5로 운반하고 남은양
+       remainSugar = totSugar%5;
+       //3을 뺀 양을 5로 운반하고 남은양이 3보다 작고 전체 설탕량이 3보다 작으면 운반하지 못하는 케이스이다.
+       //단순 남은양이 3보다 작은 케이스는 전체 설탕량이 3보다 크다면 3을 계속 빼면서 계산 가능하기 때문에 계속 계산 가능하다. 
+       if(totSugar<3 && remainSugar<3) {canBring = false; break;}
+   }
+   if(!canBring)
+       cout<<-1<<endl;
+   else
+   {
+        int smallSugar = remainSugar/3;
+        cout<<bigSugar + smallSugar + offsetSmallSuger<<endl;
+   }
+    return 0;
+}
