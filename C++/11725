@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+vector<int> treeNode[100001];
+int treeNodeParent[100001] = {0,};
+int tnVisit[100001] = {0,};
+
+int main()
+{
+
+   int treeNodes = 12;
+   cin>>treeNodes;
+    
+   for(int i=1; i<=treeNodes-1; i++)
+   {
+        int a=0,b=0;
+        cin>>a>>b;
+        treeNode[a].push_back(b);
+        treeNode[b].push_back(a);
+   }
+
+   function<void(int)> treeNodeDFS = [&](int cur)
+   {
+       for(int i=0; i<treeNode[cur].size(); i++)
+       {
+           int child =treeNode[cur][i];
+           if(tnVisit[child])continue;
+           tnVisit[child] = 1;
+           treeNodeParent[child] = cur;
+           treeNodeDFS(child);
+       }
+   };
+
+   treeNodeDFS(1);
+
+   for(int i=2; i<=treeNodes; i++) 
+       cout<<treeNodeParent[i]<<"\n";
+    
+    return 0;
+}
