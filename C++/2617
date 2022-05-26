@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <string.h>
+
+using namespace std;
+
+vector<int> marbleLighter[100];
+vector<int> marbleBigger[100];
+int marbleVisit[100];
+int main()
+{
+   int marbleCnt = 5, marblePair = 4;
+    cin>>marbleCnt >> marblePair;
+    int marbleCenter = (marbleCnt+1)/2;
+    
+    for(int i=0; i<marblePair; i++)
+    {
+        int a,b=0;
+        cin>>a>>b;
+        //현재 구슬보다 가벼운 구슬 개수 카운트
+        marbleLighter[a].push_back(b);
+        //현재 구슬보다 무거운 구슬 개수 카운트
+        marbleBigger[b].push_back(a);
+    }
+
+    int cantCenter =0, cantAns =0;
+    bool found =false;
+    
+    function<void(bool,vector<int>&,int,int)> marbleDFS = [&](bool isLighter,vector<int>& array, int cur, int cnt)
+    {
+        //DFS를 처음 시작한 구슬이 이미 중간값이 되지 않는 경우로 체크(found == true) 되었지만 
+        //이쪽으로 또 들어오는 케이스가 생기기 때문에 found 체크를 해준다. 이미 체크 되면 다시 증가 시키지 않는다.
+        //예) DFS 시작 구슬 1, 순서 1->2->3->4->5 이 케이스에서 4번 구슬을 체크하면서 1번이 센터가 되지 못함이 확정인데 5번 구슬 케이스에 또 들어올 수 있다. 
+        if(!found && cantCenter>=marbleCenter)
+        {
+            found = true;
+            cantAns++;
+            return;
+        }
+
+        for(int i=0; i<array.size(); i++)
+        {
+             int next = array[i];
+             if(marbleVisit[next])continue;
+             cantCenter++;
+             marbleVisit[next] =1;
+             if(isLighter) marbleDFS(isLighter,marbleLighter[next],next,cnt);
+             else marbleDFS(isLighter,marbleBigger[next],next,cnt);
+        };
+    };
+
+    for(int i=1; i<=marbleCnt; i++)
+    {
+        found = false;
+        cantCenter=0;
+        memset(marbleVisit,0,sizeof(marbleVisit));
+        marbleVisit[i] =1;
+        marbleDFS(1,marbleLighter[i],i,0);
+    }
+
+    for(int i=1; i<=marbleCnt; i++)
+    {
+        found =false;
+        cantCenter=0;
+        memset(marbleVisit,0,sizeof(marbleVisit));
+        marbleVisit[i] =1;
+        marbleDFS(0,marbleBigger[i],i,0);
+    }
+    
+    cout <<cantAns<<"\n";
+    return 0;
+}
