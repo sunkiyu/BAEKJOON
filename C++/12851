@@ -1,0 +1,52 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int subin2Visit[100001] = {0,};
+int main()
+{
+   //5 17
+   int subin2 = 5, dong2= 17;
+    cin>>subin2>>dong2;
+    
+   queue<pair<int,int>> subin2Q;
+   subin2Q.push({subin2,0});
+    
+   int minSB2 = 2e9, totSB2=0;
+   subin2Visit[subin2] =1;
+
+   while(!subin2Q.empty())
+   {
+       int cur = subin2Q.front().first;
+       int tm  = subin2Q.front().second;
+       subin2Q.pop();
+       subin2Visit[cur] =1;
+
+       if(cur == dong2 && minSB2>=tm)
+       {
+           totSB2++;
+           //cout<<tm<<endl;
+           minSB2 = min(minSB2,tm);
+           continue;
+       }
+
+       if(cur-1>=0 && !subin2Visit[cur-1])
+       {
+           subin2Q.push({cur-1,tm+1});
+       }
+
+       if(cur+1<=100000 && !subin2Visit[cur+1])
+       {
+           subin2Q.push({cur+1,tm+1});
+       }
+
+       if(cur*2<=100000 && !subin2Visit[cur*2])
+       {
+           subin2Q.push({cur*2, tm+1});
+       }
+   }
+    cout << minSB2<<"\n";
+    cout << totSB2 << "\n";
+    return 0;
+}
