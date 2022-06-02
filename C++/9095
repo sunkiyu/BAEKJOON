@@ -1,0 +1,36 @@
+#include <iostream>
+#include <functional>
+
+using namespace std;
+
+int main()
+{
+    int tc =0;
+    cin>>tc;
+    
+    while(tc--){
+   int ottNum =10;
+        cin>>ottNum;
+   int ottCase =0;
+
+   function<void(int)> ottDFS = [&](int sum)
+   {
+       if(sum>=ottNum)
+       {
+           if(sum>ottNum) return;
+           ottCase++;
+           return;
+       }
+
+       for(int i=1; i<=3; i++)
+       {
+            ottDFS(sum+i);
+       }
+   };
+
+   ottDFS(0);
+        cout<<ottCase<<endl;
+    }
+    
+    return 0;
+}
