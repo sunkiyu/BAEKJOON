@@ -1,0 +1,54 @@
+#include <iostream>
+#include <functional>
+#define endl "\n"
+
+using namespace std;
+
+int jdInfo[1001] = {0,};
+int jdDP[31][3][1001] = {0,};
+int main()
+{
+//   7 2
+//   2
+//   1
+//   1
+//   2
+//   2
+//   1
+//   1
+
+   int jdTime = 7, jdMv =2;
+    cin>>jdTime >>jdMv;
+    
+    for(int i=0; i<jdTime; i++) cin>>jdInfo[i+1];
+ 
+    int maxJD = 0;
+    //mv, pos, time
+   	for (int j = 0; j <= jdMv; j++)
+	{
+		for (int i = 1; i <= jdTime; i++)
+		{
+			if (j == 0)
+			{	//처음 시작시 자두는 1번 나무 아래 위치해있다.
+				jdDP[j][0][i] = jdDP[j][0][i - 1] + (jdInfo[i] == 1);
+			}
+			else
+			{
+				jdDP[j][0][i] = max(jdDP[j][0][i - 1] + (jdInfo[i] == 1), jdDP[j - 1][1][i - 1] + (jdInfo[i] == 1));
+				jdDP[j][1][i] = max(jdDP[j][1][i - 1] + (jdInfo[i] == 2), jdDP[j - 1][0][i - 1] + (jdInfo[i] == 2));
+			}
+		}
+	}
+
+
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j <= jdMv; j++)
+		{
+			maxJD = max(maxJD, jdDP[j][i][jdTime]);
+		}
+	}
+
+    cout << maxJD <<endl;
+    return 0;
+}
