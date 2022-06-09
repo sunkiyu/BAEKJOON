@@ -1,0 +1,62 @@
+#include <iostream>
+#include <functional>
+
+using namespace std;
+
+char gasTheftMap[10001][501] = {0,};
+bool gasVisit[10001][501] = {0,};
+
+int main()
+{
+   int gasRow =5, gasCol =5;
+    cin>>gasRow >> gasCol;
+    
+    for(int i=0; i<gasRow; i++)
+        for(int j=0; j<gasCol; j++)
+            cin>>gasTheftMap[i][j];
+    
+   int gasRmv[3] = {-1,0,1};
+   int gasCmv[3] = {1,1,1};
+
+   int maxGas=0;
+
+   int tmpGas = 0;
+   function<bool(pair<int,int>&&)> gasDFS = [&](pair<int,int> && pos)
+   {
+       int row =pos.first;
+       int col = pos.second;
+       gasVisit[row][col] = 1;
+
+       if(col == gasCol-1)
+       {
+           return true;
+       }
+
+       for(int i=0; i<3; i++)
+       {
+           int nrow = row + gasRmv[i];
+           int ncol = col + gasCmv[i];
+
+           if(0<=nrow  && nrow < gasRow && 0<= ncol && ncol < gasCol)
+           {
+               if(!gasVisit[nrow][ncol] && gasTheftMap[nrow][ncol]=='.')
+               {
+                   bool ret = gasDFS({nrow,ncol});
+                   if(ret)
+                       return ret;
+               }
+
+           }
+       }
+
+       return false;
+   };
+
+   for(int i=0; i<gasRow; i++)
+   {
+       if(gasDFS(pair<int,int>({i,0}))) maxGas++;
+   };
+    
+   cout << maxGas <<endl;
+    return 0;
+}
