@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+
+#define endl "\n"
+
+using namespace std;
+
+vector<int> chonMap[101];
+int retChon[101][101] = {0,};
+
+int main()
+{
+//   9
+//   7 3
+//   7
+//   1 2
+//   1 3
+//   2 7
+//   2 8
+//   2 9
+//   4 5
+//   4 6
+   int chonPeople = 9;
+   pair<int,int> calcChon = {7,3};
+   int relationship = 7;
+   int chonVisit[101] = {0,};
+    
+   cin>>chonPeople;
+   int first,second =0;
+   cin>>first>>second;
+    calcChon = {first,second};
+    cin>> relationship;
+    for(int i=0; i<relationship; i++)
+    {
+        int parent,child = 0;
+        cin>>parent>>child;
+        chonMap[parent].push_back(child);
+        chonMap[child].push_back(parent);
+    }
+    
+   queue<pair<int,int>> chonQ;
+   chonQ.push({calcChon.first,0});
+   chonVisit[calcChon.first] =1;
+   pair<bool,int> findChon = {false, -1};
+   while(!chonQ.empty())
+   {
+       int cur = chonQ.front().first;
+       int chon = chonQ.front().second;
+       chonQ.pop();
+
+       if(cur == calcChon.second)
+       {
+           findChon = {true,chon};
+           break;
+       }
+
+       for(int i=0; i<chonMap[cur].size(); i++)
+       {
+           int next =  chonMap[cur][i];
+           if(chonVisit[next])continue;
+           chonVisit[next] =1;
+           chonQ.push({next,chon+1});
+       }
+   }
+
+   cout<< findChon.second<<endl;
+   return 0;
+}
