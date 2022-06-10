@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int minNaraA[51] ={0,};
+int minNaraB[51] = {0,};
+int main()
+{
+//   9
+//   5 15 100 31 39 0 0 3 26
+//   11 12 13 2 3 4 5 9 1
+   int minCount = 9;
+   int minNaraVal = 0;
+   
+    int *pArr = minNaraA;
+   cin>>minCount;
+   int cnt =2;
+    while(cnt--)
+    {
+        for(int i=0; i<minCount; i++)
+        {
+             cin>> pArr[i];  
+        }
+        pArr = minNaraB;
+    }
+
+   sort(minNaraA, minNaraA+minCount);
+   sort(minNaraB,minNaraB+minCount, [&](int a,int b){return a>b;});
+
+   for(int i=0; i<minCount; i++)
+   {
+       minNaraVal+=(minNaraA[i] * minNaraB[i]);
+   }
+    
+   cout << minNaraVal <<endl;
+    return 0;
+}
