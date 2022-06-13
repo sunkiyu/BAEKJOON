@@ -1,0 +1,90 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+
+using namespace std;
+int mAH[4] = {1,-1,0,0};
+int mAV[4] = {0,0,1,-1};
+
+int hmMap[201][201] = {0,};
+int hmVisit[201][201][31] = {0,};
+
+int main()
+{
+//   1
+//   4 4
+//   0 0 0 0
+//   1 0 0 0
+//   0 0 1 0
+//   0 1 0 0
+   int hmK = 1;
+   int hmRow = 4, hmCol = 4;
+   int hmV[8] = {-1,-2,-1,-2,1,2,2,1};
+   int hmH[8] = {-2,-1,2,1,-2,-1,1,2};
+   cin>>hmK;
+    cin>>hmCol>>hmRow;
+    for(int i=0; i<hmRow; i++)
+        for(int j=0; j<hmCol; j++)
+        {
+            cin>>hmMap[i][j];
+        }
+   //row,col,k,cnt
+   queue<tuple<int,int,int,int>> hmQ;
+   hmQ.push({0,0,hmK,0});
+   hmVisit[0][0][hmK] = 1;
+
+   int hmAns = 0;
+   bool hmFound = false;
+
+   while(!hmQ.empty())
+   {
+       int row = get<0>(hmQ.front());
+       int col = get<1>(hmQ.front());
+       int k = get<2>(hmQ.front());
+       int cnt = get<3>(hmQ.front());
+       hmQ.pop();
+
+       if(row == hmRow -1 && col == hmCol -1)
+       {
+           hmAns = cnt;
+           hmFound = true;
+           break;
+       }
+
+       if(k>0)
+       {
+           for(int i=0; i<8; i++)
+           {
+               int nrow = row + hmV[i];
+               int ncol = col + hmH[i];
+
+               if(0<=nrow && nrow < hmRow &&  0<= ncol && ncol <hmCol && !hmMap[nrow][ncol])
+               {
+                   if(hmVisit[nrow][ncol][k-1])continue;
+                   hmVisit[nrow][ncol][k-1] = 1;
+                   hmQ.push({nrow,ncol,k-1,cnt+1});
+               }
+           }
+       }
+
+           for(int i=0; i<4; i++)
+           {
+               int nrow = row + mAV[i];
+               int ncol = col + mAH[i];
+
+               if(0<=nrow && nrow < hmRow &&  0<= ncol && ncol <hmCol && !hmMap[nrow][ncol])
+               {
+                   if(hmVisit[nrow][ncol][k])continue;
+                   hmVisit[nrow][ncol][k] = 1;
+                   hmQ.push({nrow,ncol,k,cnt+1});
+               }
+           }
+
+   }
+
+   if(hmFound)
+       cout<< hmAns <<endl;
+   else
+       cout<< -1 <<endl;
+    return 0;
+}
