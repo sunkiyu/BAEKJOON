@@ -1,0 +1,35 @@
+#include <iostream>
+#include <tuple>
+
+using namespace std;
+
+int ggHap[1025][1025] = {0,};
+int direcHap[1025][1025] = {0,};
+
+int main()
+{
+    ios::sync_with_stdio(0);
+	cin.tie(0);
+    
+   int direchapSz = 4, direc =3;
+   cin>>direchapSz>>direc;
+   
+   int num = 0;
+   for(int i=0; i<direchapSz; i++)
+   {
+       for(int j=0; j<direchapSz; j++)
+       {
+           cin>> num;
+           direcHap[i + 1][j + 1] = direcHap[i][j + 1] + direcHap[i + 1][j] - direcHap[i][j] + num;
+       }
+   }
+    
+   for(int i=0; i<direc; i++)
+   {
+       int y1,x1,y2,x2=0;
+       cin>>y1>>x1>>y2>>x2;
+       cout << direcHap[y2][x2] - direcHap[y1 - 1][x2] - direcHap[y2][x1 - 1] + direcHap[y1 - 1][x1 - 1] << '\n';
+   }
+    
+   return 0;
+}
