@@ -1,0 +1,80 @@
+#include <iostream>
+#include <queue>
+#include <string>
+#include <cstring>
+
+#define endl "\n"
+
+using namespace std;
+
+bool sosuCheck[10000] = {0,};
+bool sosuVisit[10000] = {0,};
+int main(int argc, char *argv[])
+{
+//   3
+//   1033 8179
+//   1373 8017
+//   1033 1033
+    
+    //에라토스테네스의 체
+    memset(sosuCheck,true,sizeof(sosuCheck));
+    for(int i=2; i<=9999; i++)
+    {
+       for(int j=2; j*i<=9999; j++)
+       {
+           //i에서 2 이상의 수를 곱하여 나온 수는 
+           //1과 자기 자신 외에 i, j라는 공약수를 갖기 때문에 소수가 아니다.
+           sosuCheck[j*i] = false;
+       }
+    };
+    
+    int tc =3;
+    cin >> tc;
+    
+    while(tc--)
+    {
+        memset(sosuVisit,0,sizeof(sosuVisit));
+        int startSosu = 1373, endSosu = 8017;
+        cin>>startSosu >>endSosu;
+        sosuVisit[startSosu] =1;
+        if(startSosu == endSosu)
+        {
+            cout << 0<< endl;
+            continue;
+        }
+        
+        queue<pair<int,int>> sosuConvertQ;
+        sosuConvertQ.push({startSosu,0});
+
+        while(!sosuConvertQ.empty())
+        {
+            int sosu = sosuConvertQ.front().first;
+            int cnt = sosuConvertQ.front().second;
+            sosuConvertQ.pop();
+
+            if(sosu == endSosu)
+            {
+                cout<< cnt<<endl;
+                break;
+            }
+
+            for(int i=0; i<4; i++)
+            {
+                string num = to_string(sosu);
+                int idxNum = num[i]-'0';
+                for(int j=0; j<=9; j++)
+                {
+                    if(i==0 && j==0) continue;
+                    if(idxNum==j)continue;
+                    num[i] = j+'0';
+                    if(sosuCheck[stoi(num)] && !sosuVisit[stoi(num)])
+                    {
+                        sosuVisit[stoi(num)] =1;
+                        sosuConvertQ.push({stoi(num),cnt+1});
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
