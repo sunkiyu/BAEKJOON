@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+#include <map>
+using namespace std;
+
+int runAppsUsed[101] = {0,};
+int nonActiveCost[101]= {0,};
+//row번째 앱을 탐색했을 때 col 만큼의 Cost로 얻을 수 있는 최대 메모리
+int appsDP[101][10001] = {0,};
+
+int main()
+{
+    int totalCost =0;
+    int totalApp = 5, needMemory  = 60;
+    cin>>totalApp>>needMemory;
+    for(int i=1; i<=totalApp; i++)
+    {
+        cin>>runAppsUsed[i];
+    }
+    
+    for(int i=1; i<=totalApp; i++)
+    {
+        cin>>nonActiveCost[i];
+        totalCost += nonActiveCost[i];
+    }
+    
+    for(int i=1; i<= totalApp; i++)
+    {
+        for(int j=0; j<=totalCost; j++)
+        {
+            //j 라는 비용에서 i번째 앱을 비활성화 하는 비용을 뺀 값
+            if (j - nonActiveCost[i] >= 0)
+                //i번째 앱까지 실행했을 떄 j라는 비용으로 얻을 수 있는 최대 메모리값
+                //i-1 번째 앱까지 실행했을 때 j에서 현재 앱을 비활성화 할 때 발생 비용을 뺐을 때 발생하는 최대 메모리에 현재 i앱까지 탐색했을 때 
+                //발생하는 메모리 값을 더해 최대값을 구한다.
+                appsDP[i][j] = max(appsDP[i][j], appsDP[i - 1][j - nonActiveCost[i]] + runAppsUsed[i]);
+           
+           //i번째 앱까지 탐색했을 때 j라는 비용이 발생한다.
+           //i-1 번째 앱까지 탐색했을 떄 j라는 비용이 발생했을 때 얻을 수 있는 메모리 최대값
+            appsDP[i][j] = max(appsDP[i][j], appsDP[i - 1][j]);
+        }
+    }
+    
+    for (int i = 0; i <= totalCost; i++)
+	{
+		if (appsDP[totalApp][i] >= needMemory)
+		{
+			cout << i << endl;
+			break;
+		}	
+	}
+    
+    return 0;
+}
