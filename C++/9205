@@ -1,0 +1,63 @@
+#include <iostream>
+#include <queue>
+//#include <windows.h>
+using namespace std;
+
+int main()
+{
+	int tc, pujCnt = 0;
+	cin >> tc;
+
+	while (tc--)
+	{
+		//p , h , L
+		vector<pair<int, int>> puj;
+		pair<int, int> sgHouse;
+		pair<int, int> lockP;
+		cin >> pujCnt;
+		vector<bool> sgPujVisit(pujCnt, 0);
+		cin >> sgHouse.first;
+		cin >> sgHouse.second;
+		for (int i = 0; i < pujCnt; i++)
+		{
+			int a, b = 0;
+			cin >> a >> b;
+			puj.push_back({ a,b });
+		}
+		cin >> lockP.first;
+		cin >> lockP.second;
+
+		queue<pair<int, int>> sgQ;
+		sgQ.push(sgHouse);
+
+		bool reach = false;
+		while (!sgQ.empty())
+		{
+			int row = sgQ.front().first;
+			int col = sgQ.front().second;
+			sgQ.pop();
+
+			if (abs(row - lockP.first) + abs(col - lockP.second) <= 1000)
+			{
+				reach = true;
+				cout << "happy" << endl;
+				break;
+			}
+			for (int i = 0; i < puj.size(); i++)
+			{
+				int pRow = puj[i].first;
+				int pCol = puj[i].second;
+
+				int diff = abs(row - pRow) + abs(col - pCol);
+				if (diff <= 1000)
+				{
+					if (sgPujVisit[i])continue;
+					sgPujVisit[i] = 1;
+					sgQ.push({ pRow,pCol });
+				}
+			}
+		}
+		if (!reach) cout << "sad" << endl;
+	}
+	return 0;
+}
