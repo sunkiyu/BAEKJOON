@@ -1,0 +1,13 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int doll=0;
+    cin>>doll;
+    
+    if(doll%2)cout<<"SK"<<endl;
+    else cout<<"CY"<<endl;
+    return 0;
+}
