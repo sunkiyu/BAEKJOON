@@ -1,0 +1,58 @@
+#include<iostream>
+#include<functional>
+
+using namespace std;
+
+int choo[31] = { 0, };
+int goosle[10] = { 0, };
+bool canMake[31][40001] = { 0, };
+int chooVisit[10] = { 0, };
+
+int main()
+{
+        /*4
+        2 3 3 3
+        3
+        1 4 10*/
+
+    int choos = 4;
+    cin>>choos;
+
+    for(int i=0; i<choos; i++)
+    {
+        cin>>choo[i];
+    }
+
+    int goo = 3;
+    cin>>goo;
+
+    for(int i=0; i<goo; i++)
+    {
+        cin>>goosle[i];
+    }
+
+    function<void(int,int, int)> chooDFS = [&](int cnt, int idx, int sum)
+    {
+        if(cnt>choos || canMake[idx][sum])return;
+        canMake[idx][sum] = true;
+        
+        int cur = choo[idx];
+        chooDFS(cnt+1,idx + 1, abs(sum - cur));
+        chooDFS(cnt+1,idx + 1, sum + cur);
+        chooDFS(cnt+1,idx + 1, sum);
+
+    };
+
+    chooDFS(0,0, 0);
+
+    for (int i = 0; i < goo; i++)
+    {
+        int cur = goosle[i];
+		if(cur > 15000) cout << "N ";
+		else if (canMake[choos][cur]) cout << "Y ";
+		else cout << "N ";
+    };
+	
+	return 0;
+
+}
