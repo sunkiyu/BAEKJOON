@@ -1,0 +1,115 @@
+#include <iostream>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+char puyoMap[13][7] = { 0, };
+bool puyoVisit[13][7] = { 0, };
+//bool puyoVisitDir[13][7][4] = { 0, };
+
+int mAV[4] = { 1,-1,0,0 };
+int mAH[4] = { 0,0,-1,1 };
+
+int main()
+{
+	int puyo = 0;
+
+	for (int i = 0; i < 12; i++)
+		for (int j = 0; j < 6; j++)
+		{
+			cin >> puyoMap[i][j];
+		}
+
+	bool canPop = false;
+	function<void(int, int, int, char, queue<pair<int, int>>&)> puyoDFS = [&](int row, int col, int cnt, char character, queue<pair<int, int>>& deleter)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int nrow = row + mAV[i];
+			int ncol = col + mAH[i];
+
+			if (0 <= nrow && nrow < 12 && 0 <= ncol && ncol < 6 && character == puyoMap[nrow][ncol])
+			{
+				if (puyoVisit[nrow][ncol])continue;
+				puyoVisit[nrow][ncol] = 1;
+				deleter.push({ nrow,ncol });
+				puyoDFS(nrow, ncol, cnt + 1, character, deleter);
+			}
+		}
+	};
+
+	while (1)
+	{
+		for (int i = 0; i < 12; i++)
+			for (int j = 0; j < 6; j++)
+			{
+				puyoVisit[i][j] = 0;
+			}
+		canPop = false;
+		for (int i = 0; i < 12; i++)
+			for (int j = 0; j < 6; j++)
+			{
+				if (puyoMap[i][j] != '.' && !puyoVisit[i][j])
+				{
+					puyoVisit[i][j] = 1;
+					queue<pair<int, int>> pDelete;
+					pDelete.push({ i,j });
+					puyoDFS(i, j, 1, puyoMap[i][j], pDelete);
+          //4개 이상 연속한 뿌요가 있냐? 있다면 부신다.
+          //여기서 4개 이상 연속한 뿌요가 여러개 나올 수 있으나 한 사이클에선 동시에 부셔지는 것이므로 뿌요 연쇄 1번으로 처리
+					if (pDelete.size() >= 4)
+					{
+						canPop = true;
+						while (!pDelete.empty())
+						{
+							int dRow = pDelete.front().first;
+							int dCol = pDelete.front().second;
+							pDelete.pop();
+							puyoMap[dRow][dCol] = '.';
+						}
+					}
+				}
+			}
+    //뿌요 연쇄 1번으로 처리
+		if (canPop)
+		{
+			puyo++;
+
+			for (int i = 0; i < 6; i++)
+			{
+				pair<int, int> first;
+				for (int j = 11; j >= 0; j--)
+				{
+          //6개의 열을 순회하며 .문자가 아닌 모든 것들을 중력 방향으로 내린다.
+					if (puyoMap[j][i] != '.')
+					{
+						first = { j,i };
+
+						int row = first.first;
+						int col = first.second;
+
+						if (row + 1 >= 12 || puyoMap[row + 1][col] != '.')
+							continue;
+
+						char next = puyoMap[row + 1][col];
+						while ((row + 1 < 12) && next == '.')
+						{
+							puyoMap[row + 1][col] = puyoMap[row][col];
+							puyoMap[row][col] = '.';
+							row = row + 1;
+							if (row + 1 < 12) next = puyoMap[row + 1][col];
+							else break;
+						}
+					}
+				}
+			}
+		}
+		else
+			break;
+	}
+
+	cout << puyo << "\n";
+
+	return 0;
+}
