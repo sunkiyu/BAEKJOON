@@ -1,0 +1,50 @@
+
+#include<iostream>
+#include<functional>
+
+using namespace std;
+
+using LL = long long;
+LL alyacDP[61][61] = { 0, };
+
+int main()
+{
+    ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+    int tot = 0;
+    cin>>tot;
+    
+    while(tot)
+    {
+        for (int i = 0; i < 61; i++)
+          for (int j = 0; j < 61; j++)
+            alyacDP[i][j] = -1;
+
+        function<LL(LL,LL)> alyacDFS = [&](int whole, int half)
+        {
+            //whole개가 0이라면 half만 먹을 수 있다. 경우의 수 1가지
+            if (!whole) return (LL) 1;
+            
+            //이미 계산되었다면 해당 값을 리턴
+            if (alyacDP[whole][half] != -1)
+              return alyacDP[whole][half];
+
+            //계산되지 않았다면 계산
+            alyacDP[whole][half] = 0;
+            
+            //Top Down 방식
+            //whole개와 half 개가 남았을 때 케이스를 계산해서 리턴한다.
+            //whole개가 0개 이상일 경우 반으로 쪼개는 케이스, half가 1만큼 늘어남
+            if (whole > 0) 
+              alyacDP[whole][half]+= alyacDFS(whole - 1, half + 1);
+            //half 개가 0개 이상일 경우 half를 먹는 케이스
+            if (half > 0) 
+              alyacDP[whole][half]+= alyacDFS(whole, half - 1);
+
+            return alyacDP[whole][half];
+        };
+
+        cout << alyacDFS(tot, 0) <<"\n";
+          cin>>tot;
+    }
+	return 0;
+}
