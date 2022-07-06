@@ -1,0 +1,60 @@
+#include<iostream>
+#include<functional>
+
+using namespace std;
+int roboMap[30][30] = { 0, };
+bool roboVisit[30][30] = { 0, };
+int main()
+{
+	//14 25 25 25 25
+	int mvCnt = 14;
+    cin>>mvCnt;
+	//동서남북
+	double dirPercent[4] = { 0.25,0.25, 0.25, 0.25 };
+    for(int i=0;i<4;i++)
+    {
+        cin>>dirPercent[i];
+        dirPercent[i]/=100;
+    }
+	int dirV[4] = { 0,0,1,-1 };
+	int dirH[4] = { 1,-1,0,0 };
+	double totalPercent = 0;
+	function<double(int,int,double,int)> roboDFS = [&](int row, int col, double percent,int cnt)
+	{
+		if (cnt == mvCnt)
+		{
+			return 1.0;
+		}
+
+		int nrow = 0, ncol = 0;
+        double curRet = 0.0;
+		for (int i = 0; i < 4; i++)
+		{
+			nrow = row + dirV[i];
+			ncol = col + dirH[i];
+			if (roboVisit[nrow][ncol])continue;
+			roboVisit[nrow][ncol] = true;
+			curRet += dirPercent[i]*roboDFS(nrow, ncol, percent*dirPercent[i], cnt + 1);
+			roboVisit[nrow][ncol] = false;
+		}
+        return curRet;
+	};
+
+	function<void()> clearMap = [&]()
+	{
+		for (int i = 0; i < 30; i++)
+			for (int j = 0; j < 30; j++)
+			{
+				roboVisit[i][j] = false;
+			}
+	};
+
+	clearMap();
+	roboVisit[15][15] = true;
+	totalPercent +=roboDFS(15,15, 1.0, 0);
+	
+	cout.precision(10);
+	cout << fixed << totalPercent << endl;
+
+	return 0;
+}
