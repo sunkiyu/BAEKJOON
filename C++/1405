@@ -1,0 +1,71 @@
+#include<iostream>
+#include<functional>
+
+using namespace std;
+int roboMap[30][30] = { 0, };
+bool roboVisit[30][30] = { 0, };
+int main()
+{
+	//14 25 25 25 25
+	int mvCnt = 14;
+    cin>>mvCnt;
+	//동서남북
+	double dirPercent[4] = { 0.25,0.25, 0.25, 0.25 };
+    for(int i=0;i<4;i++)
+    {
+        cin>>dirPercent[i];
+        dirPercent[i]/=100;
+    }
+	int dirV[4] = { 0,0,1,-1 };
+	int dirH[4] = { 1,-1,0,0 };
+	double totalPercent = 0;
+	function<void(int,int,double,int)> roboDFS = [&](int row, int col, double percent,int cnt)
+	{
+    //cnt가 로봇이 총 이동하려는 mvCnt와 같냐?
+    //같다면 모든 경우의 수의 확률을 더해준다.
+		if (cnt == mvCnt)
+		{
+			totalPercent += percent;
+			return;
+		}
+
+		int nrow = 0, ncol = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			nrow = row + dirV[i];
+			ncol = col + dirH[i];
+			if (roboVisit[nrow][ncol])continue;
+			roboVisit[nrow][ncol] = true;
+      //새로운 좌표에 방문한적이 없으면 이전 확률에서 해당 방향 확률을 곱하고 cnt+1해준다.
+			roboDFS(nrow, ncol, percent*dirPercent[i], cnt + 1);
+			roboVisit[nrow][ncol] = false;
+		}
+	};
+
+	function<void()> clearMap = [&]()
+	{
+		for (int i = 0; i < 30; i++)
+			for (int j = 0; j < 30; j++)
+			{
+				roboVisit[i][j] = false;
+			}
+	};
+
+
+//처음 시작 위치와 동,서,남,북 이동 방향 설정
+	for (int i = 0; i < 4; i++)
+	{
+		clearMap();
+		roboVisit[15][15] = true;
+		int nrow = 15 + dirV[i];
+		int ncol = 15 + dirH[i];
+		roboVisit[nrow][ncol] = true;
+    //동,서,남,북으로 이동을 한번 했으니 cnt는 1이고 해당 방향 퍼센트를 전달
+		roboDFS(nrow,ncol , dirPercent[i], 1);
+	}
+	
+	cout.precision(10);
+	cout << fixed << totalPercent << endl;
+
+	return 0;
+}
