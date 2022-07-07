@@ -1,0 +1,88 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<cstring>
+#include<algorithm>
+#include<functional>
+
+using namespace std;
+//노드, 가중치
+vector<pair<int, int>> IslandMap[10001];
+bool IslandVisit[10001] = { 0, };
+
+int main()
+{
+
+     cin.tie(0); 
+    
+	int island = 3, info =0;
+    cin>>island>>info;
+    
+    int factoryMax = 0;
+    for(int i=0; i<info; i++)
+    {
+        int a,b,c=0;
+        cin>>a>>b>>c;
+        IslandMap[a].push_back({b,c});
+        IslandMap[b].push_back({a,c});
+        factoryMax = max(factoryMax,c);
+    }
+    
+	pair<int, int> factory = { 1,3 };
+    cin>>factory.first>>factory.second;
+    
+    auto factoryBFS = [&](int mid)
+    {
+	    queue<int> factoryQ;
+	    factoryQ.push(factory.first);
+	    IslandVisit[factory.first] = true;
+
+	    while (!factoryQ.empty())
+	    {
+		    int cur = factoryQ.front();
+		    factoryQ.pop();
+
+		    if (cur == factory.second)
+		    {
+                return true;
+		    }
+
+		    for (int i = 0; i < IslandMap[cur].size(); i++)
+		    {
+			    int next = IslandMap[cur][i].first;
+			    int nextVal = IslandMap[cur][i].second;
+		
+          //mid로 주어진 무게를 현재 노드 사이끼리 옮길 수 있냐?
+          //방문처리
+			    if (nextVal >= mid && !IslandVisit[next])
+			    {
+                    IslandVisit[next] = true;
+                    factoryQ.push(next);
+			    }
+		    }
+	    }
+        
+        return false;
+    };
+    
+    int low = 0, high = factoryMax;
+     
+    while (low <= high)
+    {
+         memset(IslandVisit,0,sizeof(IslandVisit));
+         
+         //최대-최소 가중치의 절반
+         int mid = (low+high)/2;
+        
+         //mid 무게로 시작->끝으로 이동 가능하다면 무게를 더 늘릴 수 있다.
+         //그렇지 않다면 무게를 줄여야한다.
+         if(factoryBFS(mid))
+             low = mid+1;
+         else
+             high = mid-1;
+     }
+    
+    cout<<high <<"\n";
+    
+    return 0;
+}
