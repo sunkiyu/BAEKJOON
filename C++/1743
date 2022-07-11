@@ -1,0 +1,66 @@
+#include <iostream>
+#include <functional>
+#include <queue>
+
+using namespace std;
+
+int trashMap[101][101] = {0,};
+bool trashVisit[101][101] = {0,};
+int mAV[4] = {1,-1,0,0};
+int mAH[4] = {0,0, 1,-1};
+int main()
+{
+
+//    3 4 5
+//    3 2
+//    2 2
+//    3 1
+//    2 3
+//    1 1
+
+    int trashRow =3, trashCol =4, trashs =5;
+    cin>>trashRow >> trashCol >> trashs;
+    for(int i=0; i<trashs; i++)
+    {
+        int a,b =0;
+        cin>>a>>b;
+        trashMap[a][b] =1;
+    }
+
+    int maxTrash = 0;
+
+    function<void(int,int)> trashDFS = [&](int row,int col)
+    {
+        for(int i=0; i<4; i++)
+        {
+            int nrow = row + mAV[i];
+            int ncol = col + mAH[i];
+
+            if(0<=nrow && nrow <=trashRow && 0<= ncol && ncol <= trashCol && trashMap[nrow][ncol]==1)
+            {
+                if(trashVisit[nrow][ncol])continue;
+                trashVisit[nrow][ncol] = true;
+                maxTrash++;
+                trashDFS(nrow,ncol);
+            }
+        }
+    };
+
+    int ansTrash =0;
+    for(int i=1; i<=trashRow; i++)
+    {
+        for(int j=1; j<=trashCol; j++)
+        {
+              if(trashMap[i][j]==1 && !trashVisit[i][j])
+              {
+                  trashVisit[i][j] = true;
+                  maxTrash = 1;
+                  trashDFS(i,j);
+                  ansTrash = max(ansTrash, maxTrash);
+              }
+        }
+    }
+    
+    cout<< ansTrash <<endl;
+    return 0;
+}
