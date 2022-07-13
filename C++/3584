@@ -1,0 +1,66 @@
+#include<iostream>
+#include<unordered_map>
+#include<vector>
+
+using namespace std;
+
+int ancientNode[10005];
+//find O(1)
+bool ancientVisit[10005];
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+	cin.tie(0);
+    
+	int tc = 2;
+    cin>>tc;
+    
+    while(tc--)
+    {   
+	    int n = 16;
+        cin>>n;
+        
+        for(int i=1; i<=n; i++)
+        {
+            ancientNode[i] = 0;
+            ancientVisit[i] = false;
+        }
+        
+        for(int i=0; i<n-1; i++)
+        {
+            int a,b=0;
+            cin>>a>>b;
+            ancientNode[b]=a;
+        }
+	
+	    pair<int, int> sameAncient = { 16,7 };
+        cin>>sameAncient.first;
+        cin>>sameAncient.second;
+
+      //첫번째 노드의 부모를 모두 탐색한다.
+        ancientVisit[sameAncient.first] = true;
+	    while (1)
+	    {
+        // 현재 노드의 부모가 0인 경우는 루트인 경우
+		    if (!ancientNode[sameAncient.first])
+			    break;
+		    ancientVisit[ancientNode[sameAncient.first]] = true;
+		    sameAncient.first = ancientNode[sameAncient.first];
+	    };
+      
+      //두번째 노드의 부모를 타고 올라가며 탐색한다.
+	    while (1)
+	    {
+        //현재 노드의 부모가 같은가? 그럼 현재 노드가 공통 조상
+		    if (ancientVisit[sameAncient.second] != false)
+		    {
+			    cout << sameAncient.second << "\n";
+			    break;
+		    }
+		    sameAncient.second = ancientNode[sameAncient.second];
+	    }
+    }
+
+	return 0;
+}
