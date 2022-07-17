@@ -1,0 +1,82 @@
+#include<iostream>
+#include<queue>
+#include<string>
+
+using namespace std;
+
+int mAV[4] = {1,-1,0,0};
+int mAH[4] = {0,0, 1,-1};
+
+char ywMap[251][251] = {0,};
+bool ywMapVisit[251][251] = {0,};
+int main()
+{
+//    8 8
+//    .######.
+//    #..o...#
+//    #.####.#
+//    #.#v.#.#
+//    #.#.o#o#
+//    #o.##..#
+//    #.v..v.#
+//    .######.
+    int ywRow = 8, ywCol = 8;
+    cin>>ywRow>>ywCol;
+    
+    for(int i=0; i<ywRow; i++)
+    {
+        string str="";
+        cin>>str;
+        for(int j=0; j<str.length(); j++)
+        {
+            ywMap[i][j] = str[j];
+        }
+    }
+    
+    int totY =0, totW =0;
+    for(int i= 0; i<ywRow; i++)
+    {
+        for(int j=0; j<ywCol; j++)
+        {
+            int r = i,c =j;
+            if(ywMapVisit[r][c] || ywMap[r][c] == '#')continue;
+            int tmpY=0, tmpW =0;
+            ywMapVisit[r][c] = true;
+
+            if(ywMap[r][c] ==  'o') tmpY++;
+            if(ywMap[r][c]=='v')tmpW++;
+
+            queue<pair<int,int>> ywQ;
+            ywQ.push({r,c});
+
+            while(!ywQ.empty())
+            {
+                int row = ywQ.front().first;
+                int col = ywQ.front().second;
+                ywQ.pop();
+
+                for(int k=0; k<4; k++)
+                {
+                    int nrow = row + mAV[k];
+                    int ncol = col + mAH[k];
+
+                    if(0<=nrow && nrow <ywRow && 0<= ncol && ncol < ywCol && ywMap[nrow][ncol]!='#')
+                    {
+                        if(ywMapVisit[nrow][ncol])continue;
+                        ywMapVisit[nrow][ncol] = true;
+                        if(ywMap[nrow][ncol] ==  'o') tmpY++;
+                        if(ywMap[nrow][ncol]=='v')tmpW++;
+                        ywQ.push({nrow,ncol});
+                    }
+                }
+            }
+            if(tmpY>tmpW)
+                totY+=tmpY;
+            else
+                totW+=tmpW;
+        }
+    }
+    
+    cout<< totY <<' '<<totW<<"\n";
+    return 0;
+}
