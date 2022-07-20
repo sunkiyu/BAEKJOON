@@ -20,12 +20,15 @@ int main()
     
      for (int i = 1; i <=n; i++) {
         if (i + retire[i].first - 1 > n) {
+            //만약 현재 일로 부터 업무 일수가 n일을 초과한다면
+            //바로 이전의 최대금액과 현재 최대금액 max비교하여 저장
             retireDP[i] = max(retireDP[i], retireDP[i-1]);
             continue;
         }
 
         for (int j = 0; j < i; j++)
         {
+            //현재 i일이라면 (i일 + 업무일수 -1)에 얻을 수 있는 최대 금액은 (i 일 이전의 최대 금액) + (i일의 금액)이다.
             retireDP[i + retire[i].first - 1] = max(retireDP[i + retire[i].first - 1], retireDP[j] + retire[i].second);
         }
     }
