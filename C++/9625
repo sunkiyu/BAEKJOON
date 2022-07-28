@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+
+int kDPA[46] = {0,};
+int kDPB[46] = {0,};
+
+int main()
+{
+    int k=0;
+    cin>>k;
+    
+    kDPA[0] = 1;
+    kDPB[0] = 0;
+    
+    for(int i=1; i<=k; i++)
+    {
+        kDPA[i] = kDPB[i-1];
+        kDPB[i] = kDPA[i-1] + kDPB[i-1];
+    }
+    
+    cout<<kDPA[k]<< " "<<kDPB[k]<<endl;
+    
+    return 0;
+}
