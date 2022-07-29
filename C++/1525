@@ -1,0 +1,95 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <vector>
+#include <queue>
+#include <functional>
+#include <tuple>
+#include <string.h>
+
+using namespace std;
+
+int mAV[4] = { 1,-1,0,0 };
+int mAH[4] = { 0,0,1,-1 };
+
+int main()
+{
+    string start = "", end ="123456780";
+	int pRow = 3, pCol = 3;
+	//1 0 3
+	//4 2 5
+	//7 8 6
+
+
+//string으로 
+	for(int i=0; i<3; i++)
+        for (int j = 0; j < 3; j++)
+        {
+            int a = 0;
+            cin>>a;
+            start+= (a+'0');
+        }
+
+    set<string> visitString;
+
+  //이미 방문한 문자라면 건너뜀
+	auto checkVisit = [&](string &str)
+	{
+		if (visitString.find(str) == visitString.end())
+		{
+			visitString.insert(str);
+			return true;
+		}
+		else
+			return false;
+	};
+    
+    //BFS
+    queue<pair<string,int>> puzzleQ;
+    puzzleQ.push({start,0});
+    checkVisit(start);
+    
+    bool find = false;
+    while(!puzzleQ.empty())
+    {
+        string str = puzzleQ.front().first;
+        int cnt = puzzleQ.front().second;
+        puzzleQ.pop();
+        
+        if(str == end)
+        {
+            find = true;
+            cout<<cnt<<endl;
+            break;
+        }
+        
+        //문자의 위치를 좌표로 바꾼다.
+        int zero = str.find('0');
+        int row = zero/3;
+        int col = zero%3;
+        
+        for(int i=0; i<4; i++)
+        {
+            //0과 인접한 좌표. 즉, 교환의 후보자가 된다.
+            int nrow = row + mAV[i];
+            int ncol = col + mAH[i];
+            
+            if(0<=nrow && nrow < pRow && 0<=ncol && ncol <pCol)
+            {
+                string next = str;
+                //0의 좌표와 인접한 좌표간 데이터 교환 작업을 문자열로 나타낸다.
+                swap(next[row*3 +col], next[nrow*3 +ncol]);
+                if(checkVisit(next))
+                {
+                    puzzleQ.push({next,cnt+1});
+                }
+            }
+        }
+    }
+	
+
+    if(!find)cout<<-1<<endl;
+
+	return 0;
+}
+
