@@ -1,0 +1,61 @@
+#include <iostream>
+#include <set>
+#include <functional>
+
+using namespace std;
+
+int mAV[4] = { 1,-1,0,0 };
+int mAH[4] = { 0,0,1,-1 };
+
+int make6Map[6][6] = { 0, };
+
+int main()
+{
+		//1 1 1 1 1
+		//1 1 1 1 1
+		//1 1 1 1 1
+		//1 1 1 2 1
+		//1 1 1 1 1
+
+    for(int i=0; i<5; i++)
+    {
+        for(int j=0; j<5; j++)
+        {
+            cin>>make6Map[i][j];
+        }
+    }
+
+	set<string> numbers;
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			function<void(int,int,int,string)> makeDFS = [&](int row, int col, int cnt, string val)
+			{
+				if (cnt == 6)
+				{
+					numbers.insert(val);
+					return;
+				}
+				for (int k = 0; k < 4; k++)
+				{
+					int nrow = row + mAV[k];
+					int ncol = col + mAH[k];
+
+					if (0 <= nrow && nrow < 5 && 0 <= ncol && ncol < 5)
+					{
+						val += (make6Map[nrow][ncol] + '0');
+						makeDFS(nrow, ncol, cnt + 1, val);
+						val = val.substr(0,val.length()-1);
+					}
+				}
+			};
+
+			makeDFS(i, j, 0, "");
+		}
+	}
+
+    cout<<numbers.size()<<endl;
+    
+	return 0;
+}
