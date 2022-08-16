@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <functional>
+
+using namespace std;
+
+vector<pair<int,int> > treeNode[1001];
+bool nodevisit[1001] = {false,};
+int main()
+{
+//    4 2
+//    2 1 2
+//    4 3 2
+//    1 4 3
+//    1 2
+//    3 2
+
+    int n=4, k=2;
+    cin>>n>>k;
+    for(int i=0; i<n-1; i++)
+    {
+        int a,b,c=0;
+        cin>>a>>b>>c;
+        treeNode[a].push_back({b,c});
+        treeNode[b].push_back({a,c});
+    }
+    
+        function <void(int,int,int)> treeDFS = [&](int node, int cnt, int end)
+        {
+            if(node == end)
+            {
+                cout << cnt<<endl;
+                return;
+            }
+            for(int i=0; i<treeNode[node].size(); i++)
+            {
+                int next = treeNode[node][i].first;
+                int val =  treeNode[node][i].second;
+                if(nodevisit[next])continue;
+                nodevisit[next] = true;
+                treeDFS(next, cnt+val, end);
+            }
+        };
+
+    for(int j=0; j<k; j++)
+    {
+        for(int i=0; i<=n; i++) nodevisit[i] = false;
+        int a,b =0;
+        cin>>a>>b;
+        nodevisit[a] = true;
+        treeDFS(a,0,b);
+    }
+       
+
+
+    return 0;
+}
