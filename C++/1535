@@ -1,0 +1,44 @@
+#include <iostream>
+#include <functional>
+
+using namespace std;
+
+int maxHappy = 0;
+int hp[21] = {0,};
+int happy[21] = {0,};
+int main()
+{
+//    8
+//    100 26 13 17 24 33 100 99
+//    34 56 21 1 24 34 100 99
+    int people = 0;
+    cin>>people;
+    for(int i=1; i<=people; i++)
+    {
+        cin>>hp[i];
+    }
+       for(int i=1; i<=people; i++)
+    {
+        cin>>happy[i];
+    }
+    
+      function<void(int,int,int)> happyDFS = [&](int cnt, int curHP,int totHappy)
+    {
+        int mHappy = happy[cnt];
+        int mHp  = hp[cnt];
+        if(cnt >people)
+        {
+            maxHappy = max(maxHappy, totHappy);
+            return;
+        }
+        if(curHP - mHp > 0)
+            happyDFS(cnt+1, curHP - mHp, totHappy+ mHappy);
+        happyDFS(cnt+1, curHP, totHappy);
+    };
+
+    happyDFS(1,100,0);
+    
+    cout << maxHappy <<endl;
+    return 0;
+   
+}
