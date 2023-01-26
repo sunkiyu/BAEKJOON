@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>HTML for python flask</title>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/datetime/1.2.0/js/dataTables.dateTime.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js" integrity="sha512-zYXldzJsDrNKV+odAwFYiDXV2Cy37cwizT+NkuiPGsa9X1dOz04eHvUWVuxaJ299GvcJT31ug2zO4itXBjFx4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"/> 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/> 
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.tutorialjinni.com/tag-it/2.0/css/jquery.tagit.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tag-it/2.0/css/tagit.ui-zendesk.css" />
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/taggle/1.15.0/taggle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/taggle/1.15.0/taggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tag-it/2.0/js/tag-it.min.js"></script>
+    <script src="
+    https://cdn.jsdelivr.net/npm/highlight-within-textarea@2.0.5/jquery.highlight-within-textarea.min.js
+    "></script>
+    <link href="
+    https://cdn.jsdelivr.net/npm/highlight-within-textarea@2.0.5/jquery.highlight-within-textarea.min.css
+    " rel="stylesheet"></link>
+
+
+    <script>
+        $(function () {
+           $('#singleFieldTags').tagit({
+            // This will make Tag-it submit a single form value, as a comma-delimited field.
+            singleField: true,
+            singleFieldNode: $('#mySingleField')
+        });
+
+        var eventTags = $('#singleFieldTags');
+
+            var addEvent = function (text) {
+                $('#events_container').append(text + '<br>');
+            };
+
+            eventTags.tagit({
+      
+                beforeTagAdded: function (evt, ui) {
+                    if (!ui.duringInitialization) {
+                        addEvent('beforeTagAdded: ' + eventTags.tagit('tagLabel', ui.tag));
+                    }
+                },
+                afterTagAdded: function (evt, ui) {
+                    if (!ui.duringInitialization) {
+                        addEvent('afterTagAdded: ' + eventTags.tagit('tagLabel', ui.tag));
+                    }
+                },
+                beforeTagRemoved: function (evt, ui) {
+                    addEvent('beforeTagRemoved: ' + eventTags.tagit('tagLabel', ui.tag));
+                },
+                afterTagRemoved: function (evt, ui) {
+                    addEvent('afterTagRemoved: ' + eventTags.tagit('tagLabel', ui.tag));
+                },
+                onTagClicked: function (evt, ui) {
+                    var text = eventTags.val();
+                    for (var i = 0; i < eventTags.children().length; i++) {
+                        var p = eventTags.children()[i].innerText;
+                    }
+                    addEvent('onTagClicked: ' + eventTags.tagit('tagLabel', ui.tag));
+                },
+                onTagExists: function (evt, ui) {
+                    addEvent('onTagExists: ' + eventTags.tagit('tagLabel', ui.existingTag));
+                }
+            });
+    });
+    </script>
+</head>
+<body>
+    <form>
+        <p>
+            Example using a single input form field to hold all the tag values, instead of one per tag (see
+        </p>
+        <p>
+            Normally this input field will be hidden &mdash; we leave it visible here so you can see how it is
+            manipulated by the widget:
+            <input name="tags" id="mySingleField" value="Apple, Orange" disabled="true" style="display:none">
+            <!-- only disabled for demonstration purposes -->
+        </p>
+        <ul id="singleFieldTags"></ul>
+        <input type="submit" value="Submit">
+    </form>
+	<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>카테고리</th>
+                <th>적용상태</th>
+				<th></th>
+				<th></th>
+            </tr>
+        </thead>
+    </table>
+    <div>
+        <input type="text22" id="testtext" class="textTest"/>
+    </div>
+
+    <div class="container">
+        <div class="column">
+           <h1>1</h1>
+           <div class="list-group-item" draggable="true">Wash Clothes</div>
+           <div class="list-group-item" draggable="true">Take a stroll outside</div>
+           <div class="list-group-item" draggable="true">Design Thumbnail</div>
+           <div class="list-group-item" draggable="true">Attend Meeting</div>
+           <div class="list-group-item" draggable="true">Fix workshop</div>
+           <div class="list-group-item" draggable="true">Visit the zoo</div>
+        </div>
+        <div class="column2" id ='column2id'>
+           <h1>2</h1>
+        </div>
+     </div>
+</body>
+<style>
+.container {
+font-family: "Trebuchet MS", sans-serif;
+display: flex;
+gap: 30px;
+}
+.column {
+flex-basis: 20%;
+background: #ddd;
+min-height: 90vh;
+padding: 5px;
+border-radius: 10px;
+}
+
+.column2 {
+flex-basis: 20%;
+background: #ddd;
+min-height: 90vh;
+padding: 5px;
+border-radius: 10px;
+}
+.column2 h1 {
+text-align: center;
+font-size: 22px;
+}
+.column h1 {
+text-align: center;
+font-size: 22px;
+}
+.list-group-item {
+background: #fff;
+margin: 20px;
+padding: 20px;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.hwt-container {
+    background-color: #f8f9fa;
+}
+
+.hwt-content {
+    width: 760px;
+    height: 20px;
+    padding: 20px;
+    border: 1px solid #adb5bd;
+    color: inherit;
+    font: 18px/25px 'Droid Sans Mono', sans-serif;
+}
+
+.hwt-input:focus {
+    outline-color: #495057;
+}
+
+.hwt-content mark {
+    border-radius: 3px;
+    background-color: #d0bfff;
+}
+</style>
+
+<script>
+
+const columns = document.querySelectorAll(".column");
+columns.forEach((column) => {
+  new Sortable(column, {
+    group: "shared",
+    animation: 150,
+    ghostClass: "blue-background-class"
+  });
+});
+const columns2 = document.querySelectorAll(".column2");
+columns2.forEach((column) => {
+  new Sortable(column, {
+    group: "shared",
+    animation: 150,
+    ghostClass: "blue-background-class"
+  });
+});
+
+const container = document.querySelector(".column");
+ 
+container.addEventListener("dragenter", (e) => {
+  e.preventDefault();
+ 
+});
+container.addEventListener("dragleave", (e) => {
+  e.preventDefault();
+  e.dataTransfer.setData('text/plain', e.target.text);
+  console.log(e);
+  console.log("드래그 요소가 '첫' 번째 박스 영역을 떠나면 발생하는 이벤트");
+});
+const container2 = document.querySelector(".column2");
+
+container2.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  //console.log(e);
+  //console("드래그 요소가 '두' 번째 박스 영역에 계속 위치하면 발생하는 이벤트");
+});
+
+test = [];
+container2.addEventListener("drop", (e) => {
+  e.preventDefault();
+  var text = e.target.outerText;
+  $('#testtext').val('');
+  //var test = e.dataTransfer.items[0].getAsString(text);
+  //console.log(e);
+  $('#column2id').children().each(function () {
+    if(this.className.includes('list-group-item')) {
+        test.push(this.outerText);
+        $('#testtext').val($('#testtext').val() + this.outerText);
+        $('.textTest').highlightWithinTextarea({
+                        highlight: test
+});
+    }
+    //alert(this.outerText); // "this" is the current element in the loop
+ });
+ 
+  console("드래그 요소가 '두' 번째 박스 영역에 드롭");
+});
+function console(e) {
+  if(document.querySelectorAll('p').length === 10) {
+    document.querySelectorAll('p').forEach(e => e.remove())
+  }
+  const p = document.createElement('p');
+  p.textContent = e;
+  document.body.append(p);
+}
+/* Formatting function for row details - modify as you need */
+function format(d) {
+    // `d` is the original data object for the row
+    return (
+        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+        '<tr>' +
+        '<td>search:</td>' +
+        '<td style="font-family:Arial">' +
+        d.filedata.parsing_rule.search  +
+        '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td>replace:</td>' +
+        '<td>' +
+		d.filedata.parsing_rule.replace+
+        '</td>' +
+        '</tr>' +
+        '</table>'
+    );
+}
+//mRender: function ( data, type, row ) {
+//return data.replace(/&/g,'&').replace(//g,'>') ;
+//}
+$(document).ready(function () {
+    var table = $('#example').DataTable({
+        ajax: '/reporter',
+        columns: [
+            {
+                className: 'dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+            },
+            { data: 'filedata.category' },
+            { data: 'applyed' },
+			{
+                data: null,
+                className: "dt-center editor-edit",
+                defaultContent: '<i class="fa fa-pencil"/>',
+                orderable: false
+            },
+            {
+                data: null,
+                className: "dt-center editor-delete",
+                defaultContent: '<i class="fa fa-trash"/>',
+                orderable: false
+            },
+        ],
+        order: [[1, 'asc']],
+		responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal( {
+                    header: function ( row ) {
+                        var data = row.data();
+                        return 'Details for '+data[0]+' '+data[1];
+                    }
+                } ),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                    tableClass: 'table'
+                } )
+            }
+		}
+	});
+ 
+    // Add event listener for opening and closing details
+    $('#example tbody').on('click', 'td.dt-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+ 
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+	
+	$('#example tbody').on('click', 'td.editor-edit', function (e) {
+        e.preventDefault();
+ 
+        editor.edit( $(this).closest('tr'), {
+            title: 'Edit record',
+            buttons: 'Update'
+        } );
+    } );
+ 
+    // Delete a record
+    $('#example tbody').on('click', 'td.editor-delete', function (e) {
+        e.preventDefault();
+ 
+        editor.remove( $(this).closest('tr'), {
+            title: 'Delete record',
+            message: 'Are you sure you wish to remove this record?',
+            buttons: 'Delete'
+        } );
+    } );
+});
+
+</script>
+</html>
